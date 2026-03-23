@@ -24,7 +24,6 @@ export default function Home() {
   return (
     <main className="page">
 
-      {/* HERO */}
       <section className="hero">
         <div className="heroContent">
           <h2>Contemporary Art Experience</h2>
@@ -32,14 +31,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* GALERIA */}
       <section className={`gallery ${visible ? "show" : ""}`}>
         <h2>Galeria</h2>
 
         <div className="grid">
           {artworks.map((art: any, index) => (
             <Link key={art.id} href={`/artwork/${art.id}`} className="card">
-
               <div
                 className={`imageWrapper ${visible ? "fadeUp" : ""}`}
                 style={{ transitionDelay: `${index * 0.1}s` }}
@@ -51,13 +48,11 @@ export default function Home() {
                   <p>{art.artist}</p>
                 </div>
               </div>
-
             </Link>
           ))}
         </div>
       </section>
 
-      {/* FOOTER */}
       <footer className="footer">
         © 2026 1M2F Gallery — All rights reserved
       </footer>
