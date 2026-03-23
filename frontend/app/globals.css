@@ -1,26 +1,73 @@
-@import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+.page {
+  background: #0e0e0e;
+  color: #fff;
+  font-family: Inter, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* HERO */
+.hero {
+  height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(to bottom, #0e0e0e, #000);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.heroContent h1 {
+  font-size: 60px;
+  font-family: 'Playfair Display', serif;
+}
+
+.heroContent p {
+  margin-top: 10px;
+  color: #aaa;
+  letter-spacing: 2px;
+}
+
+/* CONTENT */
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  padding: 100px 60px;
+  align-items: center;
+}
+
+.text h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+  font-family: 'Playfair Display', serif;
+}
+
+.text p {
+  color: #ccc;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.image img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+}
+
+/* QUOTE */
+.quote {
+  padding: 100px 60px;
+  text-align: center;
+  font-size: 24px;
+  font-style: italic;
+  color: #aaa;
+}
+
+/* RESPONSIVO */
+@media (max-width: 768px) {
+  .content {
+    grid-template-columns: 1fr;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  .heroContent h1 {
+    font-size: 40px;
+  }
 }
