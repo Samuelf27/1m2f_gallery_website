@@ -1,4 +1,7 @@
+"use client"
+
 export const dynamic = "force-dynamic"
+
 import { getArtworks } from "../../services/api"
 import Link from "next/link"
 
