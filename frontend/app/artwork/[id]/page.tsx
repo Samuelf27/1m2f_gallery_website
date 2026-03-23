@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic"
 import { getArtwork } from "../../../services/api"
 import Link from "next/link"
 
@@ -5,70 +6,129 @@ export default async function ArtworkPage({ params }: any) {
   const artwork = await getArtwork(params.id)
 
   return (
-    <main style={{ background: "#0e0e0e", color: "#fff", minHeight: "100vh" }}>
+    <main className="page">
 
-      {/* BOTÃO VOLTAR */}
-      <div style={{ padding: "30px 60px" }}>
-        <Link href="/" style={{ color: "#aaa", textDecoration: "none" }}>
-          ← Voltar
-        </Link>
+      {/* VOLTAR */}
+      <div className="back">
+        <Link href="/">← Voltar</Link>
       </div>
 
       {/* CONTEÚDO */}
-      <section style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        gap: "60px",
-        padding: "40px 60px"
-      }}>
+      <section className="container">
 
         {/* IMAGEM */}
-        <div style={{ overflow: "hidden" }}>
-          <img
-            src={artwork.image_url}
-            alt={artwork.title}
-            style={{
-              width: "100%",
-              height: "80vh",
-              objectFit: "cover",
-              borderRadius: "12px"
-            }}
-          />
+        <div className="imageWrapper">
+          <img src={artwork.image_url} alt={artwork.title} />
         </div>
 
-        {/* INFORMAÇÕES */}
-        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-          
-          <h1 style={{
-            fontSize: "42px",
-            marginBottom: "10px",
-            fontFamily: "Playfair Display, serif"
-          }}>
-            {artwork.title}
-          </h1>
+        {/* INFO */}
+        <div className="info">
 
-          <h2 style={{
-            color: "#aaa",
-            marginBottom: "30px",
-            fontSize: "20px"
-          }}>
-            {artwork.artist}
-          </h2>
+          <h1>{artwork.title}</h1>
+          <h2>{artwork.artist}</h2>
 
-          <p style={{
-            lineHeight: "1.6",
-            color: "#ccc",
-            marginBottom: "20px"
-          }}>
+          <p className="description">
             {artwork.description}
           </p>
 
-          <p><strong>Ano:</strong> {artwork.year}</p>
-          <p><strong>Categoria:</strong> {artwork.category}</p>
+          <div className="details">
+            <p><span>Ano</span> {artwork.year}</p>
+            <p><span>Categoria</span> {artwork.category}</p>
+          </div>
 
         </div>
 
       </section>
+
+      <style jsx>{`
+        .page {
+          background: #0e0e0e;
+          color: #fff;
+          min-height: 100vh;
+        }
+
+        .back {
+          padding: 30px 60px;
+        }
+
+        .back a {
+          color: #aaa;
+          text-decoration: none;
+          transition: 0.3s;
+        }
+
+        .back a:hover {
+          color: #fff;
+        }
+
+        .container {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 80px;
+          padding: 40px 60px;
+          align-items: center;
+        }
+
+        .imageWrapper {
+          overflow: hidden;
+          border-radius: 12px;
+        }
+
+        .imageWrapper img {
+          width: 100%;
+          height: 80vh;
+          object-fit: cover;
+          transition: transform 0.8s ease;
+        }
+
+        .imageWrapper:hover img {
+          transform: scale(1.05);
+        }
+
+        .info {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+
+        h1 {
+          font-size: 48px;
+          margin-bottom: 10px;
+          font-family: 'Playfair Display', serif;
+        }
+
+        h2 {
+          color: #aaa;
+          margin-bottom: 30px;
+          font-size: 20px;
+        }
+
+        .description {
+          line-height: 1.7;
+          color: #ccc;
+          margin-bottom: 30px;
+        }
+
+        .details p {
+          margin-bottom: 10px;
+        }
+
+        .details span {
+          color: #777;
+          margin-right: 10px;
+        }
+
+        /* RESPONSIVO */
+        @media (max-width: 768px) {
+          .container {
+            grid-template-columns: 1fr;
+          }
+
+          .imageWrapper img {
+            height: 60vh;
+          }
+        }
+      `}</style>
 
     </main>
   )

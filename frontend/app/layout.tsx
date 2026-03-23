@@ -1,3 +1,4 @@
+import Navbar from "../components/Navbar"
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -27,32 +28,11 @@ export default function RootLayout({
         }}
       >
 
-        {/* NAVBAR */}
-        <header style={{
-          position: "fixed",
-          top: 0,
-          width: "100%",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "20px 60px",
-          background: "rgba(0,0,0,0.5)",
-          backdropFilter: "blur(12px)",
-          zIndex: 1000
-        }}>
-          <h1 style={{ letterSpacing: "2px", fontSize: "20px" }}>
-            1M2F
-          </h1>
+        {/* NAVBAR REAL */}
+        <Navbar />
 
-          <nav style={{ display: "flex", gap: "30px" }}>
-            <a href="/">Home</a>
-            <a href="/artworks">Artworks</a>
-            <a href="/about">About</a>
-            <a href="/contact">Contact</a>
-          </nav>
-        </header>
-
-        <div style={{ paddingTop: "80px" }}>
+        {/* CONTEÚDO */}
+        <div style={{ paddingTop: "100px" }}>
           {children}
         </div>
 
