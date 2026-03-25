@@ -6,6 +6,7 @@ from app.extensions import db
 from app.routes.artworks import artworks_bp
 from app.models.artist import Artist
 from app.models.artwork import Artwork
+import os
 
 app = Flask(__name__)
 
@@ -71,4 +72,5 @@ if __name__ == "__main__":
         db.create_all()
         seed_database()
 
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
