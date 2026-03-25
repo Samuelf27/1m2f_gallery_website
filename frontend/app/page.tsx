@@ -24,6 +24,7 @@ export default function Home() {
   return (
     <main className="page">
 
+      {/* HERO */}
       <section className="hero">
         <div className="heroContent">
           <h2>Contemporary Art Experience</h2>
@@ -31,6 +32,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* GALERIA */}
       <section className={`gallery ${visible ? "show" : ""}`}>
         <h2>Galeria</h2>
 
@@ -53,6 +55,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* FOOTER */}
       <footer className="footer">
         © 2026 1M2F Gallery — All rights reserved
       </footer>
