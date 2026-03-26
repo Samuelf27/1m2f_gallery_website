@@ -1,5 +1,7 @@
 "use client"
 
+export const dynamic = "force-dynamic"
+
 import { useEffect, useState } from "react"
 import { getArtworks } from "../services/api"
 import Link from "next/link"
@@ -24,7 +26,7 @@ export default function Home() {
 
       {/* HERO */}
       <section className="hero">
-        <div className="overlay" />
+        <div className="overlayHero" />
         <div className="heroContent">
           <h1>1M2F Gallery</h1>
           <p>Explore o melhor da arte contemporânea</p>
@@ -41,7 +43,7 @@ export default function Home() {
             <Link key={art.id} href={`/artwork/${art.id}`} className="card">
 
               <div
-                className="imageWrapper fadeUp"
+                className={`imageWrapper ${visible ? "fadeUp" : ""}`}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <img src={art.image_url} alt={art.title} />
@@ -50,6 +52,7 @@ export default function Home() {
                   <h3>{art.title}</h3>
                   <p>{art.artist}</p>
                 </div>
+
               </div>
 
             </Link>
