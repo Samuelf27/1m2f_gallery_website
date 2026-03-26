@@ -5,7 +5,7 @@ const API_URL =
 
 // 🔥 pegar TODOS os artworks
 export async function getArtworks() {
-  const res = await fetch(API_URL, { cache: "no-store" })
+  const res = await fetch(API_URL)
 
   if (!res.ok) {
     throw new Error("Erro ao buscar artworks")
@@ -16,7 +16,7 @@ export async function getArtworks() {
 
 // 🔥 pegar UM artwork
 export async function getArtwork(id: string) {
-  const res = await fetch(`${API_URL}${id}`, { cache: "no-store" })
+  const res = await fetch(`${API_URL}${id}`)
 
   if (!res.ok) {
     throw new Error("Erro ao buscar artwork")
