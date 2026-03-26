@@ -1,47 +1,35 @@
 "use client"
 
-export const dynamic = "force-dynamic"
-
+import { useEffect, useState } from "react"
 import { getArtwork } from "../../../services/api"
-import Link from "next/link"
 
-export default async function ArtworkPage({ params }: any) {
-  const artwork = await getArtwork(params.id)
+export default function ArtworkPage({ params }: any) {
+  const [art, setArt] = useState<any>(null)
+
+  useEffect(() => {
+    getArtwork(params.id).then(setArt)
+  }, [params.id])
+
+  if (!art) return <p style={{ padding: 40 }}>Carregando...</p>
 
   return (
-    <main className="page">
+    <main className="artPage">
 
-      {/* VOLTAR */}
-      <div className="back">
-        <Link href="/">← Voltar</Link>
+      <div className="artHero">
+        <img src={art.image_url} alt={art.title} />
       </div>
 
-      {/* CONTEÚDO */}
-      <section className="container">
+      <div className="artInfo">
+        <h1>{art.title}</h1>
+        <h3>{art.artist}</h3>
 
-        {/* IMAGEM */}
-        <div className="imageWrapper">
-          <img src={artwork.image_url} alt={artwork.title} />
+        <p>{art.description}</p>
+
+        <div className="meta">
+          <span>{art.year}</span>
+          <span>{art.category}</span>
         </div>
-
-        {/* INFO */}
-        <div className="info">
-
-          <h1>{artwork.title}</h1>
-          <h2>{artwork.artist}</h2>
-
-          <p className="description">
-            {artwork.description}
-          </p>
-
-          <div className="details">
-            <p><span>Ano</span> {artwork.year}</p>
-            <p><span>Categoria</span> {artwork.category}</p>
-          </div>
-
-        </div>
-
-      </section>
+      </div>
 
     </main>
   )

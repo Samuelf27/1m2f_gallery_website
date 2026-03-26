@@ -1,21 +1,18 @@
 "use client"
 
-export const dynamic = "force-dynamic"
-
 import { useEffect, useState } from "react"
 import { getArtworks } from "../services/api"
 import Link from "next/link"
-import Navbar from "../components/Navbar"
 
 export default function Home() {
-  const [artworks, setArtworks] = useState([])
-  const [visible, setVisible] = useState(false)
+  const [artworks, setArtworks] = useState<any[]>([])
+  const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
     getArtworks().then(setArtworks)
 
     const handleScroll = () => {
-      if (window.scrollY > 100) setVisible(true)
+      setScrolled(window.scrollY > 50)
     }
 
     window.addEventListener("scroll", handleScroll)
@@ -23,57 +20,54 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="page">
+    <main>
 
-      <Navbar />
+      {/* NAVBAR */}
+      <header className={`navbar ${scrolled ? "active" : ""}`}>
+        <h1>1M2F</h1>
+        <nav>
+          <a href="#gallery">Galeria</a>
+          <a href="#">Sobre</a>
+          <a href="#">Contato</a>
+        </nav>
+      </header>
 
       {/* HERO */}
       <section className="hero">
-        <div className="overlayHero" />
+        <div className="overlay" />
 
         <div className="heroContent">
-          <h1>1M2F</h1>
-          <h2>Art Gallery</h2>
-
-          <p>
-            Uma experiência visual única em arte contemporânea
-          </p>
-
-          <a href="#gallery" className="cta">
-            Explorar coleção
-          </a>
+          <h1>1M2F Gallery</h1>
+          <p>Arte contemporânea com identidade</p>
+          <a href="#gallery">Explorar</a>
         </div>
       </section>
 
       {/* GALERIA */}
-      <section id="gallery" className={`gallery ${visible ? "show" : ""}`}>
+      <section id="gallery" className="gallery">
         <h2>Galeria</h2>
 
         <div className="grid">
-          {artworks.map((art: any, index) => (
-            <Link key={art.id} href={`/artwork/${art.id}`} className="card">
+          {artworks.map((art, i) => (
+            <Link
+              key={art.id}
+              href={`/artwork/${art.id}`}
+              className="card"
+              style={{ animationDelay: `${i * 0.08}s` }}
+            >
+              <img src={art.image_url} alt={art.title} />
 
-              <div
-                className={`imageWrapper ${visible ? "fadeUp" : ""}`}
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <img src={art.image_url} alt={art.title} />
-
-                <div className="overlayCard">
-                  <h3>{art.title}</h3>
-                  <p>{art.artist}</p>
-                </div>
-
+              <div className="cardOverlay">
+                <h3>{art.title}</h3>
+                <p>{art.artist}</p>
               </div>
-
             </Link>
           ))}
         </div>
       </section>
 
-      {/* FOOTER */}
       <footer className="footer">
-        © 2026 1M2F Gallery — All rights reserved
+        © 2026 1M2F — Samuel Ferreira
       </footer>
 
     </main>
