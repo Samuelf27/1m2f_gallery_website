@@ -1,9 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
 
+/* RESET GLOBAL 🔥 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* BODY */
 body {
   background: #050505;
   color: #fff;
   font-family: "Poppins", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* NAVBAR */
@@ -16,17 +34,17 @@ body {
   justify-content: space-between;
   align-items: center;
   z-index: 1000;
-  transition: 0.3s;
+  transition: 0.3s ease;
 }
 
 .navbar.scrolled {
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
 }
 
 .logo {
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 700;
   letter-spacing: 2px;
 }
 
@@ -36,10 +54,14 @@ body {
 }
 
 .navbar a {
-  text-decoration: none;
-  color: #fff;
   font-size: 14px;
   position: relative;
+  opacity: 0.8;
+  transition: 0.3s;
+}
+
+.navbar a:hover {
+  opacity: 1;
 }
 
 .navbar a::after {
@@ -60,55 +82,82 @@ body {
 /* HERO */
 .hero {
   height: 100vh;
-  background: url("https://images.unsplash.com/photo-1549887534-3dbf4c9d1d79") center/cover;
+  background: url("https://images.unsplash.com/photo-1549887534-3dbf4c9d1d79") center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
 }
 
-.overlay {
+.overlayHero {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle, transparent, #000);
+  background: radial-gradient(circle, rgba(0,0,0,0.2), #000);
 }
 
 .heroContent {
   text-align: center;
   z-index: 2;
+  animation: fadeIn 1s ease;
 }
 
 .heroContent h1 {
   font-size: 5rem;
+  font-weight: 800;
+  letter-spacing: 2px;
 }
 
-.heroContent a {
-  margin-top: 20px;
+.heroContent p {
+  margin-top: 10px;
+  opacity: 0.7;
+  font-size: 16px;
+}
+
+.cta {
+  margin-top: 25px;
   display: inline-block;
-  padding: 12px 24px;
+  padding: 12px 28px;
   background: #c19a6b;
   color: #000;
   border-radius: 8px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.cta:hover {
+  transform: scale(1.05);
+  background: #d4af7f;
 }
 
 /* GALERIA */
 .gallery {
-  padding: 140px 60px;
+  padding: 120px 60px;
 }
 
+.gallery h2 {
+  text-align: center;
+  margin-bottom: 50px;
+  font-size: 32px;
+}
+
+/* GRID */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 30px;
 }
 
+/* CARD */
 .card {
   position: relative;
   overflow: hidden;
   border-radius: 20px;
-  transform: translateY(40px);
-  opacity: 0;
-  animation: fadeUp 0.6s forwards;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-8px);
 }
 
 .card img {
@@ -122,6 +171,7 @@ body {
   transform: scale(1.1);
 }
 
+/* OVERLAY */
 .cardOverlay {
   position: absolute;
   inset: 0;
@@ -129,7 +179,7 @@ body {
   flex-direction: column;
   justify-content: flex-end;
   padding: 20px;
-  background: linear-gradient(to top, #000, transparent);
+  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
   opacity: 0;
   transition: 0.4s;
 }
@@ -138,39 +188,12 @@ body {
   opacity: 1;
 }
 
-/* ANIMAÇÃO */
-@keyframes fadeUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.cardOverlay h3 {
+  font-size: 18px;
 }
 
-/* ART PAGE */
-.artPage {
-  padding: 120px 60px;
-}
-
-.artHero img {
-  width: 100%;
-  max-height: 500px;
-  object-fit: cover;
-  border-radius: 20px;
-}
-
-.artInfo {
-  margin-top: 40px;
-  max-width: 800px;
-}
-
-.artInfo h1 {
-  font-size: 3rem;
-}
-
-.meta {
-  margin-top: 20px;
-  display: flex;
-  gap: 20px;
+.cardOverlay p {
+  font-size: 14px;
   opacity: 0.7;
 }
 
@@ -179,17 +202,41 @@ body {
   text-align: center;
   padding: 40px;
   opacity: 0.5;
+  font-size: 14px;
 }
 
-/* BODY BASE */
-body {
-  background: #0e0e0e;
-  color: #fff;
-  font-family: var(--font-geist-sans);
-  -webkit-font-smoothing: antialiased;
-}
-
-/* COMPENSA NAVBAR FIXA (SEM GAMBIARRA) */
+/* OFFSET NAVBAR */
 .mainContent {
   padding-top: 100px;
+}
+
+/* ANIMAÇÕES */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* RESPONSIVO */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 20px;
+  }
+
+  .heroContent h1 {
+    font-size: 2.5rem;
+  }
+
+  .gallery {
+    padding: 80px 20px;
+  }
+
+  .card img {
+    height: 300px;
+  }
 }
