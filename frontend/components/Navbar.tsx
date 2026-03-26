@@ -1,9 +1,12 @@
 "use client"
 
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,15 +19,39 @@ export default function Navbar() {
 
   return (
     <header className={`navbar ${scrolled ? "scrolled" : ""}`}>
-      
-      <div className="logo">1M2F</div>
+      <Link href="/" className="logo">
+        1M2F
+      </Link>
 
       <nav>
-        <a href="#gallery">Galeria</a>
-        <a href="#about">Sobre</a>
-        <a href="#contact">Contato</a>
+        <Link 
+          href="/" 
+          className={pathname === "/" ? "active" : ""}
+        >
+          Home
+        </Link>
+        
+        <Link 
+          href="/artworks" 
+          className={pathname === "/artworks" ? "active" : ""}
+        >
+          Galeria
+        </Link>
+        
+        <Link 
+          href="/about" 
+          className={pathname === "/about" ? "active" : ""}
+        >
+          Sobre
+        </Link>
+        
+        <Link 
+          href="/contact" 
+          className={pathname === "/contact" ? "active" : ""}
+        >
+          Contato
+        </Link>
       </nav>
-
     </header>
   )
 }

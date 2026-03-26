@@ -444,3 +444,13 @@ body {
     font-size: 28px;
   }
 }
+
+/* NAVBAR ACTIVE LINK */
+.navbar a.active {
+  opacity: 1;
+}
+
+.navbar a.active::after {
+  width: 100%;
+  background: #c19a6b;
+}

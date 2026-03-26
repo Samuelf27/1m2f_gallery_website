@@ -1,9 +1,8 @@
-"use client"
-
-export const dynamic = "force-dynamic"
-
-import { getArtworks } from "../../services/api"
+import { getArtworks } from "@/services/api"
 import Link from "next/link"
+
+// ✅ Remova "use client" - isso é um Server Component
+export const dynamic = "force-dynamic"
 
 export default async function ArtworksPage() {
   const artworks = await getArtworks()
@@ -15,7 +14,6 @@ export default async function ArtworksPage() {
       <div className="grid">
         {artworks.map((art: any) => (
           <Link key={art.id} href={`/artwork/${art.id}`} className="card">
-
             <div className="imageWrapper">
               <img src={art.image_url} alt={art.title} />
 
@@ -24,11 +22,9 @@ export default async function ArtworksPage() {
                 <p>{art.artist}</p>
               </div>
             </div>
-
           </Link>
         ))}
       </div>
-
     </main>
   )
-} 
+}
