@@ -1,54 +1,29 @@
-"use client"
-
-export const dynamic = "force-dynamic"
 export default function About() {
   return (
-    <main className="page">
+    <main className="pageContainer">
 
-      {/* HERO */}
-      <section className="hero">
-        <div className="heroContent">
-          <h1>Maria França</h1>
-          <p>Contemporary Artist</p>
-        </div>
+      <section className="pageHero">
+        <h1>Sobre a Galeria</h1>
+        <p>Arte contemporânea com identidade e propósito</p>
       </section>
 
-      {/* CONTENT */}
-      <section className="content">
+      <section className="pageContent">
+        <div className="contentBox">
 
-        <div className="text">
-          <h2>About the Artist</h2>
-
+          <h2>Nossa visão</h2>
           <p>
-            Maria França is a contemporary artist whose work explores
-            identity, emotion, and visual storytelling through modern
-            techniques and expressive compositions.
+            A 1M2F Gallery nasce com o objetivo de conectar pessoas à arte
+            contemporânea através de uma experiência digital moderna,
+            minimalista e imersiva.
           </p>
 
+          <h2>O que fazemos</h2>
           <p>
-            Her creations reflect a deep connection between abstraction
-            and human experience, blending texture, color, and form
-            to create immersive visual narratives.
+            Curamos obras únicas, destacando artistas e criando uma ponte
+            entre criatividade e tecnologia.
           </p>
 
-          <p>
-            Based in São Paulo, her work has been featured in exhibitions
-            and private collections, capturing the attention of collectors
-            and art enthusiasts worldwide.
-          </p>
         </div>
-
-        <div className="image">
-          <img src="https://images.unsplash.com/photo-1492724441997-5dc865305da7" />
-        </div>
-
-      </section>
-
-      {/* QUOTE */}
-      <section className="quote">
-        <p>
-          "Art is not what you see, but what you make others see."
-        </p>
       </section>
 
     </main>

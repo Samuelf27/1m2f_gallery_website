@@ -1,39 +1,75 @@
 "use client"
 
-export const dynamic = "force-dynamic"
+import { useState } from "react"
 
 export default function Contact() {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    message: "",
+  })
+
+  const handleChange = (e: any) => {
+    setForm({ ...form, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault()
+    alert("Mensagem enviada 🚀")
+  }
+
   return (
-    <main className="page">
+    <main className="pageContainer">
 
-      <section className="container">
-        <h1>Contact</h1>
+      {/* HERO */}
+      <section className="pageHero">
+        <h1>Contato</h1>
+        <p>Entre em contato com a galeria</p>
+      </section>
 
-        <p className="subtitle">
-          Interested in an artwork or collaboration? Get in touch.
-        </p>
+      {/* FORM */}
+      <section className="contactSection">
+        <div className="contactWrapper">
 
-        <div className="contactGrid">
+          <div className="contactInfo">
+            <h2>Vamos conversar</h2>
+            <p>
+              Tem alguma dúvida, proposta ou interesse em arte?
+              Envie uma mensagem e responderemos o mais rápido possível.
+            </p>
 
-          {/* INFO */}
-          <div className="info">
-            <h3>Email</h3>
-            <p>contact@1m2f.com</p>
-
-            <h3>Instagram</h3>
-            <p>@1m2f_gallery</p>
-
-            <h3>Location</h3>
-            <p>São Paulo, Brazil</p>
+            <div className="contactDetails">
+              <span>Email: contato@1m2f.com</span>
+              <span>São Paulo, Brasil</span>
+            </div>
           </div>
 
-          {/* FORM */}
-          <form className="form">
-            <input type="text" placeholder="Your name" />
-            <input type="email" placeholder="Your email" />
-            <textarea placeholder="Your message" rows={5}></textarea>
+          <form className="contactForm" onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="name"
+              placeholder="Seu nome"
+              onChange={handleChange}
+              required
+            />
 
-            <button type="submit">Send Message</button>
+            <input
+              type="email"
+              name="email"
+              placeholder="Seu email"
+              onChange={handleChange}
+              required
+            />
+
+            <textarea
+              name="message"
+              placeholder="Sua mensagem"
+              rows={5}
+              onChange={handleChange}
+              required
+            />
+
+            <button type="submit">Enviar mensagem</button>
           </form>
 
         </div>

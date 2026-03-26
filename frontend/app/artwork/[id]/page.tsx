@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { getArtwork } from "../../../services/api"
+import { getArtwork } from "@/services/api"
 
 export default function ArtworkPage({ params }: any) {
   const [art, setArt] = useState<any>(null)
@@ -10,26 +10,36 @@ export default function ArtworkPage({ params }: any) {
     getArtwork(params.id).then(setArt)
   }, [params.id])
 
-  if (!art) return <p style={{ padding: 40 }}>Carregando...</p>
+  if (!art) {
+    return <div className="loading">Carregando...</div>
+  }
 
   return (
     <main className="artPage">
 
-      <div className="artHero">
+      {/* HERO IMAGEM */}
+      <section className="artHero">
         <img src={art.image_url} alt={art.title} />
-      </div>
+      </section>
 
-      <div className="artInfo">
-        <h1>{art.title}</h1>
-        <h3>{art.artist}</h3>
+      {/* INFO */}
+      <section className="artContent">
 
-        <p>{art.description}</p>
+        <div className="artHeader">
+          <h1>{art.title}</h1>
+          <p className="artist">{art.artist}</p>
+        </div>
 
-        <div className="meta">
+        <div className="artMeta">
           <span>{art.year}</span>
           <span>{art.category}</span>
         </div>
-      </div>
+
+        <div className="artDescription">
+          <p>{art.description}</p>
+        </div>
+
+      </section>
 
     </main>
   )
