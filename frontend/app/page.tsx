@@ -5,6 +5,7 @@ export const dynamic = "force-dynamic"
 import { useEffect, useState } from "react"
 import { getArtworks } from "../services/api"
 import Link from "next/link"
+import Navbar from "../components/Navbar"
 
 export default function Home() {
   const [artworks, setArtworks] = useState([])
@@ -23,6 +24,8 @@ export default function Home() {
 
   return (
     <main className="page">
+
+      <Navbar />
 
       {/* HERO */}
       <section className="hero">
