@@ -5,7 +5,7 @@
 }
 
 body {
-  background: #0d0d0d;
+  background: #0b0b0b;
   color: #fff;
   font-family: "Poppins", sans-serif;
   scroll-behavior: smooth;
@@ -21,33 +21,49 @@ body {
   position: relative;
 }
 
-/* 🔥 overlay corrigido */
+/* overlay mais sofisticado */
 .overlayHero {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.6),
+    rgba(0,0,0,0.9)
+  );
 }
 
+/* conteúdo hero */
 .heroContent {
   position: relative;
   text-align: center;
   z-index: 2;
+  max-width: 700px;
+  padding: 0 20px;
 }
 
 .heroContent h1 {
-  font-size: 4rem;
+  font-size: 90px;
+  font-family: "Playfair Display", serif;
+  letter-spacing: 6px;
   margin-bottom: 10px;
-  letter-spacing: 2px;
+}
+
+.heroContent h2 {
+  font-size: 20px;
+  letter-spacing: 8px;
+  color: #c19a6b;
+  margin-bottom: 20px;
 }
 
 .heroContent p {
-  opacity: 0.8;
-  margin-bottom: 20px;
+  color: #aaa;
+  margin-bottom: 30px;
+  line-height: 1.6;
 }
 
 /* BOTÃO */
 .cta {
-  padding: 12px 24px;
+  padding: 14px 28px;
   background: #c19a6b;
   color: #000;
   border-radius: 8px;
@@ -63,10 +79,10 @@ body {
 
 /* GALERIA */
 .gallery {
-  padding: 80px 40px;
+  padding: 100px 60px;
   opacity: 0;
   transform: translateY(40px);
-  transition: 0.6s;
+  transition: 0.8s;
 }
 
 .gallery.show {
@@ -76,26 +92,30 @@ body {
 
 .gallery h2 {
   text-align: center;
-  margin-bottom: 40px;
-  font-size: 32px;
+  margin-bottom: 60px;
+  font-size: 36px;
+  font-family: "Playfair Display", serif;
+  letter-spacing: 2px;
 }
 
 /* GRID */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
 }
 
 /* CARD */
 .card {
+  background: #111;
+  border: 1px solid rgba(255,255,255,0.05);
   border-radius: 16px;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
 }
 
 .card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-10px) scale(1.02);
 }
 
 /* IMAGEM */
@@ -106,22 +126,22 @@ body {
 
 .imageWrapper img {
   width: 100%;
-  height: 300px;
+  height: 400px;
   object-fit: cover;
-  transition: 0.4s;
+  transition: 0.5s;
 }
 
 .card:hover img {
   transform: scale(1.1);
 }
 
-/* OVERLAY CARD 🔥 melhorado */
+/* OVERLAY CARD */
 .overlayCard {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(0,0,0,0.9),
+    rgba(0,0,0,0.95),
     rgba(0,0,0,0.2)
   );
   display: flex;
@@ -129,7 +149,7 @@ body {
   justify-content: flex-end;
   padding: 20px;
   opacity: 0;
-  transition: 0.3s;
+  transition: 0.4s;
 }
 
 .card:hover .overlayCard {
@@ -137,7 +157,8 @@ body {
 }
 
 .overlayCard h3 {
-  font-size: 18px;
+  font-size: 20px;
+  margin-bottom: 5px;
 }
 
 .overlayCard p {
@@ -148,8 +169,8 @@ body {
 /* ANIMAÇÃO */
 .fadeUp {
   opacity: 0;
-  transform: translateY(30px);
-  animation: fadeUp 0.6s forwards;
+  transform: translateY(40px);
+  animation: fadeUp 0.8s forwards;
 }
 
 @keyframes fadeUp {
@@ -162,18 +183,27 @@ body {
 /* FOOTER */
 .footer {
   text-align: center;
-  padding: 30px;
-  opacity: 0.6;
+  padding: 40px;
+  opacity: 0.5;
   font-size: 14px;
 }
 
 /* RESPONSIVO */
 @media (max-width: 768px) {
   .heroContent h1 {
-    font-size: 2.5rem;
+    font-size: 50px;
+  }
+
+  .heroContent h2 {
+    font-size: 14px;
+    letter-spacing: 4px;
   }
 
   .gallery {
     padding: 60px 20px;
+  }
+
+  .imageWrapper img {
+    height: 300px;
   }
 }

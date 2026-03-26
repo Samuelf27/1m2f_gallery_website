@@ -27,10 +27,18 @@ export default function Home() {
       {/* HERO */}
       <section className="hero">
         <div className="overlayHero" />
+
         <div className="heroContent">
-          <h1>1M2F Gallery</h1>
-          <p>Explore o melhor da arte contemporânea</p>
-          <a href="#gallery" className="cta">Explorar</a>
+          <h1>1M2F</h1>
+          <h2>Art Gallery</h2>
+
+          <p>
+            Uma experiência visual única em arte contemporânea
+          </p>
+
+          <a href="#gallery" className="cta">
+            Explorar coleção
+          </a>
         </div>
       </section>
 
