@@ -1,73 +1,246 @@
-.page {
-  background: #0e0e0e;
+body {
+  background: red !important;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
+
+/* RESET GLOBAL 🔥 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* BODY */
+body {
+  background: #050505;
   color: #fff;
-  font-family: Inter, sans-serif;
+  font-family: "Poppins", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAVBAR */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 20px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  transition: 0.3s ease;
+}
+
+.navbar.scrolled {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.navbar nav {
+  display: flex;
+  gap: 30px;
+}
+
+.navbar a {
+  font-size: 14px;
+  position: relative;
+  opacity: 0.8;
+  transition: 0.3s;
+}
+
+.navbar a:hover {
+  opacity: 1;
+}
+
+.navbar a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 1px;
+  background: #c19a6b;
+  left: 0;
+  bottom: -5px;
+  transition: 0.3s;
+}
+
+.navbar a:hover::after {
+  width: 100%;
 }
 
 /* HERO */
 .hero {
-  height: 60vh;
+  height: 100vh;
+  background: url("https://images.unsplash.com/photo-1549887534-3dbf4c9d1d79") center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+.overlayHero {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(0,0,0,0.2), #000);
+}
+
+.heroContent {
   text-align: center;
-  background: linear-gradient(to bottom, #0e0e0e, #000);
+  z-index: 2;
+  animation: fadeIn 1s ease;
 }
 
 .heroContent h1 {
-  font-size: 60px;
-  font-family: 'Playfair Display', serif;
+  font-size: 5rem;
+  font-weight: 800;
+  letter-spacing: 2px;
 }
 
 .heroContent p {
   margin-top: 10px;
-  color: #aaa;
-  letter-spacing: 2px;
+  opacity: 0.7;
+  font-size: 16px;
 }
 
-/* CONTENT */
-.content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  padding: 100px 60px;
-  align-items: center;
+.cta {
+  margin-top: 25px;
+  display: inline-block;
+  padding: 12px 28px;
+  background: #c19a6b;
+  color: #000;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: 0.3s;
 }
 
-.text h2 {
-  font-size: 32px;
-  margin-bottom: 20px;
-  font-family: 'Playfair Display', serif;
+.cta:hover {
+  transform: scale(1.05);
+  background: #d4af7f;
 }
 
-.text p {
-  color: #ccc;
-  margin-bottom: 20px;
-  line-height: 1.6;
+/* GALERIA */
+.gallery {
+  padding: 120px 60px;
 }
 
-.image img {
-  width: 100%;
-  height: 500px;
-  object-fit: cover;
-}
-
-/* QUOTE */
-.quote {
-  padding: 100px 60px;
+.gallery h2 {
   text-align: center;
-  font-size: 24px;
-  font-style: italic;
-  color: #aaa;
+  margin-bottom: 50px;
+  font-size: 32px;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+/* CARD */
+.card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+}
+
+.card img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  transition: 0.5s;
+}
+
+.card:hover img {
+  transform: scale(1.1);
+}
+
+/* OVERLAY */
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+  opacity: 0;
+  transition: 0.4s;
+}
+
+.card:hover .cardOverlay {
+  opacity: 1;
+}
+
+.cardOverlay h3 {
+  font-size: 18px;
+}
+
+.cardOverlay p {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 40px;
+  opacity: 0.5;
+  font-size: 14px;
+}
+
+/* OFFSET NAVBAR */
+.mainContent {
+  padding-top: 100px;
+}
+
+/* ANIMAÇÕES */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* RESPONSIVO */
 @media (max-width: 768px) {
-  .content {
-    grid-template-columns: 1fr;
+  .navbar {
+    padding: 20px;
   }
 
   .heroContent h1 {
-    font-size: 40px;
+    font-size: 2.5rem;
+  }
+
+  .gallery {
+    padding: 80px 20px;
+  }
+
+  .card img {
+    height: 300px;
   }
 }
