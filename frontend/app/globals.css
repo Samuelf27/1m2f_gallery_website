@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
 
-/* RESET GLOBAL */
+/* RESET */
 * {
   margin: 0;
   padding: 0;
@@ -29,35 +29,36 @@ body {
   position: fixed;
   top: 0;
   width: 100%;
-  padding: 20px 60px;
+  padding: 22px 80px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 1000;
-  transition: 0.3s ease;
+  transition: all 0.4s ease;
 }
 
 .navbar.scrolled {
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 .logo {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
 }
 
 .navbar nav {
   display: flex;
-  gap: 30px;
+  gap: 40px;
 }
 
 .navbar a {
-  font-size: 14px;
-  position: relative;
-  opacity: 0.8;
+  font-size: 13px;
+  opacity: 0.7;
   transition: 0.3s;
+  position: relative;
 }
 
 .navbar a:hover {
@@ -71,7 +72,7 @@ body {
   height: 1px;
   background: #c19a6b;
   left: 0;
-  bottom: -5px;
+  bottom: -6px;
   transition: 0.3s;
 }
 
@@ -92,7 +93,7 @@ body {
 .overlayHero {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle, rgba(0,0,0,0.2), #000);
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3), #050505);
 }
 
 .heroContent {
@@ -102,73 +103,76 @@ body {
 }
 
 .heroContent h1 {
-  font-size: 5rem;
-  font-weight: 800;
-  letter-spacing: 2px;
+  font-size: 5.5rem;
+  font-weight: 700;
+  letter-spacing: 4px;
 }
 
 .heroContent p {
-  margin-top: 10px;
-  opacity: 0.7;
-  font-size: 16px;
+  margin-top: 12px;
+  opacity: 0.6;
+  font-size: 15px;
 }
 
+/* BOTÃO */
 .cta {
-  margin-top: 25px;
+  margin-top: 30px;
   display: inline-block;
-  padding: 12px 28px;
-  background: #c19a6b;
+  padding: 14px 34px;
+  background: #fff;
   color: #000;
-  border-radius: 8px;
+  border-radius: 999px;
   font-weight: 600;
   transition: 0.3s;
 }
 
 .cta:hover {
-  transform: scale(1.05);
-  background: #d4af7f;
+  transform: scale(1.06);
+  background: #e5e5e5;
 }
 
 /* GALERIA */
 .gallery {
-  padding: 120px 60px;
+  padding: 140px 80px;
 }
 
 .gallery h2 {
   text-align: center;
-  margin-bottom: 50px;
-  font-size: 32px;
+  margin-bottom: 60px;
+  font-size: 34px;
+  letter-spacing: 1px;
 }
 
 /* GRID */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
 }
 
 /* CARD */
 .card {
   position: relative;
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: 24px;
   cursor: pointer;
-  transition: transform 0.3s;
+  transition: all 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-10px);
 }
 
+/* IMAGEM */
 .card img {
   width: 100%;
-  height: 400px;
+  height: 420px;
   object-fit: cover;
-  transition: 0.5s;
+  transition: 0.6s ease;
 }
 
 .card:hover img {
-  transform: scale(1.1);
+  transform: scale(1.12);
 }
 
 /* OVERLAY */
@@ -178,10 +182,15 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 20px;
-  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+  padding: 25px;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.95),
+    rgba(0,0,0,0.3),
+    transparent
+  );
   opacity: 0;
-  transition: 0.4s;
+  transition: 0.4s ease;
 }
 
 .card:hover .cardOverlay {
@@ -190,19 +199,20 @@ body {
 
 .cardOverlay h3 {
   font-size: 18px;
+  margin-bottom: 4px;
 }
 
 .cardOverlay p {
-  font-size: 14px;
-  opacity: 0.7;
+  font-size: 13px;
+  opacity: 0.6;
 }
 
 /* FOOTER */
 .footer {
   text-align: center;
-  padding: 40px;
-  opacity: 0.5;
-  font-size: 14px;
+  padding: 60px;
+  opacity: 0.4;
+  font-size: 13px;
 }
 
 /* OFFSET NAVBAR */
@@ -210,7 +220,7 @@ body {
   padding-top: 100px;
 }
 
-/* ANIMAÇÕES */
+/* ANIMAÇÃO */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -229,7 +239,7 @@ body {
   }
 
   .heroContent h1 {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
   }
 
   .gallery {

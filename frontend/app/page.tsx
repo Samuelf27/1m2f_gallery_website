@@ -1,18 +1,20 @@
 "use client"
 
+export const dynamic = "force-dynamic"
+
 import { useEffect, useState } from "react"
 import { getArtworks } from "../services/api"
 import Link from "next/link"
 
 export default function Home() {
   const [artworks, setArtworks] = useState<any[]>([])
-  const [scrolled, setScrolled] = useState(false)
+  const [visible, setVisible] = useState(false)
 
   useEffect(() => {
     getArtworks().then(setArtworks)
 
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
+      if (window.scrollY > 120) setVisible(true)
     }
 
     window.addEventListener("scroll", handleScroll)
@@ -20,54 +22,84 @@ export default function Home() {
   }, [])
 
   return (
-    <main>
-
-      {/* NAVBAR */}
-      <header className={`navbar ${scrolled ? "active" : ""}`}>
-        <h1>1M2F</h1>
-        <nav>
-          <a href="#gallery">Galeria</a>
-          <a href="#">Sobre</a>
-          <a href="#">Contato</a>
-        </nav>
-      </header>
+    <main className="main">
 
       {/* HERO */}
       <section className="hero">
-        <div className="overlay" />
+        <div className="heroOverlay" />
 
         <div className="heroContent">
-          <h1>1M2F Gallery</h1>
-          <p>Arte contemporânea com identidade</p>
-          <a href="#gallery">Explorar</a>
+          <h1 className="heroTitle">
+            1M2F <span>Gallery</span>
+          </h1>
+
+          <p className="heroSubtitle">
+            Experiência minimalista em arte contemporânea
+          </p>
+
+          <a href="#gallery" className="heroButton">
+            Explorar coleção
+          </a>
         </div>
       </section>
 
       {/* GALERIA */}
-      <section id="gallery" className="gallery">
-        <h2>Galeria</h2>
+      <section
+        id="gallery"
+        className={`gallery ${visible ? "show" : ""}`}
+      >
+        <div className="container">
 
-        <div className="grid">
-          {artworks.map((art, i) => (
-            <Link
-              key={art.id}
-              href={`/artwork/${art.id}`}
-              className="card"
-              style={{ animationDelay: `${i * 0.08}s` }}
-            >
-              <img src={art.image_url} alt={art.title} />
+          <div className="sectionHeader">
+            <h2>Coleção</h2>
+            <p>Curadoria exclusiva de obras digitais</p>
+          </div>
 
-              <div className="cardOverlay">
-                <h3>{art.title}</h3>
-                <p>{art.artist}</p>
-              </div>
-            </Link>
-          ))}
+          <div className="grid">
+            {artworks.map((art, index) => (
+              <Link
+                key={art.id}
+                href={`/artwork/${art.id}`}
+                className="card"
+              >
+                <div
+                  className={`imageWrapper ${visible ? "fadeUp" : ""}`}
+                  style={{ animationDelay: `${index * 0.07}s` }}
+                >
+                  <img
+                    src={art.image_url}
+                    alt={art.title}
+                  />
+
+                  <div className="cardOverlay">
+                    <div className="cardContent">
+                      <h3>{art.title}</h3>
+                      <span>{art.artist}</span>
+                    </div>
+                  </div>
+
+                </div>
+              </Link>
+            ))}
+          </div>
+
         </div>
       </section>
 
+      {/* CTA FINAL */}
+      <section className="ctaSection">
+        <div className="ctaContent">
+          <h2>Explore arte como nunca antes</h2>
+          <p>Descubra artistas e coleções únicas</p>
+        </div>
+      </section>
+
+      {/* FOOTER */}
       <footer className="footer">
-        © 2026 1M2F — Samuel Ferreira
+        <div className="footerContent">
+          <h3>1M2F Gallery</h3>
+          <p>© 2026 — Todos os direitos reservados</p>
+        </div>
       </footer>
 
     </main>
