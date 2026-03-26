@@ -2,7 +2,6 @@
 
 export const dynamic = "force-dynamic"
 
-import "./globals.css"
 import { getArtworks } from "../../services/api"
 import Link from "next/link"
 

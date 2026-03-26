@@ -12,11 +12,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 })
 
-export const metadata = {
-  title: "1M2F Gallery",
-  description: "Galeria de arte contemporânea premium",
-}
-
 export default function RootLayout({
   children,
 }: {

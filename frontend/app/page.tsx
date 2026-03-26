@@ -5,7 +5,6 @@ export const dynamic = "force-dynamic"
 import { useEffect, useState } from "react"
 import { getArtworks } from "../services/api"
 import Link from "next/link"
-import "./globals.css"
 
 export default function Home() {
   const [artworks, setArtworks] = useState<any[]>([])
