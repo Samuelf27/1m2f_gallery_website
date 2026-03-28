@@ -1,4 +1,4 @@
-from app.extensions import db
+from backend.extensions import db
 
 class Artwork(db.Model):
     __tablename__ = "artworks"

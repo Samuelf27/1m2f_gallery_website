@@ -2,7 +2,7 @@ from flask import Flask
 from flasgger import Swagger
 from flask_cors import CORS
 
-from app.extensions import db
+from backend.extensions import db
 from app.routes.artworks import artworks_bp
 from app.models.artist import Artist
 from app.models.artwork import Artwork
