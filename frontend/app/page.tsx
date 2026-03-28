@@ -4,14 +4,18 @@ export const dynamic = "force-dynamic"
 
 import { useEffect, useState } from "react"
 import { getArtworks } from "../services/api"
+import type { Artwork } from "@/types/artwork.types"
 import Link from "next/link"
 
 export default function Home() {
-  const [artworks, setArtworks] = useState<any[]>([])
+  const [artworks, setArtworks] = useState<Artwork[]>([])
   const [visible, setVisible] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    getArtworks().then(setArtworks)
+    getArtworks()
+      .then(setArtworks)
+      .catch(() => setError("Não foi possível carregar as obras. Tente novamente mais tarde."))
 
     const handleScroll = () => {
       if (window.scrollY > 120) setVisible(true)
@@ -55,6 +59,11 @@ export default function Home() {
             <p>Curadoria exclusiva de obras digitais</p>
           </div>
 
+          {/* ERRO */}
+          {error && (
+            <p className="errorMessage">{error}</p>
+          )}
+
           <div className="grid">
             {artworks.map((art, index) => (
               <Link
@@ -93,14 +102,6 @@ export default function Home() {
           <p>Descubra artistas e coleções únicas</p>
         </div>
       </section>
-
-      {/* FOOTER */}
-      <footer className="footer">
-        <div className="footerContent">
-          <h3>1M2F Gallery</h3>
-          <p>© 2026 — Todos os direitos reservados</p>
-        </div>
-      </footer>
 
     </main>
   )

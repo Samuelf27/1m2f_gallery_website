@@ -1,18 +1,13 @@
-"use client"
-
-import { useEffect, useState } from "react"
 import { getArtwork } from "@/services/api"
+import type { Artwork } from "@/types/artwork.types"
 
-export default function ArtworkPage({ params }: any) {
-  const [art, setArt] = useState<any>(null)
-
-  useEffect(() => {
-    getArtwork(params.id).then(setArt)
-  }, [params.id])
-
-  if (!art) {
-    return <div className="loading">Carregando...</div>
-  }
+export default async function ArtworkPage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
+  const art: Artwork = await getArtwork(id)
 
   return (
     <main className="artPage">

@@ -17,9 +17,9 @@ export default function RootLayout({
       <body>
         <Navbar />
         {children}
-        
+
         <footer className="footer">
-          <p>© 2024 1M2F Gallery. Todos os direitos reservados.</p>
+          <p>© 2026 1M2F Gallery. Todos os direitos reservados.</p>
         </footer>
       </body>
     </html>
