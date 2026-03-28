@@ -454,3 +454,22 @@ body {
   width: 100%;
   background: #c19a6b;
 }
+
+.adminPage {
+  padding: 120px 40px;
+}
+
+.adminCard {
+  display: flex;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.adminForm {
+  max-width: 500px;
+  margin: auto;
+  padding-top: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}

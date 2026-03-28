@@ -66,6 +66,14 @@ def seed_database():
 
         print("🎨 Banco populado com sucesso!")
 
+# POST
+@app.route("/api/artworks", methods=["POST"])
+
+# PUT
+@app.route("/api/artworks/<id>", methods=["PUT"])
+
+# DELETE
+@app.route("/api/artworks/<id>", methods=["DELETE"])
 
 if __name__ == "__main__":
     with app.app_context():
