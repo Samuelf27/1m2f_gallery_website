@@ -3,8 +3,8 @@ import "./globals.css"
 import Navbar from "@/components/Navbar"
 
 export const metadata: Metadata = {
-  title: "1M2F Gallery | Arte Contemporânea",
-  description: "Galeria de arte contemporânea digital",
+  title: "1M2F Gallery | Maria França — Arte Contemporânea",
+  description: "Galeria de Maria França. Mais de 6.000 obras em acrílico sobre tela, papel, porcelana e aço. São Paulo, Brasil.",
 }
 
 export default function RootLayout({
@@ -17,10 +17,6 @@ export default function RootLayout({
       <body>
         <Navbar />
         {children}
-
-        <footer className="footer">
-          <p>© 2026 1M2F Gallery. Todos os direitos reservados.</p>
-        </footer>
       </body>
     </html>
   )
