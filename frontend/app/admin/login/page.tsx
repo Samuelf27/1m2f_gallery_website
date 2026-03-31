@@ -12,7 +12,8 @@ export default function Login() {
     e.preventDefault()
 
     if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
-      localStorage.setItem("admin", "true")
+      // Salva cookie por 8 horas
+      document.cookie = "admin=true; path=/; max-age=28800; SameSite=Strict"
       router.push("/admin")
     } else {
       setError("Senha incorreta. Tente novamente.")
