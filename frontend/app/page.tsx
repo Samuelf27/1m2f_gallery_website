@@ -15,7 +15,7 @@ export default function Home() {
   useEffect(() => {
     getArtworks()
       .then(setArtworks)
-      .catch(() => setError("Não foi possível carregar as obras. Tente novamente mais tarde."))
+      .catch(() => setError("Não foi possível carregar as obras."))
 
     const handleScroll = () => {
       if (window.scrollY > 120) setVisible(true)
@@ -26,82 +26,82 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="main">
+    <main>
 
       {/* HERO */}
       <section className="hero">
-        <div className="heroOverlay" />
-
-        <div className="heroContent">
+        <div className="heroText">
+          <div className="heroTag">Arte contemporânea · São Paulo</div>
           <h1 className="heroTitle">
-            1M2F <span>Gallery</span>
+            1M2F<br /><span>Gallery</span>
           </h1>
-
           <p className="heroSubtitle">
-            Experiência minimalista em arte contemporânea
+            A galeria de Maria França — mais de 6.000 obras em acrílico sobre tela, papel, porcelana e aço. Arte que cria atmosferas únicas e transforma ambientes.
           </p>
-
           <a href="#gallery" className="heroButton">
-            Explorar coleção
+            Explorar coleção →
           </a>
+        </div>
+
+        <div className="heroImage">
+          <img
+            src="https://1m2f.b-cdn.net/wp-content/uploads/2025/08/23-scaled.jpg"
+            alt="The Secret of the Seas — Maria França"
+          />
+          <div className="heroImageOverlay" />
         </div>
       </section>
 
       {/* GALERIA */}
-      <section
-        id="gallery"
-        className={`gallery ${visible ? "show" : ""}`}
-      >
-        <div className="container">
+      <section id="gallery" className={`gallery ${visible ? "show" : ""}`}>
+        <div className="sectionHeader">
+          <h2>Coleção</h2>
+          <p>Obras selecionadas</p>
+        </div>
 
-          <div className="sectionHeader">
-            <h2>Coleção</h2>
-            <p>Curadoria exclusiva de obras digitais</p>
-          </div>
+        {error && <p className="errorMessage">{error}</p>}
 
-          {/* ERRO */}
-          {error && (
-            <p className="errorMessage">{error}</p>
-          )}
-
-          <div className="grid">
-            {artworks.map((art, index) => (
-              <Link
-                key={art.id}
-                href={`/artwork/${art.id}`}
-                className="card"
+        <div className="grid">
+          {artworks.map((art, index) => (
+            <Link key={art.id} href={`/artwork/${art.id}`} className="card">
+              <div
+                className={`imageWrapper ${visible ? "fadeUp" : ""}`}
+                style={{ animationDelay: `${index * 0.07}s` }}
               >
-                <div
-                  className={`imageWrapper ${visible ? "fadeUp" : ""}`}
-                  style={{ animationDelay: `${index * 0.07}s` }}
-                >
-                  <img
-                    src={art.image_url}
-                    alt={art.title}
-                  />
-
-                  <div className="cardOverlay">
-                    <div className="cardContent">
-                      <h3>{art.title}</h3>
-                      <span>{art.artist}</span>
-                    </div>
+                <img src={art.image_url} alt={art.title} />
+                <div className="cardOverlay">
+                  <div className="cardContent">
+                    <h3>{art.title}</h3>
+                    <span>{art.category}</span>
                   </div>
-
                 </div>
-              </Link>
-            ))}
-          </div>
-
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 
-      {/* CTA FINAL */}
+      {/* CTA */}
       <section className="ctaSection">
         <div className="ctaContent">
-          <h2>Explore arte como nunca antes</h2>
-          <p>Descubra artistas e coleções únicas</p>
+          <h2>Arte que <em>transforma</em><br />ambientes</h2>
+          <p>Descubra a coleção completa de Maria França</p>
         </div>
+        <Link href="/artworks" className="ctaLink">
+          Ver todas as obras →
+        </Link>
       </section>
+
+      {/* FOOTER */}
+      <footer className="footer">
+        <div className="footerLogo">1M2F</div>
+        <p>© 2026 Maria França. Todos os direitos reservados.</p>
+        <div className="footerLinks">
+          <a href="https://www.instagram.com/1m2f_art_gallery/" target="_blank">Instagram</a>
+          <Link href="/about">Sobre</Link>
+          <Link href="/contact">Contato</Link>
+        </div>
+      </footer>
 
     </main>
   )

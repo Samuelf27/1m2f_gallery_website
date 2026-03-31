@@ -2,78 +2,58 @@
 
 import { useState } from "react"
 
-export default function Contact() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    message: "",
-  })
+export default function ContactPage() {
+  const [sent, setSent] = useState(false)
 
-  const handleChange = (e: any) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
-
-  const handleSubmit = (e: any) => {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    alert("Mensagem enviada 🚀")
+    setSent(true)
   }
 
   return (
-    <main className="pageContainer">
+    <main className="contactPage">
 
-      {/* HERO */}
-      <section className="pageHero">
-        <h1>Contato</h1>
-        <p>Entre em contato com a galeria</p>
-      </section>
+      <div className="contactLeft">
+        <div className="contactTag">Fale conosco</div>
+        <h1 className="contactTitle">
+          Entre em<br /><em>contato</em>
+        </h1>
 
-      {/* FORM */}
-      <section className="contactSection">
-        <div className="contactWrapper">
-
-          <div className="contactInfo">
-            <h2>Vamos conversar</h2>
-            <p>
-              Tem alguma dúvida, proposta ou interesse em arte?
-              Envie uma mensagem e responderemos o mais rápido possível.
-            </p>
-
-            <div className="contactDetails">
-              <span>Email: contato@1m2f.com</span>
-              <span>São Paulo, Brasil</span>
-            </div>
+        <div className="contactInfo">
+          <div className="contactItem">
+            <span>Telefone</span>
+            <a href="tel:+5511999449449">+55 11 999 449 449</a>
           </div>
-
-          <form className="contactForm" onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="name"
-              placeholder="Seu nome"
-              onChange={handleChange}
-              required
-            />
-
-            <input
-              type="email"
-              name="email"
-              placeholder="Seu email"
-              onChange={handleChange}
-              required
-            />
-
-            <textarea
-              name="message"
-              placeholder="Sua mensagem"
-              rows={5}
-              onChange={handleChange}
-              required
-            />
-
-            <button type="submit">Enviar mensagem</button>
-          </form>
-
+          <div className="contactItem">
+            <span>E-mail</span>
+            <a href="mailto:m.franca@1m2f-art-gallery.com">m.franca@1m2f-art-gallery.com</a>
+          </div>
+          <div className="contactItem">
+            <span>Instagram</span>
+            <a href="https://www.instagram.com/1m2f_art_gallery/" target="_blank">@1m2f_art_gallery</a>
+          </div>
+          <div className="contactItem">
+            <span>Localização</span>
+            <span>São Paulo, Brasil</span>
+          </div>
         </div>
-      </section>
+      </div>
+
+      {sent ? (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "24px", fontWeight: 300, color: "var(--gold)" }}>
+            Mensagem enviada.<br />Em breve entraremos em contato.
+          </p>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="contactForm">
+          <input type="text" placeholder="Nome" required />
+          <input type="email" placeholder="E-mail" required />
+          <input type="text" placeholder="Assunto" />
+          <textarea placeholder="Mensagem" required />
+          <button type="submit">Enviar mensagem →</button>
+        </form>
+      )}
 
     </main>
   )
