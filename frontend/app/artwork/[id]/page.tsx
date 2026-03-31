@@ -1,41 +1,70 @@
-import { getArtwork } from "@/services/api"
-import type { Artwork } from "@/types/artwork.types"
+"use client"
 
-export default async function ArtworkPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { id } = await params
-  const art: Artwork = await getArtwork(id)
+import { useEffect, useState } from "react"
+import { getArtworks, deleteArtwork } from "@/services/api"
+import type { Artwork } from "@/types/artwork.types"
+import { useRouter } from "next/navigation"
+
+export default function AdminArtworks() {
+  const [artworks, setArtworks] = useState<Artwork[]>([])
+  const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
+
+  useEffect(() => {
+    getArtworks()
+      .then(setArtworks)
+      .catch(() => setError("Não foi possível carregar as obras."))
+  }, [])
+
+  async function handleDelete(id: number, title: string) {
+    const confirm = window.confirm(`Deseja remover "${title}"?`)
+    if (!confirm) return
+
+    try {
+      await deleteArtwork(id)
+      setArtworks((prev) => prev.filter((art) => art.id !== id))
+    } catch {
+      setError("Erro ao deletar obra. Tente novamente.")
+    }
+  }
 
   return (
-    <main className="artPage">
+    <div className="adminPage">
+      <div className="adminPageHeader">
+        <h1>Obras</h1>
+        <a href="/admin/artworks/new" className="adminButton">+ Nova Obra</a>
+      </div>
 
-      {/* HERO IMAGEM */}
-      <section className="artHero">
-        <img src={art.image_url} alt={art.title} />
-      </section>
+      {error && <p className="errorMessage">{error}</p>}
 
-      {/* INFO */}
-      <section className="artContent">
+      <div className="adminList">
+        {artworks.map((art) => (
+          <div key={art.id} className="adminCard">
+            <img src={art.image_url} alt={art.title} />
 
-        <div className="artHeader">
-          <h1>{art.title}</h1>
-          <p className="artist">{art.artist}</p>
-        </div>
+            <div className="adminCardInfo">
+              <h3>{art.title}</h3>
+              <p>{art.artist}</p>
+              <span>{art.category} · {art.year}</span>
+            </div>
 
-        <div className="artMeta">
-          <span>{art.year}</span>
-          <span>{art.category}</span>
-        </div>
-
-        <div className="artDescription">
-          <p>{art.description}</p>
-        </div>
-
-      </section>
-
-    </main>
+            <div className="adminCardActions">
+              <a
+                href={`/admin/artworks/${art.id}`}
+                className="editButton"
+              >
+                Editar
+              </a>
+              <button
+                onClick={() => handleDelete(art.id, art.title)}
+                className="deleteButton"
+              >
+                Deletar
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }
