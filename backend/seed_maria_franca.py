@@ -1,7 +1,16 @@
-from app import app
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from flask import Flask
 from extensions import db
 from app.models.artist import Artist
 from app.models.artwork import Artwork
+
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///gallery.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db.init_app(app)
 
 artworks_data = [
     # Hawaii Series
@@ -115,12 +124,12 @@ artworks_data = [
 ]
 
 with app.app_context():
-    # Remove todas as obras e artistas existentes
+    db.create_all()
+
     db.session.query(Artwork).delete()
     db.session.query(Artist).delete()
     db.session.commit()
 
-    # Cria a artista Maria França
     maria = Artist(
         name="Maria França",
         bio="Brasileira, nascida em 1969, São Paulo. Com mais de 6.000 obras produzidas em acrílico sobre tela, papel, porcelana, aço e outros materiais.",
@@ -129,7 +138,6 @@ with app.app_context():
     db.session.add(maria)
     db.session.commit()
 
-    # Insere todas as obras
     for data in artworks_data:
         artwork = Artwork(
             title=data["title"],
