@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { getArtworks } from "../services/api"
 import type { Artwork } from "@/types/artwork.types"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function Home() {
   const [artworks, setArtworks] = useState<Artwork[]>([])
@@ -44,9 +45,13 @@ export default function Home() {
         </div>
 
         <div className="heroImage">
-          <img
+          <Image
             src="https://1m2f.b-cdn.net/wp-content/uploads/2025/08/23-scaled.jpg"
             alt="The Secret of the Seas — Maria França"
+            fill
+            priority
+            sizes="50vw"
+            style={{ objectFit: "cover" }}
           />
           <div className="heroImageOverlay" />
         </div>
@@ -62,13 +67,20 @@ export default function Home() {
         {error && <p className="errorMessage">{error}</p>}
 
         <div className="grid">
-          {artworks.map((art, index) => (
+          {artworks.slice(0, 12).map((art, index) => (
             <Link key={art.id} href={`/artwork/${art.id}`} className="card">
               <div
                 className={`imageWrapper ${visible ? "fadeUp" : ""}`}
                 style={{ animationDelay: `${index * 0.07}s` }}
               >
-                <img src={art.image_url} alt={art.title} />
+                <Image
+                  src={art.image_url}
+                  alt={art.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  style={{ objectFit: "cover" }}
+                  loading={index < 4 ? "eager" : "lazy"}
+                />
                 <div className="cardOverlay">
                   <div className="cardContent">
                     <h3>{art.title}</h3>
@@ -79,6 +91,14 @@ export default function Home() {
             </Link>
           ))}
         </div>
+
+        {artworks.length > 12 && (
+          <div style={{ textAlign: "center", marginTop: "60px" }}>
+            <Link href="/artworks" className="heroButton">
+              Ver todas as {artworks.length} obras →
+            </Link>
+          </div>
+        )}
       </section>
 
       {/* CTA */}
