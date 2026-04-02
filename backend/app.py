@@ -40,7 +40,6 @@ def create_artwork():
     if not data or not data.get("title"):
         return jsonify({"error": "O campo 'title' é obrigatório"}), 400
 
-    # Busca ou cria o artista pelo nome
     artist_name = data.get("artist")
     artist = None
     if artist_name:
@@ -48,7 +47,7 @@ def create_artwork():
         if not artist:
             artist = Artist(name=artist_name)
             db.session.add(artist)
-            db.session.flush()  # gera o ID sem commitar ainda
+            db.session.flush()
 
     artwork = Artwork(
         title=data.get("title"),
@@ -74,7 +73,6 @@ def update_artwork(id):
     if not data:
         return jsonify({"error": "Nenhum dado enviado"}), 400
 
-    # Atualiza os campos enviados (ignora os que não vieram)
     if "title" in data:
         artwork.title = data["title"]
     if "year" in data:
@@ -86,7 +84,6 @@ def update_artwork(id):
     if "category" in data:
         artwork.category = data["category"]
 
-    # Atualiza artista pelo nome, se enviado
     if "artist" in data:
         artist = Artist.query.filter_by(name=data["artist"]).first()
         if not artist:
@@ -111,39 +108,9 @@ def delete_artwork(id):
     return jsonify({"message": f"Obra '{artwork.title}' removida com sucesso"}), 200
 
 
-# SEED
-def seed_database():
-    if Artwork.query.count() == 0:
-        artist1 = Artist(name="Leonardo da Vinci")
-        artist2 = Artist(name="Vincent van Gogh")
-        db.session.add_all([artist1, artist2])
-        db.session.commit()
-
-        art1 = Artwork(
-            title="Mona Lisa",
-            artist_id=artist1.id,
-            year="1503",
-            description="Portrait painting by Leonardo da Vinci",
-            image_url="https://upload.wikimedia.org/wikipedia/commons/6/6a/Mona_Lisa.jpg",
-            category="Renaissance",
-        )
-        art2 = Artwork(
-            title="Starry Night",
-            artist_id=artist2.id,
-            year="1889",
-            description="Famous painting by Van Gogh",
-            image_url="https://upload.wikimedia.org/wikipedia/commons/e/ea/The_Starry_Night.JPG",
-            category="Post-Impressionism",
-        )
-        db.session.add_all([art1, art2])
-        db.session.commit()
-        print("🎨 Banco populado com sucesso!")
-
-
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-        seed_database()
 
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)

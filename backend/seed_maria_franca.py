@@ -1,6 +1,9 @@
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+# Garante que o script encontra os módulos e o banco na pasta certa
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, BASE_DIR)
 
 from flask import Flask
 from extensions import db
@@ -8,50 +11,41 @@ from app.models.artist import Artist
 from app.models.artwork import Artwork
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///gallery.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(BASE_DIR, 'instance', 'gallery.db')}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 artworks_data = [
-    # Hawaii Series
     {"title": "Hawaii Series", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/5.jpg", "category": "Acrylic on Canvas", "year": "2025"},
     {"title": "Hawaii Series", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/09/1.jpg", "category": "Acrylic on Canvas", "year": "2025"},
     {"title": "Hawaii Series", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/7.jpg", "category": "Acrylic on Canvas", "year": "2025"},
     {"title": "Hawaii Series", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/4.jpg", "category": "Acrylic on Canvas", "year": "2025"},
     {"title": "Hawaii Series", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/16-scaled.jpg", "category": "Acrylic on Canvas", "year": "2025"},
     {"title": "Hawaii Series", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/15-scaled.jpg", "category": "Acrylic on Canvas", "year": "2025"},
-    # Jurassic Series
     {"title": "Jurassic Series", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/09/6-scaled.jpg", "category": "Acrylic on Canvas", "year": "2025"},
     {"title": "Jurassic Series", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/19-scaled.jpg", "category": "Acrylic on Canvas", "year": "2025"},
     {"title": "Jurassic Series", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/18-scaled.jpg", "category": "Acrylic on Canvas", "year": "2025"},
     {"title": "Jurassic Series", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/10/ce13ade4-413d-4429-ac8f-20865b711b94-scaled.jpeg", "category": "Acrylic on Canvas", "year": "2025"},
-    # Volcanic Thoughts
     {"title": "Volcanic Thoughts", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/30-scaled.jpg", "category": "Acrylic on Canvas", "year": "2025"},
     {"title": "Volcanic Thoughts", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/25-scaled.jpg", "category": "Acrylic on Canvas", "year": "2025"},
     {"title": "Volcanic Thoughts", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/29.jpg", "category": "Acrylic on Canvas", "year": "2025"},
     {"title": "Volcanic Thoughts", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/27.jpg", "category": "Acrylic on Canvas", "year": "2025"},
-    # The Secret of the Seas
     {"title": "The Secret of the Seas", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/24-scaled.jpg", "category": "Acrylic on Canvas", "year": "2025"},
     {"title": "The Secret of the Seas", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/23-scaled.jpg", "category": "Acrylic on Canvas", "year": "2025"},
     {"title": "The Secret of the Seas", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/22-scaled.jpg", "category": "Acrylic on Canvas", "year": "2025"},
-    # The Jumping Series
     {"title": "The Jumping Series", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/13-1-scaled.jpg", "category": "Acrylic on Canvas", "year": "2025"},
     {"title": "The Jumping Series", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/8-1-scaled.jpg", "category": "Acrylic on Canvas", "year": "2025"},
     {"title": "The Jumping Series", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/1-1-scaled.jpg", "category": "Acrylic on Canvas", "year": "2025"},
-    # Dialogues and Transformations
     {"title": "Dialogues and Transformations", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/2-scaled.jpg", "category": "Acrylic on Canvas", "year": "2025"},
     {"title": "Dialogues and Transformations", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/09/5-scaled.jpg", "category": "Acrylic on Canvas", "year": "2025"},
     {"title": "Dialogues and Transformations", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/08/1-scaled.jpg", "category": "Acrylic on Canvas", "year": "2025"},
-    # Sol e Mar Vermelho
     {"title": "Sol e Mar Vermelho", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/05/1-1-scaled.jpg", "category": "Acrylic on stainless steel", "year": "2025"},
     {"title": "Sol e Mar Vermelho", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/05/2-scaled.jpg", "category": "Acrylic on stainless steel", "year": "2025"},
     {"title": "Sol e Mar Vermelho", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/05/3-scaled.jpg", "category": "Acrylic on stainless steel", "year": "2025"},
-    # Overflowing
     {"title": "Overflowing", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/05/5-1-scaled.jpg", "category": "Acrylic on Porcelain", "year": "2025"},
     {"title": "Overflowing", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/05/6-1-scaled.jpg", "category": "Acrylic on Porcelain", "year": "2025"},
     {"title": "Overflowing", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/05/7-scaled.jpg", "category": "Acrylic on Porcelain", "year": "2025"},
     {"title": "Overflowing", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2025/05/9-scaled.jpg", "category": "Acrylic on Porcelain", "year": "2025"},
-    # Named classics
     {"title": "Growing", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2024/12/agqgafgadfgadfgdfgadfgadfg.jpg", "category": "Acrylic on Paper", "year": "2024"},
     {"title": "I'm from another Galaxy", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2024/08/IMG_1487-scaled.jpg", "category": "Acrylic on Paper", "year": "2024"},
     {"title": "Carnivoro", "image_url": "https://1m2f.b-cdn.net/wp-content/uploads/2024/08/IMG_8280-scaled.jpg", "category": "Acrylic on Paper", "year": "2024"},
