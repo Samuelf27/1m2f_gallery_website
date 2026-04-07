@@ -10,12 +10,15 @@ export default async function ArtworksPage() {
 
   return (
     <main className="page">
-      <h1 className="title">Artworks</h1>
+      <div className="sectionHeader">
+        <h1 className="title">Coleção</h1>
+        <p>{artworks.length} obras</p>
+      </div>
 
       <div className="grid">
         {artworks.map((art: Artwork, index: number) => (
           <Link key={art.id} href={`/artwork/${art.id}`} className="card">
-            <div className="imageWrapper">
+            <div className="imageWrapper fadeUp">
               <Image
                 src={art.image_url}
                 alt={art.title}

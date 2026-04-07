@@ -18,33 +18,40 @@ export default async function ArtworkPage({
   }
 
   return (
-    <main className="artworkPage">
-      <Link href="/artworks" className="backLink">
-        ← Voltar à galeria
-      </Link>
+    <main className="artPage">
+      <div className="artHero">
+        <Image
+          src={art.image_url}
+          alt={art.title}
+          fill
+          sizes="100vw"
+          style={{ objectFit: "contain" }}
+          priority
+        />
+        <div className="artHeroOverlay" />
+      </div>
 
-      <div className="artworkDetail">
-        <div className="artworkImageWrapper">
-          <Image
-            src={art.image_url}
-            alt={art.title}
-            fill
-            sizes="(max-width: 768px) 100vw, 60vw"
-            style={{ objectFit: "cover" }}
-            priority
-          />
+      <div className="artContent">
+        <div className="artHeader">
+          {art.category && (
+            <div className="artCategory">{art.category}</div>
+          )}
+          <h1>{art.title}</h1>
+          {art.artist && <p className="artist">{art.artist}</p>}
+          {art.year && (
+            <div className="artMeta">
+              <span>{art.year}</span>
+            </div>
+          )}
         </div>
 
-        <div className="artworkInfo">
-          {art.category && (
-            <span className="artworkCategory">{art.category}</span>
-          )}
-          <h1 className="artworkTitle">{art.title}</h1>
-          {art.artist && <p className="artworkArtist">{art.artist}</p>}
-          {art.year && <span className="artworkYear">{art.year}</span>}
+        <div className="artDetails">
           {art.description && (
-            <p className="artworkDescription">{art.description}</p>
+            <p className="artDescription">{art.description}</p>
           )}
+          <Link href="/artworks" className="backLink">
+            ← Voltar à galeria
+          </Link>
         </div>
       </div>
     </main>
