@@ -1,12 +1,17 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { getArtwork, updateArtwork } from "@/services/api"
+import { getArtwork } from "@/services/api"
+import { updateArtworkAction } from "@/app/admin/actions"
 import type { Artwork } from "@/types/artwork.types"
-import { useRouter } from "next/navigation"
+import Link from "next/link"
 
-export default function EditArtwork({ params }: { params: Promise<{ id: string }> }) {
-  const router = useRouter()
+export default function EditArtwork({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const [id, setId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [fetching, setFetching] = useState(true)
@@ -22,6 +27,7 @@ export default function EditArtwork({ params }: { params: Promise<{ id: string }
 
   useEffect(() => {
     params.then(({ id }) => {
+      setId(id)
       getArtwork(id)
         .then((art: Artwork) => {
           setForm({
@@ -36,7 +42,7 @@ export default function EditArtwork({ params }: { params: Promise<{ id: string }
         .catch(() => setError("Não foi possível carregar a obra."))
         .finally(() => setFetching(false))
     })
-  }, [])
+  }, [params])
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -44,8 +50,10 @@ export default function EditArtwork({ params }: { params: Promise<{ id: string }
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: { preventDefault(): void }) {
     e.preventDefault()
+    if (!id) return
+
     setError(null)
 
     if (!form.title || !form.artist) {
@@ -53,16 +61,14 @@ export default function EditArtwork({ params }: { params: Promise<{ id: string }
       return
     }
 
-    try {
-      setLoading(true)
-      const { id } = await params
-      await updateArtwork(Number(id), form)
-      router.push("/admin/artworks")
-    } catch {
-      setError("Erro ao atualizar obra. Tente novamente.")
-    } finally {
+    setLoading(true)
+    const result = await updateArtworkAction(Number(id), form)
+
+    if (result?.error) {
+      setError(result.error)
       setLoading(false)
     }
+    // Se não retornou erro, o server action fez redirect
   }
 
   if (fetching) return <div className="loading">Carregando...</div>
@@ -115,7 +121,7 @@ export default function EditArtwork({ params }: { params: Promise<{ id: string }
           <button type="submit" disabled={loading}>
             {loading ? "Salvando..." : "Salvar alterações"}
           </button>
-          <a href="/admin/artworks">Cancelar</a>
+          <Link href="/admin/artworks">Cancelar</Link>
         </div>
       </form>
     </div>

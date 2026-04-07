@@ -1,27 +1,20 @@
-"use client"
-
-import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { logoutAction } from "./actions"
 
 export default function Admin() {
-  const router = useRouter()
-
-  function handleLogout() {
-    // Remove o cookie
-    document.cookie = "admin=; path=/; max-age=0"
-    router.push("/admin/login")
-  }
-
   return (
     <div className="adminDashboard">
       <h1>Painel Admin</h1>
 
-      <a href="/admin/artworks" className="adminButton">
+      <Link href="/admin/artworks" className="adminButton">
         Gerenciar Obras
-      </a>
+      </Link>
 
-      <button onClick={handleLogout} className="logoutButton">
-        Sair
-      </button>
+      <form action={logoutAction}>
+        <button type="submit" className="logoutButton">
+          Sair
+        </button>
+      </form>
     </div>
   )
 }

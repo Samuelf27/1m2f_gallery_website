@@ -1,11 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { createArtwork } from "@/services/api"
-import { useRouter } from "next/navigation"
+import { createArtworkAction } from "@/app/admin/actions"
+import Link from "next/link"
 
 export default function NewArtwork() {
-  const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -24,7 +23,7 @@ export default function NewArtwork() {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: { preventDefault(): void }) {
     e.preventDefault()
     setError(null)
 
@@ -33,15 +32,14 @@ export default function NewArtwork() {
       return
     }
 
-    try {
-      setLoading(true)
-      await createArtwork(form)
-      router.push("/admin/artworks")
-    } catch {
-      setError("Erro ao criar obra. Tente novamente.")
-    } finally {
+    setLoading(true)
+    const result = await createArtworkAction(form)
+
+    if (result?.error) {
+      setError(result.error)
       setLoading(false)
     }
+    // Se não retornou erro, o server action fez redirect
   }
 
   return (
@@ -92,7 +90,7 @@ export default function NewArtwork() {
           <button type="submit" disabled={loading}>
             {loading ? "Criando..." : "Criar obra"}
           </button>
-          <a href="/admin/artworks">Cancelar</a>
+          <Link href="/admin/artworks">Cancelar</Link>
         </div>
       </form>
     </div>

@@ -1,23 +1,25 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { loginAction } from "../actions"
 
 export default function Login() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
+  const [loading, setLoading] = useState(false)
 
-  function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    setError(null)
+    setLoading(true)
 
-    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
-      // Salva cookie por 8 horas
-      document.cookie = "admin=true; path=/; max-age=28800; SameSite=Strict"
-      router.push("/admin")
-    } else {
-      setError("Senha incorreta. Tente novamente.")
+    const result = await loginAction(password)
+
+    if (result?.error) {
+      setError(result.error)
+      setLoading(false)
     }
+    // Se não retornou erro, o server action fez redirect — não precisa fazer nada
   }
 
   return (
@@ -37,7 +39,9 @@ export default function Login() {
 
         {error && <p className="errorMessage">{error}</p>}
 
-        <button type="submit">Entrar</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Entrando..." : "Entrar"}
+        </button>
       </form>
     </div>
   )
