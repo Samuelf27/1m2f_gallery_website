@@ -29,8 +29,20 @@ export default function Home() {
   return (
     <main>
 
-      {/* HERO */}
+      {/* HERO — imagem de fundo com texto sobreposto */}
       <section className="hero">
+        <div className="heroBg">
+          <Image
+            src="https://1m2f.b-cdn.net/wp-content/uploads/2025/08/23-scaled.jpg"
+            alt="The Secret of the Seas — Maria França"
+            fill
+            priority
+            sizes="100vw"
+            style={{ objectFit: "cover" }}
+          />
+          <div className="heroBgOverlay" />
+        </div>
+
         <div className="heroText">
           <div className="heroTag">Arte contemporânea · São Paulo</div>
           <h1 className="heroTitle">
@@ -42,18 +54,6 @@ export default function Home() {
           <a href="#gallery" className="heroButton">
             Explorar coleção →
           </a>
-        </div>
-
-        <div className="heroImage">
-          <Image
-            src="https://1m2f.b-cdn.net/wp-content/uploads/2025/08/23-scaled.jpg"
-            alt="The Secret of the Seas — Maria França"
-            fill
-            priority
-            sizes="50vw"
-            style={{ objectFit: "cover" }}
-          />
-          <div className="heroImageOverlay" />
         </div>
       </section>
 
@@ -67,7 +67,7 @@ export default function Home() {
         {error && <p className="errorMessage">{error}</p>}
 
         <div className="grid">
-          {artworks.slice(0, 12).map((art, index) => (
+          {artworks.slice(0, 8).map((art, index) => (
             <Link key={art.id} href={`/artwork/${art.id}`} className="card">
               <div
                 className={`imageWrapper ${visible ? "fadeUp" : ""}`}
@@ -77,7 +77,7 @@ export default function Home() {
                   src={art.image_url}
                   alt={art.title}
                   fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   style={{ objectFit: "cover" }}
                   loading={index < 4 ? "eager" : "lazy"}
                 />
@@ -92,7 +92,7 @@ export default function Home() {
           ))}
         </div>
 
-        {artworks.length > 12 && (
+        {artworks.length > 8 && (
           <div style={{ textAlign: "center", marginTop: "60px" }}>
             <Link href="/artworks" className="heroButton">
               Ver todas as {artworks.length} obras →
@@ -117,7 +117,8 @@ export default function Home() {
         <div className="footerLogo">1M2F</div>
         <p>© 2026 Maria França. Todos os direitos reservados.</p>
         <div className="footerLinks">
-          <a href="https://www.instagram.com/1m2f_art_gallery/" target="_blank">Instagram</a>
+          <a href="https://www.instagram.com/1m2f_art_gallery/" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://www.youtube.com/@1M2FArtGallery-MariaFran%C3%A7a" target="_blank" rel="noopener noreferrer">YouTube</a>
           <Link href="/about">Sobre</Link>
           <Link href="/contact">Contato</Link>
         </div>

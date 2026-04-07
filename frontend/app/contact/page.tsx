@@ -5,7 +5,7 @@ import { useState } from "react"
 export default function ContactPage() {
   const [sent, setSent] = useState(false)
 
-  function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: { preventDefault(): void }) {
     e.preventDefault()
     setSent(true)
   }
@@ -30,7 +30,15 @@ export default function ContactPage() {
           </div>
           <div className="contactItem">
             <span>Instagram</span>
-            <a href="https://www.instagram.com/1m2f_art_gallery/" target="_blank">@1m2f_art_gallery</a>
+            <a href="https://www.instagram.com/1m2f_art_gallery/" target="_blank" rel="noopener noreferrer">@1m2f_art_gallery</a>
+          </div>
+          <div className="contactItem">
+            <span>YouTube</span>
+            <a href="https://www.youtube.com/@1M2FArtGallery-MariaFran%C3%A7a" target="_blank" rel="noopener noreferrer">1M2F Art Gallery</a>
+          </div>
+          <div className="contactItem">
+            <span>LinkedIn</span>
+            <a href="https://www.linkedin.com/in/maria-franca-1m2f" target="_blank" rel="noopener noreferrer">Maria França</a>
           </div>
           <div className="contactItem">
             <span>Localização</span>
@@ -40,8 +48,8 @@ export default function ContactPage() {
       </div>
 
       {sent ? (
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "24px", fontWeight: 300, color: "var(--gold)" }}>
+        <div className="contactSent">
+          <p>
             Mensagem enviada.<br />Em breve entraremos em contato.
           </p>
         </div>
