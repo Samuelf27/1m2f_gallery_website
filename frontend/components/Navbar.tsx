@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -15,12 +16,8 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  // Fecha o menu ao trocar de página
-  useEffect(() => {
-    setMenuOpen(false)
-  }, [pathname])
+  useEffect(() => { setMenuOpen(false) }, [pathname])
 
-  // Impede scroll do body quando menu está aberto
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : ""
     return () => { document.body.style.overflow = "" }
@@ -35,22 +32,25 @@ export default function Navbar() {
 
   return (
     <header className={`navbar ${scrolled ? "scrolled" : ""}`}>
-      <Link href="/" className="logo">1M2F</Link>
+      <Link href="/" className="logo">
+        <Image
+          src="/logo.png"
+          alt="1M2F Gallery"
+          width={72}
+          height={28}
+          priority
+          style={{ objectFit: "contain", objectPosition: "left center" }}
+        />
+      </Link>
 
-      {/* Desktop nav */}
       <nav className="navDesktop">
         {links.map(({ href, label }) => (
-          <Link
-            key={href}
-            href={href}
-            className={pathname === href ? "active" : ""}
-          >
+          <Link key={href} href={href} className={pathname === href ? "active" : ""}>
             {label}
           </Link>
         ))}
       </nav>
 
-      {/* Hamburger */}
       <button
         type="button"
         className={`hamburger ${menuOpen ? "open" : ""}`}
@@ -62,15 +62,10 @@ export default function Navbar() {
         <span />
       </button>
 
-      {/* Mobile menu overlay */}
       {menuOpen && (
         <nav className="navMobile">
           {links.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className={pathname === href ? "active" : ""}
-            >
+            <Link key={href} href={href} className={pathname === href ? "active" : ""}>
               {label}
             </Link>
           ))}

@@ -10,11 +10,12 @@ import Image from "next/image"
 
 export default function Home() {
   const [artworks, setArtworks] = useState<Artwork[]>([])
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [videoPlaying, setVideoPlaying] = useState(false)
   const carouselRef = useRef<HTMLDivElement>(null)
+  const heroRef = useRef<HTMLElement>(null)
+  const bgRef = useRef<HTMLDivElement>(null)
+  const textRef = useRef<HTMLDivElement>(null)
 
-  // Busca obras
   useEffect(() => {
     getArtworks().then(setArtworks).catch(() => {})
   }, [])
@@ -22,32 +23,38 @@ export default function Home() {
   // Scroll animations via IntersectionObserver
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible")
-          }
-        })
-      },
-      { threshold: 0.12 }
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("visible") }),
+      { threshold: 0.1 }
     )
     document.querySelectorAll(".anim").forEach((el) => observer.observe(el))
     return () => observer.disconnect()
   }, [artworks])
 
-  // Parallax do mouse no hero
+  // Parallax de alta precisão: relativo ao centro do hero
   function handleMouseMove(e: React.MouseEvent<HTMLElement>) {
-    const x = (e.clientX / window.innerWidth - 0.5) * 28
-    const y = (e.clientY / window.innerHeight - 0.5) * 28
-    setMousePos({ x, y })
+    const rect = heroRef.current?.getBoundingClientRect()
+    if (!rect) return
+    const x = (e.clientX - rect.left) / rect.width - 0.5   // -0.5 a 0.5
+    const y = (e.clientY - rect.top)  / rect.height - 0.5
+
+    // DOM direto: sem re-render, melhor performance para animações
+    bgRef.current?.style.setProperty("--parallax-x", `${x * 36}px`)
+    bgRef.current?.style.setProperty("--parallax-y", `${y * 36}px`)
+    textRef.current?.style.setProperty("--text-x", `${x * -10}px`)
+    textRef.current?.style.setProperty("--text-y", `${y * -10}px`)
   }
 
-  // Navegação do carrossel
+  function handleMouseLeave() {
+    bgRef.current?.style.setProperty("--parallax-x", "0px")
+    bgRef.current?.style.setProperty("--parallax-y", "0px")
+    textRef.current?.style.setProperty("--text-x", "0px")
+    textRef.current?.style.setProperty("--text-y", "0px")
+  }
+
   function scrollCarousel(dir: "left" | "right") {
     if (!carouselRef.current) return
-    const amount = carouselRef.current.clientWidth * 0.75
     carouselRef.current.scrollBy({
-      left: dir === "right" ? amount : -amount,
+      left: dir === "right" ? carouselRef.current.clientWidth * 0.75 : -(carouselRef.current.clientWidth * 0.75),
       behavior: "smooth",
     })
   }
@@ -55,52 +62,47 @@ export default function Home() {
   return (
     <main>
 
-      {/* ─── HERO ─────────────────────────────────────────────── */}
-      <section className="hero heroCentered" onMouseMove={handleMouseMove}>
-        <div
-          className="heroBg"
-          style={{
-            "--parallax-x": `${mousePos.x * 0.35}px`,
-            "--parallax-y": `${mousePos.y * 0.35}px`,
-          } as React.CSSProperties}
-        >
+      {/* ─── HERO ──────────────────────────────────────────── */}
+      <section
+        ref={heroRef}
+        className="hero"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
+        {/* Imagem com parallax de fundo */}
+        <div ref={bgRef} className="heroBg">
           <Image
-            src="https://1m2f.b-cdn.net/wp-content/uploads/2025/08/23-scaled.jpg"
-            alt="1M2F Gallery"
+            src="/hero.png"
+            alt="1M2F Gallery — Ateliê"
             fill
             priority
             sizes="100vw"
-            style={{ objectFit: "cover" }}
+            style={{ objectFit: "cover", objectPosition: "center center" }}
           />
         </div>
-        <div className="heroBgOverlay heroCenteredOverlay" />
 
-        <div className="heroCenter">
-          <div className="heroLogo">
-            <Image
-              src="/logo.png"
-              alt="1M2F Gallery"
-              width={320}
-              height={120}
-              priority
-              style={{ objectFit: "contain" }}
-            />
-          </div>
+        {/* Overlay gradiente: forte à esquerda para legibilidade */}
+        <div className="heroBgOverlay" />
+
+        {/* Texto à esquerda com counter-parallax */}
+        <div ref={textRef} className="heroText heroAnimated">
           <div className="heroTag">Arte contemporânea · São Paulo</div>
+          <h1 className="heroTitle">
+            1M2F<br /><span>Gallery</span>
+          </h1>
           <p className="heroSubtitle">
             A galeria de Maria França — mais de 6.000 obras em acrílico, tela, porcelana e aço.
           </p>
-          <a href="#colecao" className="heroButton heroButtonLarge">
+          <a href="#colecao" className="heroButton heroButtonPulse">
             Explorar coleção →
           </a>
         </div>
 
-        <div className="heroScroll">
-          <span />
-        </div>
+        {/* Indicador de scroll */}
+        <div className="heroScroll"><span /></div>
       </section>
 
-      {/* ─── CARROSSEL ────────────────────────────────────────── */}
+      {/* ─── CARROSSEL ─────────────────────────────────────── */}
       <section id="colecao" className="carouselSection">
         <div className="sectionHeader carouselSectionHeader anim">
           <h2>Coleção em destaque</h2>
@@ -108,14 +110,7 @@ export default function Home() {
         </div>
 
         <div className="carouselWrapper">
-          <button
-            type="button"
-            className="carouselBtn carouselBtnLeft"
-            onClick={() => scrollCarousel("left")}
-            aria-label="Anterior"
-          >
-            ←
-          </button>
+          <button type="button" className="carouselBtn carouselBtnLeft" onClick={() => scrollCarousel("left")} aria-label="Anterior">←</button>
 
           <div className="carouselTrack" ref={carouselRef}>
             {artworks.map((art) => (
@@ -137,26 +132,17 @@ export default function Home() {
             ))}
           </div>
 
-          <button
-            type="button"
-            className="carouselBtn carouselBtnRight"
-            onClick={() => scrollCarousel("right")}
-            aria-label="Próximo"
-          >
-            →
-          </button>
+          <button type="button" className="carouselBtn carouselBtnRight" onClick={() => scrollCarousel("right")} aria-label="Próximo">→</button>
         </div>
 
         {artworks.length > 0 && (
           <div className="carouselFooter anim">
-            <Link href="/artworks" className="heroButton">
-              Ver todas as {artworks.length} obras →
-            </Link>
+            <Link href="/artworks" className="heroButton">Ver todas as {artworks.length} obras →</Link>
           </div>
         )}
       </section>
 
-      {/* ─── VÍDEO ────────────────────────────────────────────── */}
+      {/* ─── VÍDEO ─────────────────────────────────────────── */}
       <section className="videoSection">
         <div className="sectionHeader videoSectionHeader anim">
           <h2>Arte em movimento</h2>
@@ -172,14 +158,9 @@ export default function Home() {
               title="1M2F Art Gallery"
             />
           ) : (
-            <button
-              type="button"
-              className="videoThumb"
-              onClick={() => setVideoPlaying(true)}
-              aria-label="Reproduzir vídeo"
-            >
+            <button type="button" className="videoThumb" onClick={() => setVideoPlaying(true)} aria-label="Reproduzir vídeo">
               <Image
-                src="https://1m2f.b-cdn.net/wp-content/uploads/2025/08/23-scaled.jpg"
+                src="https://img.youtube.com/vi/TB5uBxVcP78/maxresdefault.jpg"
                 alt="Reproduzir vídeo"
                 fill
                 sizes="(max-width: 768px) 100vw, 960px"
@@ -187,18 +168,16 @@ export default function Home() {
               />
               <div className="videoThumbOverlay" />
               <div className="playButton">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
               </div>
             </button>
           )}
         </div>
       </section>
 
-      {/* ─── SOBRE ────────────────────────────────────────────── */}
+      {/* ─── SOBRE ─────────────────────────────────────────── */}
       <section className="homeAbout">
-        <div className="homeAboutImage anim">
+        <div className="homeAboutImage anim anim--left">
           <Image
             src="https://1m2f.b-cdn.net/wp-content/uploads/2024/03/maria-1512x1512-1.jpeg"
             alt="Maria França"
@@ -207,33 +186,30 @@ export default function Home() {
             style={{ objectFit: "cover", filter: "grayscale(10%)" }}
           />
         </div>
-
-        <div className="homeAboutText anim">
+        <div className="homeAboutText anim anim--right">
           <div className="aboutTag">A artista</div>
           <h2>Maria<br /><em>França</em></h2>
           <p>
-            Brasileira, nascida em 1969, São Paulo. Com vivências em quatro continentes e mais de 6.000 obras criadas, Maria François une técnica e sentimento para transformar espaços em experiências únicas.
+            Brasileira, nascida em 1969, São Paulo. Com vivências em quatro continentes e mais de 6.000 obras criadas, une técnica e sentimento para transformar espaços em experiências únicas.
           </p>
-          <Link href="/about" className="heroButton">
-            Conhecer a artista →
-          </Link>
+          <Link href="/about" className="heroButton">Conhecer a artista →</Link>
         </div>
       </section>
 
-      {/* ─── CTA ──────────────────────────────────────────────── */}
+      {/* ─── CTA ───────────────────────────────────────────── */}
       <section className="ctaSection anim">
         <div className="ctaContent">
           <h2>Arte que <em>transforma</em><br />ambientes</h2>
           <p>Descubra a coleção completa de Maria França</p>
         </div>
-        <Link href="/artworks" className="ctaLink">
-          Ver todas as obras →
-        </Link>
+        <Link href="/artworks" className="ctaLink">Ver todas as obras →</Link>
       </section>
 
-      {/* ─── FOOTER ───────────────────────────────────────────── */}
+      {/* ─── FOOTER ────────────────────────────────────────── */}
       <footer className="footer">
-        <div className="footerLogo">1M2F</div>
+        <div className="footerLogo">
+          <Image src="/logo.png" alt="1M2F Gallery" width={52} height={20} style={{ objectFit: "contain", objectPosition: "left center", opacity: 0.4 }} />
+        </div>
         <p>© 2026 Maria França. Todos os direitos reservados.</p>
         <div className="footerLinks">
           <a href="https://www.instagram.com/1m2f_art_gallery/" target="_blank" rel="noopener noreferrer">Instagram</a>

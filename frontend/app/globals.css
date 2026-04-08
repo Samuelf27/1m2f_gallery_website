@@ -128,6 +128,52 @@ body {
 
 .heroCenter .heroSubtitle { text-align: center; }
 
+/* Counter-parallax no texto do hero */
+.heroAnimated {
+  transform: translate(var(--text-x, 0px), var(--text-y, 0px));
+  transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Botão com pulso sutil */
+.heroButtonPulse {
+  position: relative;
+}
+
+.heroButtonPulse::before {
+  content: "";
+  position: absolute;
+  inset: -8px -12px;
+  border: 0.5px solid rgba(201, 169, 110, 0);
+  transition: border-color 0.4s ease, inset 0.4s ease;
+}
+
+.heroButtonPulse:hover::before {
+  border-color: rgba(201, 169, 110, 0.3);
+  inset: -12px -18px;
+}
+
+/* Variantes de animação no scroll */
+.anim--left {
+  transform: translateX(-40px);
+}
+
+.anim--left.visible {
+  transform: translateX(0);
+}
+
+.anim--right {
+  transform: translateX(40px);
+}
+
+.anim--right.visible {
+  transform: translateX(0);
+}
+
+/* 3D tilt nos cards do carrossel */
+.carouselCard {
+  perspective: 900px;
+}
+
 /* Logo no hero */
 .heroLogo {
   margin-bottom: 28px;
@@ -155,22 +201,23 @@ body {
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
+  width: 1px;
+  height: 56px;
+  overflow: hidden;
 }
 
 .heroScroll span {
   display: block;
   width: 1px;
-  height: 56px;
+  height: 100%;
   background: linear-gradient(to bottom, transparent, var(--gold));
   animation: scrollLine 2s ease-in-out infinite;
-  margin: 0 auto;
+  will-change: transform;
 }
 
 @keyframes scrollLine {
-  0%   { transform: scaleY(0); transform-origin: top; }
-  50%  { transform: scaleY(1); transform-origin: top; }
-  51%  { transform: scaleY(1); transform-origin: bottom; }
-  100% { transform: scaleY(0); transform-origin: bottom; }
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
 }
 
 /* ── SCROLL ANIMATIONS ─────────────────────────────────── */
