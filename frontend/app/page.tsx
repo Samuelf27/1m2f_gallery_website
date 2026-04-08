@@ -2,7 +2,7 @@
 
 export const dynamic = "force-dynamic"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { getArtworks } from "../services/api"
 import type { Artwork } from "@/types/artwork.types"
 import Link from "next/link"
@@ -10,90 +10,138 @@ import Image from "next/image"
 
 export default function Home() {
   const [artworks, setArtworks] = useState<Artwork[]>([])
-  const [visible, setVisible] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [videoPlaying, setVideoPlaying] = useState(false)
+  const carouselRef = useRef<HTMLDivElement>(null)
 
+  // Busca obras
   useEffect(() => {
-    getArtworks()
-      .then(setArtworks)
-      .catch(() => setError("Não foi possível carregar as obras."))
-
-    const handleScroll = () => {
-      if (window.scrollY > 120) setVisible(true)
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    getArtworks().then(setArtworks).catch(() => {})
   }, [])
+
+  // Scroll animations via IntersectionObserver
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible")
+          }
+        })
+      },
+      { threshold: 0.12 }
+    )
+    document.querySelectorAll(".anim").forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
+  }, [artworks])
+
+  // Parallax do mouse no hero
+  function handleMouseMove(e: React.MouseEvent<HTMLElement>) {
+    const x = (e.clientX / window.innerWidth - 0.5) * 28
+    const y = (e.clientY / window.innerHeight - 0.5) * 28
+    setMousePos({ x, y })
+  }
+
+  // Navegação do carrossel
+  function scrollCarousel(dir: "left" | "right") {
+    if (!carouselRef.current) return
+    const amount = carouselRef.current.clientWidth * 0.75
+    carouselRef.current.scrollBy({
+      left: dir === "right" ? amount : -amount,
+      behavior: "smooth",
+    })
+  }
 
   return (
     <main>
 
-      {/* HERO — imagem de fundo com texto sobreposto */}
-      <section className="hero">
-        <div className="heroBg">
+      {/* ─── HERO ─────────────────────────────────────────────── */}
+      <section className="hero heroCentered" onMouseMove={handleMouseMove}>
+        <div
+          className="heroBg"
+          style={{
+            "--parallax-x": `${mousePos.x * 0.35}px`,
+            "--parallax-y": `${mousePos.y * 0.35}px`,
+          } as React.CSSProperties}
+        >
           <Image
             src="https://1m2f.b-cdn.net/wp-content/uploads/2025/08/23-scaled.jpg"
-            alt="The Secret of the Seas — Maria França"
+            alt="1M2F Gallery"
             fill
             priority
             sizes="100vw"
             style={{ objectFit: "cover" }}
           />
-          <div className="heroBgOverlay" />
         </div>
+        <div className="heroBgOverlay heroCenteredOverlay" />
 
-        <div className="heroText">
+        <div className="heroCenter">
           <div className="heroTag">Arte contemporânea · São Paulo</div>
           <h1 className="heroTitle">
             1M2F<br /><span>Gallery</span>
           </h1>
           <p className="heroSubtitle">
-            A galeria de Maria França — mais de 6.000 obras em acrílico sobre tela, papel, porcelana e aço. Arte que cria atmosferas únicas e transforma ambientes.
+            A galeria de Maria França — mais de 6.000 obras em acrílico, tela, porcelana e aço.
           </p>
-          <a href="#gallery" className="heroButton">
+          <a href="#colecao" className="heroButton heroButtonLarge">
             Explorar coleção →
           </a>
         </div>
+
+        <div className="heroScroll">
+          <span />
+        </div>
       </section>
 
-      {/* GALERIA */}
-      <section id="gallery" className={`gallery ${visible ? "show" : ""}`}>
-        <div className="sectionHeader">
-          <h2>Coleção</h2>
+      {/* ─── CARROSSEL ────────────────────────────────────────── */}
+      <section id="colecao" className="carouselSection">
+        <div className="sectionHeader carouselSectionHeader anim">
+          <h2>Coleção em destaque</h2>
           <p>Obras selecionadas</p>
         </div>
 
-        {error && <p className="errorMessage">{error}</p>}
+        <div className="carouselWrapper">
+          <button
+            type="button"
+            className="carouselBtn carouselBtnLeft"
+            onClick={() => scrollCarousel("left")}
+            aria-label="Anterior"
+          >
+            ←
+          </button>
 
-        <div className="grid">
-          {artworks.slice(0, 8).map((art, index) => (
-            <Link key={art.id} href={`/artwork/${art.id}`} className="card">
-              <div
-                className={`imageWrapper ${visible ? "fadeUp" : ""}`}
-                style={{ animationDelay: `${index * 0.07}s` }}
-              >
-                <Image
-                  src={art.image_url}
-                  alt={art.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  style={{ objectFit: "cover" }}
-                  loading={index < 4 ? "eager" : "lazy"}
-                />
-                <div className="cardOverlay">
-                  <div className="cardContent">
+          <div className="carouselTrack" ref={carouselRef}>
+            {artworks.map((art) => (
+              <Link key={art.id} href={`/artwork/${art.id}`} className="carouselCard">
+                <div className="carouselCardInner">
+                  <Image
+                    src={art.image_url}
+                    alt={art.title}
+                    fill
+                    sizes="340px"
+                    style={{ objectFit: "cover" }}
+                  />
+                  <div className="carouselCardOverlay">
                     <h3>{art.title}</h3>
                     <span>{art.category}</span>
                   </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            className="carouselBtn carouselBtnRight"
+            onClick={() => scrollCarousel("right")}
+            aria-label="Próximo"
+          >
+            →
+          </button>
         </div>
 
-        {artworks.length > 8 && (
-          <div style={{ textAlign: "center", marginTop: "60px" }}>
+        {artworks.length > 0 && (
+          <div className="carouselFooter anim">
             <Link href="/artworks" className="heroButton">
               Ver todas as {artworks.length} obras →
             </Link>
@@ -101,8 +149,72 @@ export default function Home() {
         )}
       </section>
 
-      {/* CTA */}
-      <section className="ctaSection">
+      {/* ─── VÍDEO ────────────────────────────────────────────── */}
+      <section className="videoSection">
+        <div className="sectionHeader videoSectionHeader anim">
+          <h2>Arte em movimento</h2>
+          <p>Conheça o processo criativo</p>
+        </div>
+
+        <div className="videoWrapper anim">
+          {videoPlaying ? (
+            <iframe
+              src="https://www.youtube.com/embed/TB5uBxVcP78?autoplay=1&rel=0&modestbranding=1"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title="1M2F Art Gallery"
+            />
+          ) : (
+            <button
+              type="button"
+              className="videoThumb"
+              onClick={() => setVideoPlaying(true)}
+              aria-label="Reproduzir vídeo"
+            >
+              <Image
+                src="https://1m2f.b-cdn.net/wp-content/uploads/2025/08/23-scaled.jpg"
+                alt="Reproduzir vídeo"
+                fill
+                sizes="(max-width: 768px) 100vw, 960px"
+                style={{ objectFit: "cover" }}
+              />
+              <div className="videoThumbOverlay" />
+              <div className="playButton">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+            </button>
+          )}
+        </div>
+      </section>
+
+      {/* ─── SOBRE ────────────────────────────────────────────── */}
+      <section className="homeAbout">
+        <div className="homeAboutImage anim">
+          <Image
+            src="https://1m2f.b-cdn.net/wp-content/uploads/2024/03/maria-1512x1512-1.jpeg"
+            alt="Maria França"
+            fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            style={{ objectFit: "cover", filter: "grayscale(10%)" }}
+          />
+        </div>
+
+        <div className="homeAboutText anim">
+          <div className="aboutTag">A artista</div>
+          <h2>Maria<br /><em>França</em></h2>
+          <p>
+            Brasileira, nascida em 1969, São Paulo. Com vivências em quatro continentes e mais de 6.000 obras criadas, Maria François une técnica e sentimento para transformar espaços em experiências únicas.
+          </p>
+          <Link href="/about" className="heroButton">
+            Conhecer a artista →
+          </Link>
+        </div>
+      </section>
+
+      {/* ─── CTA ──────────────────────────────────────────────── */}
+      <section className="ctaSection anim">
         <div className="ctaContent">
           <h2>Arte que <em>transforma</em><br />ambientes</h2>
           <p>Descubra a coleção completa de Maria França</p>
@@ -112,7 +224,7 @@ export default function Home() {
         </Link>
       </section>
 
-      {/* FOOTER */}
+      {/* ─── FOOTER ───────────────────────────────────────────── */}
       <footer className="footer">
         <div className="footerLogo">1M2F</div>
         <p>© 2026 Maria França. Todos os direitos reservados.</p>
