@@ -205,19 +205,6 @@ export default function Home() {
         <Link href="/artworks" className="ctaLink">Ver todas as obras →</Link>
       </section>
 
-      {/* ─── FOOTER ────────────────────────────────────────── */}
-      <footer className="footer">
-        <div className="footerLogo">
-          <Image src="/logo.png" alt="1M2F Gallery" width={52} height={20} style={{ objectFit: "contain", objectPosition: "left center", opacity: 0.4 }} />
-        </div>
-        <p>© 2026 Maria França. Todos os direitos reservados.</p>
-        <div className="footerLinks">
-          <a href="https://www.instagram.com/1m2f_art_gallery/" target="_blank" rel="noopener noreferrer">Instagram</a>
-          <a href="https://www.youtube.com/@1M2FArtGallery-MariaFran%C3%A7a" target="_blank" rel="noopener noreferrer">YouTube</a>
-          <Link href="/about">Sobre</Link>
-          <Link href="/contact">Contato</Link>
-        </div>
-      </footer>
 
     </main>
   )

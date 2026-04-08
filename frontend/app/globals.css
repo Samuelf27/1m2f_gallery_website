@@ -677,84 +677,142 @@ body {
 
 .ctaLink:hover { gap: 20px; }
 
-/* FOOTER */
+/* ── FOOTER ────────────────────────────────────────────── */
 .footer {
-  padding: 48px 80px;
   border-top: 0.5px solid var(--border);
+  padding: 64px 80px 40px;
+}
+
+.footerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 48px;
+  padding-bottom: 48px;
+  border-bottom: 0.5px solid var(--border);
+  gap: 60px;
+}
+
+.footerBrand {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footerTagline {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+}
+
+.footerNav {
+  display: flex;
+  gap: 64px;
+}
+
+.footerNavCol {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.footerNavCol > span {
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 4px;
+}
+
+.footerNavCol a {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.4);
+  transition: color 0.3s;
+}
+
+.footerNavCol a:hover { color: var(--gold); }
+
+.footerBottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.footerLogo {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 18px;
-  letter-spacing: 5px;
-  color: var(--white-dim);
-}
-
-.footer p {
-  font-size: 11px;
-  color: rgba(255,255,255,0.2);
+.footerBottom p {
+  font-size: 10px;
   letter-spacing: 1px;
+  color: rgba(255,255,255,0.15);
 }
 
-.footerLinks {
-  display: flex;
-  gap: 32px;
-}
-
-.footerLinks a {
+.footerLocation {
   font-size: 10px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.25);
-  transition: color 0.3s;
+  color: rgba(255,255,255,0.15);
 }
 
-.footerLinks a:hover { color: var(--gold); }
+/* ── ART PAGE ──────────────────────────────────────────── */
+.artPage {
+  padding-top: 80px;
+  min-height: 100vh;
+}
 
-/* ART PAGE */
-.artPage { padding-top: 80px; }
+.artLayout {
+  display: grid;
+  grid-template-columns: 55fr 45fr;
+  min-height: calc(100vh - 80px);
+}
 
-.artHero {
-  width: 100%;
-  height: 75vh;
+/* Imagem */
+.artImageBlock {
+  position: sticky;
+  top: 80px;
+  height: calc(100vh - 80px);
   overflow: hidden;
-  position: relative;
   background: var(--black-2);
 }
 
-.artHero img {
+.artImageWrapper {
+  position: relative;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  overflow: hidden;
 }
 
-.artHeroOverlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent 60%, var(--black));
+.artImageWrapper img {
+  transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
 }
 
-.artContent {
-  max-width: 960px;
-  margin: auto;
-  padding: 70px 40px 120px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: start;
+.artImageBlock:hover .artImageWrapper img {
+  transform: scale(1.04) !important;
 }
 
-.artHeader { }
+/* Info */
+.artInfoBlock {
+  padding: 64px 64px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  animation: artInfoEntrance 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes artInfoEntrance {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.artInfoBlock .backLink {
+  margin-bottom: 40px;
+}
 
 .artCategory {
   font-size: 10px;
   letter-spacing: 4px;
   text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -768,41 +826,151 @@ body {
   background: var(--gold);
 }
 
-.artHeader h1 {
+.artTitle {
   font-family: 'Cormorant Garamond', serif;
   font-size: 52px;
   font-weight: 300;
-  line-height: 1.1;
-  margin-bottom: 12px;
+  line-height: 1.05;
+  color: var(--white);
+  margin-bottom: 16px;
 }
 
-.artist {
+.artArtist {
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--white-dim);
+  margin-bottom: 28px;
+}
+
+.artMetaRow {
+  display: flex;
+  gap: 32px;
+  padding: 20px 0;
+  border-top: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+  margin-bottom: 32px;
+}
+
+.artMetaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.artMetaLabel {
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.artMetaValue {
   font-size: 13px;
   color: var(--white-dim);
   letter-spacing: 1px;
 }
 
-.artMeta {
-  display: flex;
-  gap: 24px;
-  margin-top: 28px;
-  padding-top: 24px;
-  border-top: 0.5px solid var(--border);
-}
-
-.artMeta span {
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.3);
-}
-
-.artDetails { padding-top: 16px; }
-
 .artDescription {
   font-size: 14px;
-  line-height: 1.9;
+  line-height: 1.95;
   color: var(--white-dim);
+  margin-bottom: 36px;
+}
+
+.artDivider {
+  width: 40px;
+  height: 0.5px;
+  background: var(--gold);
+  opacity: 0.4;
+  margin-bottom: 36px;
+}
+
+/* ── BOTÃO ADQUIRIR OBRA ───────────────────────────────── */
+.acquireBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 36px;
+  overflow: hidden;
+  border: 0.5px solid var(--gold);
+  cursor: pointer;
+  text-decoration: none;
+  width: fit-content;
+  margin-bottom: 20px;
+}
+
+/* Fundo animado que desliza no hover */
+.acquireBtnBg {
+  position: absolute;
+  inset: 0;
+  background: var(--gold);
+  transform: translateX(-101%);
+  transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1);
+  z-index: 0;
+}
+
+.acquireBtn:hover .acquireBtnBg {
+  transform: translateX(0);
+}
+
+.acquireBtnText {
+  position: relative;
+  z-index: 1;
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+  transition: color 0.45s ease;
+}
+
+.acquireBtn:hover .acquireBtnText {
+  color: var(--black);
+}
+
+.acquireBtnIcon {
+  position: relative;
+  z-index: 1;
+  font-size: 14px;
+  color: var(--gold);
+  transition: color 0.45s ease, transform 0.3s ease;
+}
+
+.acquireBtn:hover .acquireBtnIcon {
+  color: var(--black);
+  transform: translateX(4px);
+}
+
+/* Brilho lateral que varre o botão */
+.acquireBtn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+  transform: skewX(-15deg);
+  transition: left 0.6s ease;
+  z-index: 2;
+}
+
+.acquireBtn:hover::after {
+  left: 125%;
+}
+
+.artContactNote {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
 }
 
 /* ARTWORKS PAGE */
@@ -1361,23 +1529,142 @@ body {
   overflow: hidden;
 }
 
-/* ARTWORKS PAGE HEADER */
-.page .sectionHeader {
+/* ── ARTWORKS PAGE ─────────────────────────────────────── */
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
   margin-bottom: 60px;
-  align-items: center;
+  padding-bottom: 24px;
+  border-bottom: 0.5px solid var(--border);
+  gap: 24px;
 }
 
 .page .title {
-  margin-bottom: 0;
+  margin-bottom: 8px;
   padding-bottom: 0;
   border-bottom: none;
   font-size: 42px;
+}
+
+.pageSubtitle {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--white-dim);
 }
 
 /* Na página de coleção o imageWrapper já aparece sem precisar de scroll */
 .page .imageWrapper {
   opacity: 1;
   transform: none;
+}
+
+/* ── ABOUT STATS ───────────────────────────────────────── */
+.aboutStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+}
+
+.aboutStat {
+  padding: 48px 80px;
+  border-right: 0.5px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aboutStat:last-child { border-right: none; }
+
+.aboutStatValue {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 52px;
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.aboutStatLabel {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--white-dim);
+}
+
+/* ── ABOUT CTA ─────────────────────────────────────────── */
+.aboutCta {
+  padding: 100px 80px;
+  border-top: 0.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.aboutCta h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 48px;
+  font-weight: 300;
+  line-height: 1.2;
+  max-width: 500px;
+}
+
+.aboutCta h2 em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+/* ── CONTACT MELHORADO ─────────────────────────────────── */
+.contactDesc {
+  font-size: 13px;
+  color: var(--white-dim);
+  line-height: 1.8;
+  max-width: 360px;
+  margin-bottom: 36px;
+}
+
+.contactItemValue {
+  font-size: 14px;
+  color: var(--white-dim);
+}
+
+.contactFormField {
+  position: relative;
+}
+
+.contactFormNote {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.2);
+  margin-top: -8px;
+}
+
+.contactResetBtn {
+  background: transparent;
+  border: 0.5px solid var(--border);
+  color: var(--white-dim);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.3s;
+  margin-top: 16px;
+}
+
+.contactResetBtn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.contactSentIcon {
+  font-size: 32px;
+  color: var(--gold);
+  margin-bottom: 16px;
+  font-family: 'Cormorant Garamond', serif;
 }
 
 /* HAMBURGER */
@@ -1470,15 +1757,22 @@ body {
 .navMobile a:hover,
 .navMobile a.active { color: var(--gold); }
 
-/* RESPONSIVO */
+/* ── RESPONSIVO ────────────────────────────────────────── */
 @media (max-width: 1024px) {
   .aboutHero { grid-template-columns: 1fr; }
   .aboutHeroImage { display: none; }
-  .artContent { grid-template-columns: 1fr; gap: 40px; }
   .aboutContent { grid-template-columns: 1fr; }
   .aboutBlock { border-right: none; border-bottom: 0.5px solid var(--border); }
+  .aboutStats { grid-template-columns: 1fr; }
+  .aboutStat { border-right: none; border-bottom: 0.5px solid var(--border); padding: 36px 40px; }
+  .aboutCta { flex-direction: column; align-items: flex-start; }
+  .artLayout { grid-template-columns: 1fr; }
+  .artImageBlock { position: relative; top: 0; height: 60vw; }
+  .artInfoBlock { padding: 48px 40px 60px; }
   .contactPage { grid-template-columns: 1fr; gap: 60px; }
   .ctaSection { flex-direction: column; align-items: flex-start; }
+  .footerTop { flex-direction: column; gap: 40px; }
+  .footerNav { gap: 40px; }
 }
 
 @media (max-width: 768px) {
@@ -1486,17 +1780,36 @@ body {
   .navDesktop { display: none; }
   .hamburger { display: flex; }
   .hero { padding: 100px 24px 60px; }
+  .heroCenter .heroTitle { font-size: 52px; }
   .heroTitle { font-size: 48px; }
   .gallery { padding: 80px 24px; }
   .grid { grid-template-columns: 1fr; }
-  .page, .adminPage { padding: 100px 24px 60px; }
+  .page { padding: 100px 24px 60px; }
+  .adminPage { padding: 100px 24px 60px; }
+  .pageHeader { flex-direction: column; align-items: flex-start; gap: 16px; }
   .aboutHeroText { padding: 100px 24px; }
   .aboutTitle { font-size: 42px; }
   .aboutContent { padding: 60px 24px; }
+  .aboutStat { padding: 28px 24px; }
+  .aboutStatValue { font-size: 40px; }
+  .aboutCta { padding: 80px 24px; }
+  .aboutCta h2 { font-size: 36px; }
+  .artImageBlock { height: 70vw; }
+  .artInfoBlock { padding: 40px 24px 60px; }
+  .artTitle { font-size: 38px; }
   .contactPage { padding: 100px 24px 60px; }
   .contactTitle { font-size: 36px; }
-  .footer { padding: 40px 24px; flex-direction: column; gap: 20px; text-align: center; }
-  .footerLinks { flex-wrap: wrap; justify-content: center; gap: 20px; }
+  .footer { padding: 48px 24px 32px; }
+  .footerTop { margin-bottom: 32px; padding-bottom: 32px; }
+  .footerNav { flex-direction: column; gap: 32px; }
+  .footerBottom { flex-direction: column; gap: 8px; text-align: center; }
   .ctaSection { padding: 80px 24px; }
   .ctaContent h2 { font-size: 32px; }
+  .carouselSection { padding: 80px 0; }
+  .carouselSectionHeader { padding: 0 24px; }
+  .carouselTrack { padding: 16px 24px; }
+  .carouselFooter { padding: 0 24px; }
+  .videoSection { padding: 80px 24px; }
+  .homeAbout { padding: 80px 24px; grid-template-columns: 1fr; }
+  .homeAboutImage { height: 60vw; }
 }
