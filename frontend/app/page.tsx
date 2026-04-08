@@ -76,10 +76,17 @@ export default function Home() {
         <div className="heroBgOverlay heroCenteredOverlay" />
 
         <div className="heroCenter">
+          <div className="heroLogo">
+            <Image
+              src="/logo.png"
+              alt="1M2F Gallery"
+              width={320}
+              height={120}
+              priority
+              style={{ objectFit: "contain" }}
+            />
+          </div>
           <div className="heroTag">Arte contemporânea · São Paulo</div>
-          <h1 className="heroTitle">
-            1M2F<br /><span>Gallery</span>
-          </h1>
           <p className="heroSubtitle">
             A galeria de Maria França — mais de 6.000 obras em acrílico, tela, porcelana e aço.
           </p>
