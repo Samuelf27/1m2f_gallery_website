@@ -52,7 +52,7 @@ export default function AboutPage() {
 
         <div className="aboutHeroImage">
           <Image
-            src="https://1m2f.b-cdn.net/wp-content/uploads/2024/03/maria-1512x1512-1.jpeg"
+            src="/images/maria-franca.jpeg"
             alt="Maria França"
             fill
             sizes="50vw"

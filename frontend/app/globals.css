@@ -1813,3 +1813,13 @@ body {
   .homeAbout { padding: 80px 24px; grid-template-columns: 1fr; }
   .homeAboutImage { height: 60vw; }
 }
+
+/* ART CARD */
+.art-card-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+}
+.art-card-image img {
+  object-fit: cover;
+}

@@ -160,7 +160,7 @@ export default function Home() {
           ) : (
             <button type="button" className="videoThumb" onClick={() => setVideoPlaying(true)} aria-label="Reproduzir vídeo">
               <Image
-                src="https://img.youtube.com/vi/TB5uBxVcP78/maxresdefault.jpg"
+                src="/images/video-thumbnail.jpg"
                 alt="Reproduzir vídeo"
                 fill
                 sizes="(max-width: 768px) 100vw, 960px"
@@ -179,7 +179,7 @@ export default function Home() {
       <section className="homeAbout">
         <div className="homeAboutImage anim anim--left">
           <Image
-            src="https://1m2f.b-cdn.net/wp-content/uploads/2024/03/maria-1512x1512-1.jpeg"
+            src="/images/maria-franca.jpeg"
             alt="Maria França"
             fill
             sizes="(max-width: 1024px) 100vw, 50vw"
