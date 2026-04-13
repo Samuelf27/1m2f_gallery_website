@@ -2374,6 +2374,129 @@ body::before {
 
 .errorLink:hover { color: var(--white); }
 
+/* ─── FAVORITES ───────────────────────────────────────────── */
+
+/* Botão coração nos cards */
+.favBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 4;
+  background: rgba(8, 8, 8, 0.65);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgba(240, 237, 232, 0.45);
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease),
+              background 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.card:hover .favBtn,
+.carouselCard:hover .favBtn { opacity: 1; transform: translateY(0); }
+
+.favBtn--active {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  color: var(--gold);
+  border-color: rgba(201, 169, 110, 0.35);
+  background: rgba(8, 8, 8, 0.75);
+}
+
+.favBtn:hover {
+  background: rgba(201, 169, 110, 0.15);
+  border-color: rgba(201, 169, 110, 0.4);
+  color: var(--gold);
+}
+
+.favBtn svg { width: 15px; height: 15px; }
+
+/* Ícone de favoritos na navbar */
+.favNavBtn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: var(--white-dim);
+  transition: color 0.3s;
+  margin-left: 4px;
+}
+
+.favNavBtn:hover,
+.favNavBtn.active { color: var(--gold); }
+
+.favNavBtn svg { width: 17px; height: 17px; }
+
+.favNavCount {
+  position: absolute;
+  top: -7px;
+  right: -9px;
+  background: var(--gold);
+  color: var(--black);
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  line-height: 1;
+}
+
+/* Link de favoritos no menu mobile */
+.navMobileFav {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 40px;
+  font-weight: 300;
+  color: rgba(240, 237, 232, 0.4);
+  letter-spacing: 6px;
+  transition: color 0.35s var(--ease), letter-spacing 0.35s var(--ease);
+}
+
+.navMobileFav:hover { color: var(--white); letter-spacing: 8px; }
+.navMobileFav.active { color: var(--gold); }
+
+/* Estado vazio na página de favoritos */
+.favEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 100px 0 80px;
+  text-align: center;
+}
+
+.favEmptyIcon {
+  color: rgba(201, 169, 110, 0.18);
+  margin-bottom: 8px;
+}
+
+.favEmptyIcon svg { width: 64px; height: 64px; }
+
+.favEmpty p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--white-dim);
+}
+
+.favEmptyHint {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 12px !important;
+  letter-spacing: 0.5px;
+  color: rgba(240, 237, 232, 0.3) !important;
+  margin-top: -8px;
+}
+
 /* ART CARD */
 .art-card-image {
   position: relative;

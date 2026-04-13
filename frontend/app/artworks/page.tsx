@@ -5,6 +5,7 @@ import { getArtworks } from "@/services/api"
 import type { Artwork } from "@/types/artwork.types"
 import Link from "next/link"
 import Image from "next/image"
+import FavoriteButton from "@/components/FavoriteButton"
 
 const PAGE_SIZE = 24
 
@@ -139,6 +140,7 @@ export default function ArtworksPage() {
                       </div>
                     </div>
                   </div>
+                  <FavoriteButton id={art.id} />
                 </Link>
               ))}
             </div>

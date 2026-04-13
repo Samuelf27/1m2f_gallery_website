@@ -5,6 +5,7 @@ import { getArtworks } from "../services/api"
 import type { Artwork } from "@/types/artwork.types"
 import Link from "next/link"
 import Image from "next/image"
+import FavoriteButton from "@/components/FavoriteButton"
 
 const heroStats = [
   { value: "6.000+", label: "Obras criadas" },
@@ -145,6 +146,7 @@ export default function Home() {
                       <span>{art.category}</span>
                     </div>
                   </div>
+                  <FavoriteButton id={art.id} />
                 </Link>
               ))
             )}

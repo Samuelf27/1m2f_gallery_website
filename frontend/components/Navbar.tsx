@@ -4,11 +4,13 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
+import { useFavorites } from "@/context/FavoritesContext"
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const pathname = usePathname()
+  const { count } = useFavorites()
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50)
@@ -49,6 +51,18 @@ export default function Navbar() {
             {label}
           </Link>
         ))}
+
+        <Link
+          href="/favoritos"
+          className={`favNavBtn${pathname === "/favoritos" ? " active" : ""}`}
+          aria-label="Favoritos"
+          title="Favoritos"
+        >
+          <svg viewBox="0 0 24 24" fill={count > 0 ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+          {count > 0 && <span className="favNavCount">{count}</span>}
+        </Link>
       </nav>
 
       <button
@@ -69,6 +83,9 @@ export default function Navbar() {
               {label}
             </Link>
           ))}
+          <Link href="/favoritos" className={`navMobileFav${pathname === "/favoritos" ? " active" : ""}`}>
+            Favoritos {count > 0 && `(${count})`}
+          </Link>
         </nav>
       )}
     </header>

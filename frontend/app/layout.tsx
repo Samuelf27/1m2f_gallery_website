@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import "./globals.css"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
+import { FavoritesProvider } from "@/context/FavoritesContext"
 
 const siteUrl = "https://1m2f-gallery.vercel.app"
 
@@ -40,9 +41,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
-        <Navbar />
-        {children}
-        <Footer />
+        <FavoritesProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </FavoritesProvider>
       </body>
     </html>
   )
