@@ -2512,6 +2512,195 @@ body::before {
 
 .errorLink:hover { color: var(--white); }
 
+/* ─── CARD COMO BOTÃO (modal) ────────────────────────────── */
+.cardBtn {
+  width: 100%;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  text-align: left;
+  display: block;
+}
+
+/* ─── ARTWORK MODAL ───────────────────────────────────────── */
+.artModal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  transition: opacity 0.25s var(--ease);
+  pointer-events: none;
+}
+
+.artModal--visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Backdrop */
+.artModalBackdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 8, 8, 0.88);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+}
+
+/* Painel principal */
+.artModalPanel {
+  position: relative;
+  z-index: 1;
+  background: var(--black-3);
+  border: 0.5px solid var(--border-warm);
+  width: 100%;
+  max-width: 1080px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(32px) scale(0.97);
+  transition: transform 0.3s var(--ease-out);
+}
+
+.artModalPanel--visible {
+  transform: translateY(0) scale(1);
+}
+
+/* Botão fechar */
+.artModalClose {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  background: rgba(8, 8, 8, 0.7);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 0.5px solid var(--border);
+  color: var(--white-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+}
+
+.artModalClose:hover {
+  border-color: var(--border-warm);
+  color: var(--gold);
+  background: rgba(201, 169, 110, 0.1);
+}
+
+.artModalClose svg { width: 16px; height: 16px; }
+
+/* Estado de loading */
+.artModalLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+}
+
+/* Layout interno: imagem + info */
+.artModalInner {
+  display: grid;
+  grid-template-columns: 55fr 45fr;
+  height: 100%;
+  max-height: 90vh;
+}
+
+/* Imagem */
+.artModalImage {
+  position: relative;
+  background: var(--black-2);
+  min-height: 420px;
+  overflow: hidden;
+}
+
+.artModalImage img {
+  transition: transform 0.9s var(--ease-out) !important;
+}
+
+.artModalImage:hover img {
+  transform: scale(1.04) !important;
+}
+
+/* FavoriteButton dentro da imagem do modal */
+.artModalImage .favBtn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Info (lado direito) */
+.artModalInfo {
+  padding: 52px 48px 40px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.artModalInfo::-webkit-scrollbar { width: 4px; }
+.artModalInfo::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* Link para página completa */
+.artModalFullLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(240, 237, 232, 0.3);
+  transition: color 0.3s, gap 0.3s var(--ease);
+  border: none;
+  background: transparent;
+}
+
+.artModalFullLink:hover {
+  color: var(--white-dim);
+  gap: 14px;
+}
+
+/* ─── MODAL RESPONSIVO ────────────────────────────────────── */
+@media (max-width: 768px) {
+  .artModal { padding: 0; align-items: flex-end; }
+
+  .artModalPanel {
+    max-width: 100%;
+    max-height: 95vh;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    transform: translateY(100%);
+  }
+
+  .artModalPanel--visible { transform: translateY(0); }
+
+  .artModalInner {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+    max-height: 95vh;
+  }
+
+  .artModalImage { min-height: 60vw; }
+
+  .artModalInfo {
+    padding: 32px 24px 40px;
+    overflow-y: visible;
+  }
+}
+
 /* ─── FAVORITES ───────────────────────────────────────────── */
 
 /* Botão coração nos cards */

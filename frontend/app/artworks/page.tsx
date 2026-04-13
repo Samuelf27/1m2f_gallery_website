@@ -1,11 +1,13 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState, Suspense } from "react"
+import { useSearchParams, useRouter } from "next/navigation"
 import { getArtworks } from "@/services/api"
 import type { Artwork } from "@/types/artwork.types"
 import Link from "next/link"
 import Image from "next/image"
 import FavoriteButton from "@/components/FavoriteButton"
+import ArtworkModal from "@/components/ArtworkModal"
 
 const PAGE_SIZE = 24
 
@@ -18,15 +20,20 @@ const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: "za",     label: "Z → A"        },
 ]
 
-export default function ArtworksPage() {
-  const [artworks, setArtworks]   = useState<Artwork[]>([])
-  const [loading, setLoading]     = useState(true)
-  const [error, setError]         = useState(false)
-  const [search, setSearch]       = useState("")
-  const [category, setCategory]   = useState("Todas")
-  const [sort, setSort]           = useState<SortKey>("newest")
-  const [gridCols, setGridCols]   = useState<2 | 3>(2)
-  const [page, setPage]           = useState(1)
+/* ─── Componente interno que usa useSearchParams ──────────── */
+function GalleryContent() {
+  const router       = useRouter()
+  const searchParams = useSearchParams()
+  const obraId       = searchParams.get("obra")
+
+  const [artworks, setArtworks] = useState<Artwork[]>([])
+  const [loading, setLoading]   = useState(true)
+  const [error, setError]       = useState(false)
+  const [search, setSearch]     = useState("")
+  const [category, setCategory] = useState("Todas")
+  const [sort, setSort]         = useState<SortKey>("newest")
+  const [gridCols, setGridCols] = useState<2 | 3>(2)
+  const [page, setPage]         = useState(1)
 
   useEffect(() => {
     getArtworks()
@@ -70,16 +77,16 @@ export default function ArtworksPage() {
   function handleSort(value: SortKey)   { setSort(value);     setPage(1) }
 
   function clearFilters() {
-    setSearch("")
-    setCategory("Todas")
-    setSort("newest")
-    setPage(1)
+    setSearch(""); setCategory("Todas"); setSort("newest"); setPage(1)
+  }
+
+  function openModal(id: number) {
+    router.push(`/artworks?obra=${id}`, { scroll: false })
   }
 
   return (
-    <main className="page">
-
-      {/* ─── HEADER ───────────────────────────────────────────── */}
+    <>
+      {/* ─── HEADER ─────────────────────────────────────────── */}
       <div className="pageHeader">
         <div>
           <h1 className="title">Coleção</h1>
@@ -91,14 +98,12 @@ export default function ArtworksPage() {
         </div>
 
         <div className="pageHeaderActions">
-          {/* Toggle de colunas */}
           <div className="gridToggle" role="group" aria-label="Colunas do grid">
             <button
               type="button"
               className={`gridToggleBtn${gridCols === 2 ? " active" : ""}`}
               onClick={() => setGridCols(2)}
-              aria-label="2 colunas"
-              title="2 colunas"
+              aria-label="2 colunas" title="2 colunas"
             >
               <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
                 <rect x="0" y="0" width="7" height="7" rx="0.5" />
@@ -111,8 +116,7 @@ export default function ArtworksPage() {
               type="button"
               className={`gridToggleBtn${gridCols === 3 ? " active" : ""}`}
               onClick={() => setGridCols(3)}
-              aria-label="3 colunas"
-              title="3 colunas"
+              aria-label="3 colunas" title="3 colunas"
             >
               <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
                 <rect x="0"  y="0" width="4" height="7" rx="0.5" />
@@ -124,15 +128,12 @@ export default function ArtworksPage() {
               </svg>
             </button>
           </div>
-
           <Link href="/contact" className="heroButton">Adquirir uma obra →</Link>
         </div>
       </div>
 
-      {/* ─── FILTROS ──────────────────────────────────────────── */}
+      {/* ─── FILTROS ────────────────────────────────────────── */}
       <div className="galleryFilters">
-
-        {/* Linha 1: busca + ordenação */}
         <div className="galleryFilterRow">
           <div className="gallerySearchWrapper">
             <svg className="gallerySearchIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -162,31 +163,24 @@ export default function ArtworksPage() {
           </div>
         </div>
 
-        {/* Linha 2: categorias + limpar */}
         <div className="galleryFilterBottom">
           <div className="galleryCats">
             {categories.map((cat) => (
-              <button
-                key={cat}
-                type="button"
+              <button key={cat} type="button"
                 className={`galleryCatBtn${category === cat ? " active" : ""}`}
                 onClick={() => handleCategory(cat)}
-              >
-                {cat}
-              </button>
+              >{cat}</button>
             ))}
           </div>
-
           {activeFilters > 0 && (
             <button type="button" className="galleryClearBtn" onClick={clearFilters}>
               Limpar filtros ×
             </button>
           )}
         </div>
-
       </div>
 
-      {/* ─── CARREGAMENTO / ERRO ──────────────────────────────── */}
+      {/* ─── ESTADOS ────────────────────────────────────────── */}
       {loading && (
         <div className="galleryState">
           <div className="gallerySpinner" />
@@ -203,7 +197,7 @@ export default function ArtworksPage() {
         </div>
       )}
 
-      {/* ─── GRID ─────────────────────────────────────────────── */}
+      {/* ─── GRID ───────────────────────────────────────────── */}
       {!loading && !error && (
         <>
           {paginated.length === 0 ? (
@@ -216,17 +210,19 @@ export default function ArtworksPage() {
           ) : (
             <div className={`grid grid--${gridCols}`}>
               {paginated.map((art, index) => (
-                <Link key={art.id} href={`/artwork/${art.id}`} className="card">
+                <button
+                  key={art.id}
+                  type="button"
+                  className="card cardBtn"
+                  onClick={() => openModal(art.id)}
+                  aria-label={`Ver obra: ${art.title}`}
+                >
                   <div className="imageWrapper fadeUp">
                     <Image
                       src={art.image_url}
                       alt={art.title}
                       fill
-                      sizes={
-                        gridCols === 3
-                          ? "(max-width: 768px) 100vw, 33vw"
-                          : "(max-width: 768px) 100vw, 50vw"
-                      }
+                      sizes={gridCols === 3 ? "(max-width: 768px) 100vw, 33vw" : "(max-width: 768px) 100vw, 50vw"}
                       style={{ objectFit: "cover" }}
                       loading={index < 6 ? "eager" : "lazy"}
                     />
@@ -238,20 +234,17 @@ export default function ArtworksPage() {
                     </div>
                   </div>
                   <FavoriteButton id={art.id} />
-                </Link>
+                </button>
               ))}
             </div>
           )}
 
-          {/* ─── PAGINAÇÃO ──────────────────────────────────────── */}
+          {/* ─── PAGINAÇÃO ──────────────────────────────────── */}
           {totalPages > 1 && (
             <div className="pagination">
-              <button
-                type="button"
-                className="paginationBtn"
+              <button type="button" className="paginationBtn"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                aria-label="Página anterior"
+                disabled={currentPage === 1} aria-label="Página anterior"
               >←</button>
 
               {Array.from({ length: totalPages }, (_, i) => i + 1)
@@ -263,29 +256,41 @@ export default function ArtworksPage() {
                 }, [])
                 .map((item, i) =>
                   item === "…" ? (
-                    <span key={`ellipsis-${i}`} className="paginationEllipsis">…</span>
+                    <span key={`ell-${i}`} className="paginationEllipsis">…</span>
                   ) : (
-                    <button
-                      key={item}
-                      type="button"
+                    <button key={item} type="button"
                       className={`paginationBtn${currentPage === item ? " active" : ""}`}
                       onClick={() => setPage(item as number)}
                     >{item}</button>
                   )
                 )}
 
-              <button
-                type="button"
-                className="paginationBtn"
+              <button type="button" className="paginationBtn"
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
-                aria-label="Próxima página"
+                disabled={currentPage === totalPages} aria-label="Próxima página"
               >→</button>
             </div>
           )}
         </>
       )}
 
+      {/* ─── MODAL ──────────────────────────────────────────── */}
+      {obraId && <ArtworkModal id={obraId} />}
+    </>
+  )
+}
+
+/* ─── Página principal ────────────────────────────────────── */
+export default function ArtworksPage() {
+  return (
+    <main className="page">
+      <Suspense fallback={
+        <div className="galleryState" style={{ paddingTop: "160px" }}>
+          <div className="gallerySpinner" />
+        </div>
+      }>
+        <GalleryContent />
+      </Suspense>
     </main>
   )
 }
