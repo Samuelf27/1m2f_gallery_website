@@ -9,13 +9,24 @@ import FavoriteButton from "@/components/FavoriteButton"
 
 const PAGE_SIZE = 24
 
+type SortKey = "newest" | "oldest" | "az" | "za"
+
+const SORT_OPTIONS: { value: SortKey; label: string }[] = [
+  { value: "newest", label: "Mais recente" },
+  { value: "oldest", label: "Mais antigo"  },
+  { value: "az",     label: "A → Z"        },
+  { value: "za",     label: "Z → A"        },
+]
+
 export default function ArtworksPage() {
-  const [artworks, setArtworks] = useState<Artwork[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
-  const [search, setSearch] = useState("")
-  const [category, setCategory] = useState("Todas")
-  const [page, setPage] = useState(1)
+  const [artworks, setArtworks]   = useState<Artwork[]>([])
+  const [loading, setLoading]     = useState(true)
+  const [error, setError]         = useState(false)
+  const [search, setSearch]       = useState("")
+  const [category, setCategory]   = useState("Todas")
+  const [sort, setSort]           = useState<SortKey>("newest")
+  const [gridCols, setGridCols]   = useState<2 | 3>(2)
+  const [page, setPage]           = useState(1)
 
   useEffect(() => {
     getArtworks()
@@ -32,68 +43,150 @@ export default function ArtworksPage() {
     const q = search.trim().toLowerCase()
     return artworks.filter((a) => {
       const matchSearch = !q || a.title.toLowerCase().includes(q) || a.category?.toLowerCase().includes(q)
-      const matchCat = category === "Todas" || a.category === category
+      const matchCat    = category === "Todas" || a.category === category
       return matchSearch && matchCat
     })
   }, [artworks, search, category])
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
-  const currentPage = Math.min(page, totalPages)
-  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+  const sorted = useMemo(() => {
+    return [...filtered].sort((a, b) => {
+      switch (sort) {
+        case "newest": return (parseInt(b.year) || 0) - (parseInt(a.year) || 0)
+        case "oldest": return (parseInt(a.year) || 0) - (parseInt(b.year) || 0)
+        case "az":     return a.title.localeCompare(b.title, "pt-BR")
+        case "za":     return b.title.localeCompare(a.title, "pt-BR")
+        default:       return 0
+      }
+    })
+  }, [filtered, sort])
 
-  function handleSearch(value: string) {
-    setSearch(value)
-    setPage(1)
-  }
+  const activeFilters = (search ? 1 : 0) + (category !== "Todas" ? 1 : 0)
+  const totalPages    = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE))
+  const currentPage   = Math.min(page, totalPages)
+  const paginated     = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
 
-  function handleCategory(value: string) {
-    setCategory(value)
+  function handleSearch(value: string)  { setSearch(value);   setPage(1) }
+  function handleCategory(value: string){ setCategory(value); setPage(1) }
+  function handleSort(value: SortKey)   { setSort(value);     setPage(1) }
+
+  function clearFilters() {
+    setSearch("")
+    setCategory("Todas")
+    setSort("newest")
     setPage(1)
   }
 
   return (
     <main className="page">
 
+      {/* ─── HEADER ───────────────────────────────────────────── */}
       <div className="pageHeader">
         <div>
           <h1 className="title">Coleção</h1>
           <p className="pageSubtitle">
-            {loading ? "Carregando…" : `${filtered.length} obra${filtered.length !== 1 ? "s" : ""} encontrada${filtered.length !== 1 ? "s" : ""}`}
+            {loading
+              ? "Carregando…"
+              : `${sorted.length} obra${sorted.length !== 1 ? "s" : ""} encontrada${sorted.length !== 1 ? "s" : ""}`}
           </p>
         </div>
-        <Link href="/contact" className="heroButton">Adquirir uma obra →</Link>
+
+        <div className="pageHeaderActions">
+          {/* Toggle de colunas */}
+          <div className="gridToggle" role="group" aria-label="Colunas do grid">
+            <button
+              type="button"
+              className={`gridToggleBtn${gridCols === 2 ? " active" : ""}`}
+              onClick={() => setGridCols(2)}
+              aria-label="2 colunas"
+              title="2 colunas"
+            >
+              <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                <rect x="0" y="0" width="7" height="7" rx="0.5" />
+                <rect x="9" y="0" width="7" height="7" rx="0.5" />
+                <rect x="0" y="9" width="7" height="7" rx="0.5" />
+                <rect x="9" y="9" width="7" height="7" rx="0.5" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className={`gridToggleBtn${gridCols === 3 ? " active" : ""}`}
+              onClick={() => setGridCols(3)}
+              aria-label="3 colunas"
+              title="3 colunas"
+            >
+              <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                <rect x="0"  y="0" width="4" height="7" rx="0.5" />
+                <rect x="6"  y="0" width="4" height="7" rx="0.5" />
+                <rect x="12" y="0" width="4" height="7" rx="0.5" />
+                <rect x="0"  y="9" width="4" height="7" rx="0.5" />
+                <rect x="6"  y="9" width="4" height="7" rx="0.5" />
+                <rect x="12" y="9" width="4" height="7" rx="0.5" />
+              </svg>
+            </button>
+          </div>
+
+          <Link href="/contact" className="heroButton">Adquirir uma obra →</Link>
+        </div>
       </div>
 
       {/* ─── FILTROS ──────────────────────────────────────────── */}
       <div className="galleryFilters">
-        <div className="gallerySearchWrapper">
-          <svg className="gallerySearchIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <circle cx="11" cy="11" r="7" /><path d="m16.5 16.5 4 4" />
-          </svg>
-          <input
-            type="search"
-            className="gallerySearch"
-            placeholder="Buscar por título ou categoria…"
-            value={search}
-            onChange={(e) => handleSearch(e.target.value)}
-          />
+
+        {/* Linha 1: busca + ordenação */}
+        <div className="galleryFilterRow">
+          <div className="gallerySearchWrapper">
+            <svg className="gallerySearchIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <circle cx="11" cy="11" r="7" /><path d="m16.5 16.5 4 4" />
+            </svg>
+            <input
+              type="search"
+              className="gallerySearch"
+              placeholder="Buscar por título ou categoria…"
+              value={search}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
+          </div>
+
+          <div className="gallerySortWrapper">
+            <label className="gallerySortLabel" htmlFor="gallery-sort">Ordenar</label>
+            <select
+              id="gallery-sort"
+              className="gallerySort"
+              value={sort}
+              onChange={(e) => handleSort(e.target.value as SortKey)}
+            >
+              {SORT_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        <div className="galleryCats">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              type="button"
-              className={`galleryCatBtn${category === cat ? " active" : ""}`}
-              onClick={() => handleCategory(cat)}
-            >
-              {cat}
+        {/* Linha 2: categorias + limpar */}
+        <div className="galleryFilterBottom">
+          <div className="galleryCats">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                className={`galleryCatBtn${category === cat ? " active" : ""}`}
+                onClick={() => handleCategory(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {activeFilters > 0 && (
+            <button type="button" className="galleryClearBtn" onClick={clearFilters}>
+              Limpar filtros ×
             </button>
-          ))}
+          )}
         </div>
+
       </div>
 
-      {/* ─── ESTADO DE CARREGAMENTO / ERRO ────────────────────── */}
+      {/* ─── CARREGAMENTO / ERRO ──────────────────────────────── */}
       {loading && (
         <div className="galleryState">
           <div className="gallerySpinner" />
@@ -115,13 +208,13 @@ export default function ArtworksPage() {
         <>
           {paginated.length === 0 ? (
             <div className="galleryState">
-              <p>Nenhuma obra encontrada para &ldquo;{search}&rdquo;.</p>
-              <button type="button" className="heroButton" onClick={() => { setSearch(""); setCategory("Todas") }}>
+              <p>Nenhuma obra encontrada{search ? ` para "${search}"` : ""}.</p>
+              <button type="button" className="heroButton" onClick={clearFilters}>
                 Limpar filtros
               </button>
             </div>
           ) : (
-            <div className="grid">
+            <div className={`grid grid--${gridCols}`}>
               {paginated.map((art, index) => (
                 <Link key={art.id} href={`/artwork/${art.id}`} className="card">
                   <div className="imageWrapper fadeUp">
@@ -129,9 +222,13 @@ export default function ArtworksPage() {
                       src={art.image_url}
                       alt={art.title}
                       fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
+                      sizes={
+                        gridCols === 3
+                          ? "(max-width: 768px) 100vw, 33vw"
+                          : "(max-width: 768px) 100vw, 50vw"
+                      }
                       style={{ objectFit: "cover" }}
-                      loading={index < 4 ? "eager" : "lazy"}
+                      loading={index < 6 ? "eager" : "lazy"}
                     />
                     <div className="cardOverlay">
                       <div className="cardContent">
@@ -155,9 +252,7 @@ export default function ArtworksPage() {
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
                 aria-label="Página anterior"
-              >
-                ←
-              </button>
+              >←</button>
 
               {Array.from({ length: totalPages }, (_, i) => i + 1)
                 .filter((p) => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 2)
@@ -175,9 +270,7 @@ export default function ArtworksPage() {
                       type="button"
                       className={`paginationBtn${currentPage === item ? " active" : ""}`}
                       onClick={() => setPage(item as number)}
-                    >
-                      {item}
-                    </button>
+                    >{item}</button>
                   )
                 )}
 
@@ -187,9 +280,7 @@ export default function ArtworksPage() {
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
                 aria-label="Próxima página"
-              >
-                →
-              </button>
+              >→</button>
             </div>
           )}
         </>

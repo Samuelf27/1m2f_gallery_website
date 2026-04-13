@@ -2203,8 +2203,18 @@ body::before {
   margin-bottom: 40px;
 }
 
+/* Linha 1: busca + sort */
+.galleryFilterRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 .gallerySearchWrapper {
   position: relative;
+  flex: 1;
+  min-width: 220px;
   max-width: 480px;
 }
 
@@ -2236,10 +2246,57 @@ body::before {
 .gallerySearch::placeholder { color: var(--white-dim); }
 .gallerySearch:focus { border-color: var(--gold); }
 
+/* Select de ordenação */
+.gallerySortWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.gallerySortLabel {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(240, 237, 232, 0.3);
+  white-space: nowrap;
+}
+
+.gallerySort {
+  background: var(--white-faint);
+  border: 0.5px solid var(--border);
+  color: var(--white-dim);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  padding: 10px 32px 10px 14px;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(240,237,232,0.3)'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.gallerySort:focus { border-color: var(--gold); }
+.gallerySort option { background: var(--black-3); color: var(--white); }
+
+/* Linha 2: categorias + limpar */
+.galleryFilterBottom {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 .galleryCats {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  flex: 1;
 }
 
 .galleryCatBtn {
@@ -2259,6 +2316,87 @@ body::before {
 
 .galleryCatBtn:hover { color: var(--white); border-color: rgba(255,255,255,0.2); }
 .galleryCatBtn.active { background: var(--gold); border-color: var(--gold); color: var(--black); }
+
+/* Botão limpar filtros */
+.galleryClearBtn {
+  background: transparent;
+  border: 0.5px solid rgba(201, 169, 110, 0.25);
+  color: var(--gold);
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.galleryClearBtn:hover {
+  background: var(--gold-dim);
+  border-color: var(--gold);
+}
+
+/* ─── PAGE HEADER ACTIONS ─────────────────────────────── */
+.pageHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
+}
+
+/* ─── GRID TOGGLE ─────────────────────────────────────── */
+.gridToggle {
+  display: flex;
+  border: 0.5px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.gridToggleBtn {
+  background: transparent;
+  border: none;
+  color: rgba(240, 237, 232, 0.3);
+  padding: 8px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  border-right: 0.5px solid var(--border);
+}
+
+.gridToggleBtn:last-child { border-right: none; }
+
+.gridToggleBtn:hover { color: var(--white-dim); background: var(--white-faint); }
+
+.gridToggleBtn.active {
+  color: var(--gold);
+  background: var(--gold-dim);
+}
+
+.gridToggleBtn svg { width: 14px; height: 14px; }
+
+/* ─── GRID VARIANTS ───────────────────────────────────── */
+.grid--2 { grid-template-columns: repeat(2, 1fr); }
+.grid--3 { grid-template-columns: repeat(3, 1fr); }
+
+@media (max-width: 1024px) {
+  .grid--3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .grid--2,
+  .grid--3 { grid-template-columns: 1fr; }
+  .galleryFilterRow { flex-direction: column; align-items: stretch; }
+  .gallerySearchWrapper { max-width: none; }
+  .gallerySortWrapper { justify-content: space-between; }
+  .pageHeaderActions { gap: 14px; }
+  .gridToggle { display: none; }
+}
 
 /* ─── GALLERY STATE (loading / error / empty) ─────────── */
 .galleryState {
