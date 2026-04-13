@@ -6,37 +6,42 @@ import type { Artwork } from "@/types/artwork.types"
 import Link from "next/link"
 import Image from "next/image"
 
+const heroStats = [
+  { value: "6.000+", label: "Obras criadas" },
+  { value: "30+",    label: "Anos de arte" },
+  { value: "4",      label: "Continentes" },
+  { value: "SP",     label: "São Paulo, Brasil" },
+]
+
 export default function Home() {
-  const [artworks, setArtworks] = useState<Artwork[]>([])
+  const [artworks, setArtworks]       = useState<Artwork[]>([])
   const [carouselError, setCarouselError] = useState(false)
-  const [videoPlaying, setVideoPlaying] = useState(false)
+  const [videoPlaying, setVideoPlaying]   = useState(false)
   const carouselRef = useRef<HTMLDivElement>(null)
-  const heroRef = useRef<HTMLElement>(null)
-  const bgRef = useRef<HTMLDivElement>(null)
-  const textRef = useRef<HTMLDivElement>(null)
+  const heroRef     = useRef<HTMLElement>(null)
+  const bgRef       = useRef<HTMLDivElement>(null)
+  const textRef     = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     getArtworks().then(setArtworks).catch(() => setCarouselError(true))
   }, [])
 
-  // Scroll animations via IntersectionObserver
+  // Scroll animations
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("visible") }),
-      { threshold: 0.1 }
+      { threshold: 0.08 }
     )
     document.querySelectorAll(".anim").forEach((el) => observer.observe(el))
     return () => observer.disconnect()
   }, [artworks])
 
-  // Parallax de alta precisão: relativo ao centro do hero
+  // Parallax
   function handleMouseMove(e: React.MouseEvent<HTMLElement>) {
     const rect = heroRef.current?.getBoundingClientRect()
     if (!rect) return
-    const x = (e.clientX - rect.left) / rect.width - 0.5   // -0.5 a 0.5
+    const x = (e.clientX - rect.left) / rect.width - 0.5
     const y = (e.clientY - rect.top)  / rect.height - 0.5
-
-    // DOM direto: sem re-render, melhor performance para animações
     bgRef.current?.style.setProperty("--parallax-x", `${x * 36}px`)
     bgRef.current?.style.setProperty("--parallax-y", `${y * 36}px`)
     textRef.current?.style.setProperty("--text-x", `${x * -10}px`)
@@ -53,7 +58,7 @@ export default function Home() {
   function scrollCarousel(dir: "left" | "right") {
     if (!carouselRef.current) return
     carouselRef.current.scrollBy({
-      left: dir === "right" ? carouselRef.current.clientWidth * 0.75 : -(carouselRef.current.clientWidth * 0.75),
+      left: dir === "right" ? carouselRef.current.clientWidth * 0.8 : -(carouselRef.current.clientWidth * 0.8),
       behavior: "smooth",
     })
   }
@@ -68,22 +73,18 @@ export default function Home() {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
-        {/* Imagem com parallax de fundo */}
         <div ref={bgRef} className="heroBg">
           <Image
             src="/hero.png"
-            alt="1M2F Gallery — Ateliê"
+            alt="1M2F Gallery — Ateliê de Maria França"
             fill
             priority
             sizes="100vw"
             style={{ objectFit: "cover", objectPosition: "center center" }}
           />
         </div>
-
-        {/* Overlay gradiente: forte à esquerda para legibilidade */}
         <div className="heroBgOverlay" />
 
-        {/* Texto à esquerda com counter-parallax */}
         <div ref={textRef} className="heroText heroAnimated">
           <div className="heroTag">Arte contemporânea · São Paulo</div>
           <h1 className="heroTitle">
@@ -97,15 +98,26 @@ export default function Home() {
           </a>
         </div>
 
-        {/* Indicador de scroll */}
         <div className="heroScroll"><span /></div>
       </section>
 
+      {/* ─── STATS STRIP ───────────────────────────────────── */}
+      <div className="heroStrip">
+        {heroStats.map((s) => (
+          <div key={s.label} className="heroStripItem">
+            <span className="heroStripValue">{s.value}</span>
+            <span className="heroStripLabel">{s.label}</span>
+          </div>
+        ))}
+      </div>
+
       {/* ─── CARROSSEL ─────────────────────────────────────── */}
       <section id="colecao" className="carouselSection">
-        <div className="sectionHeader carouselSectionHeader anim">
-          <h2>Coleção em destaque</h2>
-          <p>Obras selecionadas</p>
+        <div className="carouselSectionHeader">
+          <div className="sectionHeader anim">
+            <h2>Coleção em destaque</h2>
+            <p>Obras selecionadas</p>
+          </div>
         </div>
 
         <div className="carouselWrapper">
@@ -147,6 +159,18 @@ export default function Home() {
         )}
       </section>
 
+      {/* ─── MANIFESTO ─────────────────────────────────────── */}
+      <section className="manifestoSection">
+        <blockquote className="manifestoText anim">
+          Arte é perder-se ou encontrar-se em seus próprios pensamentos.<br />
+          É criar, compartilhar a existência e respeitar o Outro.<br />
+          <em>A arte é uma companheira da vida.</em>
+        </blockquote>
+        <p className="manifestoAuthor anim" style={{ "--delay": "150ms" } as React.CSSProperties}>
+          — Maria França
+        </p>
+      </section>
+
       {/* ─── VÍDEO ─────────────────────────────────────────── */}
       <section className="videoSection">
         <div className="sectionHeader videoSectionHeader anim">
@@ -154,19 +178,19 @@ export default function Home() {
           <p>Conheça o processo criativo</p>
         </div>
 
-        <div className="videoWrapper anim">
+        <div className="videoWrapper anim" style={{ "--delay": "100ms" } as React.CSSProperties}>
           {videoPlaying ? (
             <iframe
               src="https://www.youtube.com/embed/TB5uBxVcP78?autoplay=1&rel=0&modestbranding=1"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
-              title="1M2F Art Gallery"
+              title="1M2F Art Gallery — Maria França"
             />
           ) : (
             <button type="button" className="videoThumb" onClick={() => setVideoPlaying(true)} aria-label="Reproduzir vídeo">
               <Image
                 src="/images/video-thumbnail.jpg"
-                alt="Reproduzir vídeo"
+                alt="Reproduzir vídeo de Maria França"
                 fill
                 sizes="(max-width: 768px) 100vw, 960px"
                 style={{ objectFit: "cover" }}
@@ -185,10 +209,10 @@ export default function Home() {
         <div className="homeAboutImage anim anim--left">
           <Image
             src="/images/maria-franca.jpeg"
-            alt="Maria França"
+            alt="Maria França — artista"
             fill
             sizes="(max-width: 1024px) 100vw, 50vw"
-            style={{ objectFit: "cover", filter: "grayscale(10%)" }}
+            style={{ objectFit: "cover", filter: "grayscale(8%)" }}
           />
         </div>
         <div className="homeAboutText anim anim--right">
@@ -205,11 +229,10 @@ export default function Home() {
       <section className="ctaSection anim">
         <div className="ctaContent">
           <h2>Arte que <em>transforma</em><br />ambientes</h2>
-          <p>Descubra a coleção completa de Maria França</p>
+          <p>Cada obra é única. Adquira uma peça de Maria França e leve a arte para o seu espaço.</p>
         </div>
         <Link href="/artworks" className="ctaLink">Ver todas as obras →</Link>
       </section>
-
 
     </main>
   )

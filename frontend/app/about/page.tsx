@@ -20,8 +20,8 @@ export const metadata: Metadata = {
 
 const stats = [
   { value: "6.000+", label: "Obras criadas" },
-  { value: "4", label: "Continentes" },
-  { value: "30+", label: "Anos de arte" },
+  { value: "4",      label: "Continentes" },
+  { value: "30+",    label: "Anos de arte" },
 ]
 
 const blocks = [
@@ -56,7 +56,7 @@ export default function AboutPage() {
           <p className="aboutBio">
             Brasileira, nascida em 1969, São Paulo. Vivências nos EUA, América do Sul, Ásia, Caribe, Arábia Saudita e Europa que, quando refletidas, moldam sua obra e suas criações. Com formação em história, TI e turismo, é uma pessoa multiprofissional e multifuncional.
           </p>
-          <Link href="/contact" className="heroButton" style={{ marginTop: "16px" }}>
+          <Link href="/contact" className="heroButton" style={{ marginTop: "24px" }}>
             Entrar em contato →
           </Link>
         </div>
@@ -67,7 +67,7 @@ export default function AboutPage() {
             alt="Maria França"
             fill
             sizes="50vw"
-            style={{ objectFit: "cover", filter: "grayscale(12%)" }}
+            style={{ objectFit: "cover", filter: "grayscale(10%)" }}
             priority
           />
         </div>
@@ -75,8 +75,8 @@ export default function AboutPage() {
 
       {/* ── Números ────────────────────────────────── */}
       <section className="aboutStats">
-        {stats.map((s) => (
-          <div key={s.label} className="aboutStat">
+        {stats.map((s, i) => (
+          <div key={s.label} className="aboutStat" style={{ "--delay": `${i * 80}ms` } as React.CSSProperties}>
             <div className="aboutStatValue">{s.value}</div>
             <div className="aboutStatLabel">{s.label}</div>
           </div>
@@ -85,8 +85,8 @@ export default function AboutPage() {
 
       {/* ── Blocos ─────────────────────────────────── */}
       <section className="aboutContent">
-        {blocks.map((b) => (
-          <div key={b.label} className="aboutBlock">
+        {blocks.map((b, i) => (
+          <div key={b.label} className="aboutBlock" style={{ "--delay": `${i * 100}ms` } as React.CSSProperties}>
             <div className="aboutBlockLabel">{b.label}</div>
             <h3>{b.title}</h3>
             <p>{b.text}</p>
@@ -96,7 +96,7 @@ export default function AboutPage() {
 
       {/* ── CTA ────────────────────────────────────── */}
       <section className="aboutCta">
-        <h2>Quer uma obra <em>única</em> para o seu espaço?</h2>
+        <h2>Quer uma obra <em>única</em><br />para o seu espaço?</h2>
         <Link href="/contact" className="heroButton">Fale com a artista →</Link>
       </section>
 

@@ -28,7 +28,7 @@ export default function ContactPage() {
     const msg = encodeURIComponent(
       `Olá! Me chamo ${form.name}.\n\nAssunto: ${form.subject || "Contato"}\n\n${form.message}\n\nE-mail para retorno: ${form.email}`
     )
-    window.open(`https://wa.me/5511999449449?text=${msg}`, "_blank")
+    window.open(`${WHATSAPP_URL}?text=${msg}`, "_blank")
 
     setTimeout(() => {
       setSent(true)

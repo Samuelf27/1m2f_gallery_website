@@ -70,6 +70,8 @@ export default async function ArtworkPage({
               priority
             />
           </div>
+          {/* Label "Obra única" */}
+          <div className="artImageLabel">Obra única</div>
         </div>
 
         {/* ── Info ───────────────────────────────────── */}
@@ -93,6 +95,14 @@ export default async function ArtworkPage({
                 <span className="artMetaLabel">Ano</span>
                 <span className="artMetaValue">{art.year}</span>
               </div>
+              <div className="artMetaItem">
+                <span className="artMetaLabel">Origem</span>
+                <span className="artMetaValue">São Paulo, Brasil</span>
+              </div>
+              <div className="artMetaItem">
+                <span className="artMetaLabel">Disponibilidade</span>
+                <span className="artMetaValue artMetaAvailable">Disponível</span>
+              </div>
             </div>
           )}
 
@@ -102,6 +112,28 @@ export default async function ArtworkPage({
 
           <div className="artDivider" />
 
+          {/* Trust strip */}
+          <div className="artTrustStrip">
+            <div className="artTrustItem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Obra original certificada
+            </div>
+            <div className="artTrustItem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Resposta em até 24h
+            </div>
+            <div className="artTrustItem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              Atendimento personalizado
+            </div>
+          </div>
+
           {/* CTA principal */}
           <a
             href={whatsappUrl}
@@ -110,12 +142,12 @@ export default async function ArtworkPage({
             className="acquireBtn"
           >
             <span className="acquireBtnBg" />
-            <span className="acquireBtnText">Adquirir Obra</span>
+            <span className="acquireBtnText">Adquirir esta Obra</span>
             <span className="acquireBtnIcon">→</span>
           </a>
 
           <p className="artContactNote">
-            Resposta em até 24h · Atendimento personalizado
+            Via WhatsApp · Pagamento e envio combinados diretamente com a artista
           </p>
 
         </div>

@@ -5,16 +5,29 @@ import { WHATSAPP_URL } from "@/lib/config"
 export default function Footer() {
   return (
     <footer className="footer">
+
+      {/* ── CTA strip ─────────────────────────────── */}
+      <div className="footerCta">
+        <div className="footerCtaText">
+          <p className="footerCtaLabel">Interessado em uma obra?</p>
+          <p className="footerCtaHeading">Fale diretamente com a artista</p>
+        </div>
+        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="heroButton">
+          Conversar no WhatsApp →
+        </a>
+      </div>
+
       <div className="footerTop">
         <div className="footerBrand">
           <Image
             src="/logo.png"
             alt="1M2F Gallery"
-            width={64}
-            height={24}
-            style={{ objectFit: "contain", objectPosition: "left center", opacity: 0.5 }}
+            width={72}
+            height={28}
+            style={{ objectFit: "contain", objectPosition: "left center", opacity: 0.45 }}
           />
           <p className="footerTagline">Arte que transforma ambientes</p>
+          <p className="footerLocation">São Paulo, Brasil</p>
         </div>
 
         <div className="footerNav">
@@ -35,8 +48,7 @@ export default function Footer() {
       </div>
 
       <div className="footerBottom">
-        <p>© 2026 Maria França. Todos os direitos reservados.</p>
-        <p className="footerLocation">São Paulo, Brasil</p>
+        <p>© 2026 Maria França · 1M2F Gallery. Todos os direitos reservados.</p>
       </div>
     </footer>
   )
