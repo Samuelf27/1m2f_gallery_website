@@ -3,8 +3,19 @@ import Image from "next/image"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Sobre Maria França — 1M2F Gallery",
+  title: "Sobre Maria França",
   description: "Conheça Maria França, artista brasileira com mais de 6.000 obras e vivências em quatro continentes.",
+  openGraph: {
+    title: "Sobre Maria França — 1M2F Gallery",
+    description: "Conheça Maria França, artista brasileira com mais de 6.000 obras e vivências em quatro continentes.",
+    images: [{ url: "/images/maria-franca.jpeg", alt: "Maria França" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sobre Maria França — 1M2F Gallery",
+    description: "Conheça Maria França, artista brasileira com mais de 6.000 obras e vivências em quatro continentes.",
+    images: ["/images/maria-franca.jpeg"],
+  },
 }
 
 const stats = [

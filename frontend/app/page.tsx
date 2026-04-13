@@ -1,7 +1,5 @@
 "use client"
 
-export const dynamic = "force-dynamic"
-
 import { useEffect, useRef, useState } from "react"
 import { getArtworks } from "../services/api"
 import type { Artwork } from "@/types/artwork.types"
@@ -10,6 +8,7 @@ import Image from "next/image"
 
 export default function Home() {
   const [artworks, setArtworks] = useState<Artwork[]>([])
+  const [carouselError, setCarouselError] = useState(false)
   const [videoPlaying, setVideoPlaying] = useState(false)
   const carouselRef = useRef<HTMLDivElement>(null)
   const heroRef = useRef<HTMLElement>(null)
@@ -17,7 +16,7 @@ export default function Home() {
   const textRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    getArtworks().then(setArtworks).catch(() => {})
+    getArtworks().then(setArtworks).catch(() => setCarouselError(true))
   }, [])
 
   // Scroll animations via IntersectionObserver
@@ -113,23 +112,29 @@ export default function Home() {
           <button type="button" className="carouselBtn carouselBtnLeft" onClick={() => scrollCarousel("left")} aria-label="Anterior">←</button>
 
           <div className="carouselTrack" ref={carouselRef}>
-            {artworks.map((art) => (
-              <Link key={art.id} href={`/artwork/${art.id}`} className="carouselCard">
-                <div className="carouselCardInner">
-                  <Image
-                    src={art.image_url}
-                    alt={art.title}
-                    fill
-                    sizes="340px"
-                    style={{ objectFit: "cover" }}
-                  />
-                  <div className="carouselCardOverlay">
-                    <h3>{art.title}</h3>
-                    <span>{art.category}</span>
+            {carouselError ? (
+              <p className="carouselEmpty">Não foi possível carregar as obras. Tente novamente mais tarde.</p>
+            ) : artworks.length === 0 ? (
+              <p className="carouselEmpty">Carregando obras…</p>
+            ) : (
+              artworks.map((art) => (
+                <Link key={art.id} href={`/artwork/${art.id}`} className="carouselCard">
+                  <div className="carouselCardInner">
+                    <Image
+                      src={art.image_url}
+                      alt={art.title}
+                      fill
+                      sizes="340px"
+                      style={{ objectFit: "cover" }}
+                    />
+                    <div className="carouselCardOverlay">
+                      <h3>{art.title}</h3>
+                      <span>{art.category}</span>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))
+            )}
           </div>
 
           <button type="button" className="carouselBtn carouselBtnRight" onClick={() => scrollCarousel("right")} aria-label="Próximo">→</button>

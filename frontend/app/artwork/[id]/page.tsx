@@ -1,7 +1,38 @@
+import type { Metadata } from "next"
 import { getArtwork } from "@/services/api"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { WHATSAPP_NUMBER } from "@/lib/config"
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}): Promise<Metadata> {
+  const { id } = await params
+  try {
+    const art = await getArtwork(id)
+    return {
+      title: `${art.title} — ${art.artist ?? "Maria França"}`,
+      description: art.description ?? `Obra de ${art.artist ?? "Maria França"}${art.year ? `, ${art.year}` : ""}. Categoria: ${art.category}.`,
+      openGraph: {
+        title: art.title,
+        description: art.description ?? `Obra de ${art.artist ?? "Maria França"}`,
+        images: [{ url: art.image_url, alt: art.title }],
+        type: "article",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: art.title,
+        description: art.description ?? `Obra de ${art.artist ?? "Maria França"}`,
+        images: [art.image_url],
+      },
+    }
+  } catch {
+    return { title: "Obra não encontrada" }
+  }
+}
 
 export default async function ArtworkPage({
   params,
@@ -20,7 +51,7 @@ export default async function ArtworkPage({
   const whatsappMsg = encodeURIComponent(
     `Olá! Tenho interesse em adquirir a obra "${art.title}"${art.artist ? ` de ${art.artist}` : ""}. Poderia me dar mais informações?`
   )
-  const whatsappUrl = `https://wa.me/5511999449449?text=${whatsappMsg}`
+  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMsg}`
 
   return (
     <main className="artPage">

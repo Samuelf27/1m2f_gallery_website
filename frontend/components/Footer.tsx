@@ -1,5 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
+import { WHATSAPP_URL } from "@/lib/config"
 
 export default function Footer() {
   return (
@@ -28,7 +29,7 @@ export default function Footer() {
             <span>Redes sociais</span>
             <a href="https://www.instagram.com/1m2f_art_gallery/" target="_blank" rel="noopener noreferrer">Instagram</a>
             <a href="https://www.youtube.com/@1M2FArtGallery-MariaFran%C3%A7a" target="_blank" rel="noopener noreferrer">YouTube</a>
-            <a href="https://wa.me/5511999449449" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">WhatsApp</a>
           </div>
         </div>
       </div>

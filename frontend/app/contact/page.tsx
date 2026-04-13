@@ -1,9 +1,10 @@
 "use client"
 
 import { useState } from "react"
+import { WHATSAPP_URL } from "@/lib/config"
 
 const contactItems = [
-  { label: "Telefone / WhatsApp", value: "+55 11 999 449 449", href: "https://wa.me/5511999449449" },
+  { label: "Telefone / WhatsApp", value: "+55 11 999 449 449", href: WHATSAPP_URL },
   { label: "E-mail", value: "m.franca@1m2f-art-gallery.com", href: "mailto:m.franca@1m2f-art-gallery.com" },
   { label: "Instagram", value: "@1m2f_art_gallery", href: "https://www.instagram.com/1m2f_art_gallery/" },
   { label: "YouTube", value: "1M2F Art Gallery", href: "https://www.youtube.com/@1M2FArtGallery-MariaFran%C3%A7a" },
