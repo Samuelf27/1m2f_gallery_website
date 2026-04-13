@@ -1,20 +1,30 @@
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
+import { SITE_URL } from "@/lib/config"
 
 export const metadata: Metadata = {
   title: "Sobre Maria França",
-  description: "Conheça Maria França, artista brasileira com mais de 6.000 obras e vivências em quatro continentes.",
+  description: "Conheça Maria França — artista brasileira nascida em 1969, com mais de 6.000 obras criadas e vivências em quatro continentes. Arte contemporânea, São Paulo.",
+  keywords: [
+    "Maria França", "artista brasileira", "arte contemporânea São Paulo",
+    "biografia artista", "pintora brasileira", "1M2F Gallery", "sobre a artista",
+  ],
+  alternates: { canonical: `${SITE_URL}/about` },
   openGraph: {
-    title: "Sobre Maria França — 1M2F Gallery",
-    description: "Conheça Maria França, artista brasileira com mais de 6.000 obras e vivências em quatro continentes.",
-    images: [{ url: "/images/maria-franca.jpeg", alt: "Maria França" }],
+    title:       "Sobre Maria França — 1M2F Gallery",
+    description: "Conheça Maria França — artista brasileira com mais de 6.000 obras e vivências em quatro continentes.",
+    url:          `${SITE_URL}/about`,
+    siteName:    "1M2F Gallery",
+    locale:      "pt_BR",
+    type:        "profile",
+    images: [{ url: "/images/maria-franca.jpeg", alt: "Maria França — artista", width: 800, height: 1000 }],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Sobre Maria França — 1M2F Gallery",
-    description: "Conheça Maria França, artista brasileira com mais de 6.000 obras e vivências em quatro continentes.",
-    images: ["/images/maria-franca.jpeg"],
+    card:        "summary_large_image",
+    title:       "Sobre Maria França — 1M2F Gallery",
+    description: "Artista brasileira com mais de 6.000 obras e vivências em quatro continentes.",
+    images:      ["/images/maria-franca.jpeg"],
   },
 }
 

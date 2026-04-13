@@ -3,8 +3,9 @@ import { getArtwork } from "@/services/api"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { WHATSAPP_NUMBER } from "@/lib/config"
+import { WHATSAPP_NUMBER, SITE_URL } from "@/lib/config"
 
+/* ─── METADATA DINÂMICO ────────────────────────────────────── */
 export async function generateMetadata({
   params,
 }: {
@@ -13,20 +14,54 @@ export async function generateMetadata({
   const { id } = await params
   try {
     const art = await getArtwork(id)
+    const artist = art.artist ?? "Maria França"
+    const title  = `${art.title} — ${artist}`
+
+    const description = art.description
+      ? art.description.length > 155
+        ? `${art.description.slice(0, 152).trimEnd()}…`
+        : art.description
+      : `Obra "${art.title}" de ${artist}${art.year ? `, ${art.year}` : ""}. ${art.category ? `Categoria: ${art.category}.` : ""} Galeria 1M2F — São Paulo, Brasil.`
+
+    const keywords = [
+      art.title,
+      artist,
+      art.category,
+      art.year,
+      "arte contemporânea",
+      "galeria de arte",
+      "São Paulo",
+      "1M2F Gallery",
+      "obra original",
+      "pintura brasileira",
+    ].filter(Boolean) as string[]
+
+    const pageUrl = `${SITE_URL}/artwork/${id}`
+
     return {
-      title: `${art.title} — ${art.artist ?? "Maria França"}`,
-      description: art.description ?? `Obra de ${art.artist ?? "Maria França"}${art.year ? `, ${art.year}` : ""}. Categoria: ${art.category}.`,
+      title,
+      description,
+      keywords,
+      alternates: { canonical: pageUrl },
       openGraph: {
-        title: art.title,
-        description: art.description ?? `Obra de ${art.artist ?? "Maria França"}`,
-        images: [{ url: art.image_url, alt: art.title }],
-        type: "article",
+        title:       `${art.title} — 1M2F Gallery`,
+        description,
+        url:         pageUrl,
+        siteName:    "1M2F Gallery",
+        locale:      "pt_BR",
+        type:        "article",
+        images: [{
+          url:    art.image_url,
+          alt:    `${art.title} — ${artist}`,
+          width:  1200,
+          height: 800,
+        }],
       },
       twitter: {
-        card: "summary_large_image",
-        title: art.title,
-        description: art.description ?? `Obra de ${art.artist ?? "Maria França"}`,
-        images: [art.image_url],
+        card:        "summary_large_image",
+        title:       `${art.title} — 1M2F Gallery`,
+        description,
+        images:      [art.image_url],
       },
     }
   } catch {
@@ -34,6 +69,7 @@ export async function generateMetadata({
   }
 }
 
+/* ─── PÁGINA ───────────────────────────────────────────────── */
 export default async function ArtworkPage({
   params,
 }: {
@@ -48,13 +84,58 @@ export default async function ArtworkPage({
     notFound()
   }
 
+  const artist      = art.artist ?? "Maria França"
+  const pageUrl     = `${SITE_URL}/artwork/${id}`
   const whatsappMsg = encodeURIComponent(
     `Olá! Tenho interesse em adquirir a obra "${art.title}"${art.artist ? ` de ${art.artist}` : ""}. Poderia me dar mais informações?`
   )
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMsg}`
 
+  /* JSON-LD — VisualArtwork schema */
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "VisualArtwork",
+    name:        art.title,
+    url:         pageUrl,
+    image:       art.image_url,
+    description: art.description ?? undefined,
+    dateCreated: art.year        ?? undefined,
+    artMedium:   art.category    ?? undefined,
+    creator: {
+      "@type":      "Person",
+      name:          artist,
+      nationality:   "Brazilian",
+      url:           `${SITE_URL}/about`,
+    },
+    isPartOf: {
+      "@type": "ArtGallery",
+      name:    "1M2F Gallery",
+      url:      SITE_URL,
+      address: {
+        "@type":           "PostalAddress",
+        addressLocality:   "São Paulo",
+        addressCountry:    "BR",
+      },
+    },
+    offers: {
+      "@type":        "Offer",
+      availability:   "https://schema.org/InStock",
+      areaServed:     "BR",
+      seller: {
+        "@type": "Person",
+        name:     artist,
+      },
+    },
+  }
+
   return (
     <main className="artPage">
+
+      {/* JSON-LD injetado no head via script */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
       <div className="artLayout">
 
@@ -63,14 +144,14 @@ export default async function ArtworkPage({
           <div className="artImageWrapper">
             <Image
               src={art.image_url}
-              alt={art.title}
+              alt={`${art.title} — ${artist}`}
               fill
               sizes="(max-width: 1024px) 100vw, 55vw"
               style={{ objectFit: "cover" }}
               priority
+              quality={90}
             />
           </div>
-          {/* Label "Obra única" */}
           <div className="artImageLabel">Obra única</div>
         </div>
 
@@ -134,12 +215,13 @@ export default async function ArtworkPage({
             </div>
           </div>
 
-          {/* CTA principal */}
+          {/* CTA */}
           <a
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="acquireBtn"
+            aria-label={`Adquirir a obra "${art.title}" via WhatsApp`}
           >
             <span className="acquireBtnBg" />
             <span className="acquireBtnText">Adquirir esta Obra</span>
