@@ -79,6 +79,7 @@ export default function Home() {
             alt="1M2F Gallery — Ateliê de Maria França"
             fill
             priority
+            quality={95}
             sizes="100vw"
             style={{ objectFit: "cover", objectPosition: "center center" }}
           />
