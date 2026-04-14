@@ -7,21 +7,18 @@ import Link from "next/link"
 import Image from "next/image"
 import { useFavorites } from "@/context/FavoritesContext"
 import FavoriteButton from "@/components/FavoriteButton"
+import { useArtworkHistory } from "@/hooks/useArtworkHistory"
 
 export default function FavoritosPage() {
   const [artworks, setArtworks] = useState<Artwork[]>([])
-  const [loading, setLoading] = useState(true)
-  const [historyIds, setHistoryIds] = useState<number[]>([])
-  const { ids } = useFavorites()
+  const [loading, setLoading]   = useState(true)
+  const { ids }                 = useFavorites()
+  const { historyIds }          = useArtworkHistory()
 
   useEffect(() => {
     getArtworks()
       .then((data) => { setArtworks(data); setLoading(false) })
       .catch(() => setLoading(false))
-    try {
-      const saved: number[] = JSON.parse(localStorage.getItem("1m2f_history") ?? "[]")
-      setHistoryIds(saved)
-    } catch { /* ignore */ }
   }, [])
 
   const favorites = useMemo(

@@ -6,17 +6,18 @@ import Image from "next/image"
 import Link from "next/link"
 import { getArtwork } from "@/services/api"
 import type { Artwork } from "@/types/artwork.types"
-import { WHATSAPP_NUMBER } from "@/lib/config"
+import { buildArtworkWhatsAppUrl } from "@/lib/whatsapp"
+import { useArtworkHistory } from "@/hooks/useArtworkHistory"
 import FavoriteButton from "@/components/FavoriteButton"
 
 export default function ArtworkModal({ id }: { id: string }) {
   const router  = useRouter()
   const infoRef = useRef<HTMLDivElement>(null)
-  const [art, setArt]       = useState<Artwork | null>(null)
+  const [art, setArt]         = useState<Artwork | null>(null)
   const [loading, setLoading] = useState(true)
   const [visible, setVisible] = useState(false)
+  const { addToHistory }      = useArtworkHistory()
 
-  /* Busca a obra */
   useEffect(() => {
     setLoading(true)
     setArt(null)
@@ -24,13 +25,7 @@ export default function ArtworkModal({ id }: { id: string }) {
       .then((data) => {
         setArt(data)
         setLoading(false)
-        // Salva no histórico
-        try {
-          const key = "1m2f_history"
-          const prev: number[] = JSON.parse(localStorage.getItem(key) ?? "[]")
-          const next = [data.id, ...prev.filter((x) => x !== data.id)].slice(0, 20)
-          localStorage.setItem(key, JSON.stringify(next))
-        } catch { /* ignore */ }
+        addToHistory(data.id)
       })
       .catch(() => setLoading(false))
   }, [id])
@@ -79,10 +74,7 @@ export default function ArtworkModal({ id }: { id: string }) {
   const [copied, setCopied] = useState(false)
   const [zoomed, setZoomed] = useState(false)
 
-  const whatsappMsg = art
-    ? encodeURIComponent(`Olá! Tenho interesse em adquirir a obra "${art.title}". Poderia me dar mais informações?`)
-    : ""
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMsg}`
+  const whatsappUrl = art ? buildArtworkWhatsAppUrl(art.title, art.artist) : ""
 
   return (
     <div

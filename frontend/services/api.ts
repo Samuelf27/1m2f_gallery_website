@@ -1,9 +1,5 @@
 import type { Artwork } from "@/types/artwork.types"
-
-const API_URL =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:5000/api/artworks"
-    : "https://onem2f-gallery-website.onrender.com/api/artworks"
+import { API_URL } from "@/lib/config"
 
 export async function getArtworks(): Promise<Artwork[]> {
   const res = await fetch(API_URL + "/")

@@ -148,12 +148,6 @@ body::before {
   overflow: hidden;
 }
 
-/* Variante centrada */
-.heroCentered {
-  justify-content: center;
-  text-align: center;
-}
-
 .heroBg {
   position: absolute;
   inset: 0;
@@ -181,43 +175,11 @@ body::before {
   z-index: 1;
 }
 
-/* Overlay para hero centrado — escurece uniformemente */
-.heroCenteredOverlay {
-  background: linear-gradient(
-    180deg,
-    rgba(8, 8, 8, 0.55) 0%,
-    rgba(8, 8, 8, 0.3) 50%,
-    rgba(8, 8, 8, 0.7) 100%
-  );
-}
-
 .heroText {
   position: relative;
   z-index: 2;
   max-width: 580px;
 }
-
-/* Conteúdo centrado do hero */
-.heroCenter {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 720px;
-  animation: heroEntrance 1.2s ease forwards;
-}
-
-@keyframes heroEntrance {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.heroCenter .heroTag { justify-content: center; }
-
-.heroCenter .heroTitle { text-align: center; font-size: 88px; }
-
-.heroCenter .heroSubtitle { text-align: center; }
 
 /* Counter-parallax no texto do hero */
 .heroAnimated {
@@ -243,46 +205,9 @@ body::before {
   inset: -12px -18px;
 }
 
-/* Variantes de animação no scroll */
-.anim--left {
-  transform: translateX(-40px);
-}
-
-.anim--left.visible {
-  transform: translateX(0);
-}
-
-.anim--right {
-  transform: translateX(40px);
-}
-
-.anim--right.visible {
-  transform: translateX(0);
-}
-
 /* 3D tilt nos cards do carrossel */
 .carouselCard {
   perspective: 900px;
-}
-
-/* Logo no hero */
-.heroLogo {
-  margin-bottom: 28px;
-  display: flex;
-  justify-content: center;
-}
-
-.heroLogo img {
-  max-width: 280px;
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 2px 24px rgba(0,0,0,0.4));
-}
-
-.heroButtonLarge {
-  margin-top: 8px;
-  font-size: 11px;
-  letter-spacing: 4px;
 }
 
 /* Scroll indicator */

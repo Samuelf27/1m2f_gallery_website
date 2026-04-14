@@ -2,11 +2,7 @@
 
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
-
-const API_URL =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:5000/api/artworks"
-    : "https://onem2f-gallery-website.onrender.com/api/artworks"
+import { API_URL } from "@/lib/config"
 
 function authHeaders() {
   return {

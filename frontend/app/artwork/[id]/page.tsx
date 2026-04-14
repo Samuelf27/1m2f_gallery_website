@@ -3,7 +3,8 @@ import { getArtwork, getArtworks } from "@/services/api"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { WHATSAPP_NUMBER, SITE_URL } from "@/lib/config"
+import { SITE_URL } from "@/lib/config"
+import { buildArtworkWhatsAppUrl } from "@/lib/whatsapp"
 import ShareButton from "@/components/ShareButton"
 
 /* ─── METADATA DINÂMICO ────────────────────────────────────── */
@@ -92,10 +93,7 @@ export default async function ArtworkPage({
 
   const artist      = art.artist ?? "Maria França"
   const pageUrl     = `${SITE_URL}/artwork/${id}`
-  const whatsappMsg = encodeURIComponent(
-    `Olá! Tenho interesse em adquirir a obra "${art.title}"${art.artist ? ` de ${art.artist}` : ""}. Poderia me dar mais informações?`
-  )
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMsg}`
+  const whatsappUrl = buildArtworkWhatsAppUrl(art.title, art.artist)
 
   /* JSON-LD — VisualArtwork schema */
   const jsonLd = {
