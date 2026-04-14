@@ -4,7 +4,10 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { logoutAction } from "@/app/admin/actions"
 
-const navItems = [
+type NavLink = { href: string; label: string; icon: string; exact?: boolean }
+type NavGroup = { section: string; links: NavLink[] }
+
+const navItems: NavGroup[] = [
   {
     section: "Principal",
     links: [
