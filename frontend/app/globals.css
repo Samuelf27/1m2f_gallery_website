@@ -642,17 +642,17 @@ body::before {
 
 /* ── SOBRE (home) ──────────────────────────────────────── */
 .homeAbout {
-  padding: 100px 80px;
+  padding: 80px 80px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  grid-template-columns: 5fr 7fr;
+  gap: 64px;
   align-items: center;
   border-top: 0.5px solid var(--border);
 }
 
 .homeAboutImage {
   position: relative;
-  height: 520px;
+  height: 400px;
   overflow: hidden;
 }
 
@@ -2249,8 +2249,8 @@ body::before {
   .carouselCard { width: 280px; height: 380px; }
   .carouselFooter { padding: 0 24px; }
   .videoSection { padding: 80px 24px; }
-  .homeAbout { padding: 80px 24px; grid-template-columns: 1fr; gap: 40px; }
-  .homeAboutImage { height: 65vw; }
+  .homeAbout { padding: 60px 24px; grid-template-columns: 1fr; gap: 32px; }
+  .homeAboutImage { height: 56vw; max-height: 340px; }
   .homeAboutText h2 { font-size: 44px; }
   .manifestoSection { padding: 80px 24px; }
   .manifestoText { font-size: 22px; }
@@ -3214,48 +3214,6 @@ body::before {
   .relatedGrid { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* ─── CUSTOM CURSOR ──────────────────────────────────── */
-@media (hover: hover) {
-  .cursorDot {
-    position: fixed;
-    top: -4px;
-    left: -4px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--gold);
-    pointer-events: none;
-    z-index: 10000;
-    will-change: transform;
-    transition: width 0.2s var(--ease), height 0.2s var(--ease), opacity 0.2s;
-  }
-  .cursorDot--active {
-    width: 12px;
-    height: 12px;
-    top: -6px;
-    left: -6px;
-  }
-  .cursorRing {
-    position: fixed;
-    top: -20px;
-    left: -20px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 1px solid rgba(179, 143, 80, 0.5);
-    pointer-events: none;
-    z-index: 9999;
-    will-change: transform;
-    transition: width 0.25s var(--ease), height 0.25s var(--ease), border-color 0.2s, opacity 0.2s;
-  }
-  .cursorRing--active {
-    width: 52px;
-    height: 52px;
-    top: -26px;
-    left: -26px;
-    border-color: rgba(179, 143, 80, 0.8);
-  }
-}
 
 /* ─── COOKIE BANNER ──────────────────────────────────── */
 .cookieBanner {
