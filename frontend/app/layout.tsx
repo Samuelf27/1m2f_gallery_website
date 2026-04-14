@@ -3,6 +3,7 @@ import "./globals.css"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import { FavoritesProvider } from "@/context/FavoritesContext"
+import PageTransitionWrapper from "@/components/PageTransitionWrapper"
 import { SITE_URL } from "@/lib/config"
 
 export const metadata: Metadata = {
@@ -77,7 +78,9 @@ export default function RootLayout({
         />
         <FavoritesProvider>
           <Navbar />
-          {children}
+          <PageTransitionWrapper>
+            {children}
+          </PageTransitionWrapper>
           <Footer />
         </FavoritesProvider>
       </body>
