@@ -5,6 +5,7 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useFavorites } from "@/context/FavoritesContext"
+import GlobalSearch from "@/components/GlobalSearch"
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -53,6 +54,8 @@ export default function Navbar() {
             {label}
           </Link>
         ))}
+
+        <GlobalSearch />
 
         <Link
           href="/favoritos"

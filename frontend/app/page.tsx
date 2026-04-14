@@ -6,12 +6,57 @@ import type { Artwork } from "@/types/artwork.types"
 import Link from "next/link"
 import Image from "next/image"
 import FavoriteButton from "@/components/FavoriteButton"
+import Newsletter from "@/components/Newsletter"
+
+/* ── Counter hook ─────────────────────────────────────── */
+function useCountUp(target: number, duration = 1800) {
+  const [count, setCount] = useState(0)
+  const ref = useRef<HTMLDivElement>(null)
+  const started = useRef(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true
+          const start = performance.now()
+          function tick(now: number) {
+            const progress = Math.min((now - start) / duration, 1)
+            const ease = 1 - Math.pow(1 - progress, 3) // ease-out-cubic
+            setCount(Math.round(ease * target))
+            if (progress < 1) requestAnimationFrame(tick)
+          }
+          requestAnimationFrame(tick)
+        }
+      },
+      { threshold: 0.5 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [target, duration])
+
+  return { count, ref }
+}
+
+/* ── Stat item ─────────────────────────────────────────── */
+function StatItem({ num, suffix, label }: { num: number; suffix: string; label: string }) {
+  const { count, ref } = useCountUp(num)
+  return (
+    <div ref={ref} className="heroStripItem">
+      <span className="heroStripValue">
+        {num > 999 ? count.toLocaleString("pt-BR") : count}{suffix}
+      </span>
+      <span className="heroStripLabel">{label}</span>
+    </div>
+  )
+}
 
 const heroStats = [
-  { value: "6.000+", label: "Obras criadas" },
-  { value: "30+",    label: "Anos de arte" },
-  { value: "4",      label: "Continentes" },
-  { value: "SP",     label: "São Paulo, Brasil" },
+  { num: 6000, suffix: "+", label: "Obras criadas" },
+  { num: 30,   suffix: "+", label: "Anos de arte"  },
+  { num: 4,    suffix: "",  label: "Continentes"   },
 ]
 
 const testimonials = [
@@ -127,11 +172,12 @@ export default function Home() {
       {/* ─── STATS STRIP ───────────────────────────────────── */}
       <div className="heroStrip">
         {heroStats.map((s) => (
-          <div key={s.label} className="heroStripItem">
-            <span className="heroStripValue">{s.value}</span>
-            <span className="heroStripLabel">{s.label}</span>
-          </div>
+          <StatItem key={s.label} num={s.num} suffix={s.suffix} label={s.label} />
         ))}
+        <div className="heroStripItem">
+          <span className="heroStripValue">SP</span>
+          <span className="heroStripLabel">São Paulo, Brasil</span>
+        </div>
       </div>
 
       {/* ─── CARROSSEL ─────────────────────────────────────── */}
@@ -274,6 +320,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* ─── NEWSLETTER ────────────────────────────────────── */}
+      <Newsletter />
 
       {/* ─── CTA ───────────────────────────────────────────── */}
       <section className="ctaSection anim">

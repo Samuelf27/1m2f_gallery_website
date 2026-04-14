@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { getArtwork } from "@/services/api"
+import { getArtwork, getArtworks } from "@/services/api"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -78,8 +78,13 @@ export default async function ArtworkPage({
   const { id } = await params
 
   let art
+  let related: Awaited<ReturnType<typeof getArtworks>> = []
   try {
-    art = await getArtwork(id)
+    const [artData, all] = await Promise.all([getArtwork(id), getArtworks()])
+    art = artData
+    related = all
+      .filter((a) => a.id !== artData.id && a.category === artData.category)
+      .slice(0, 4)
   } catch {
     notFound()
   }
@@ -234,6 +239,37 @@ export default async function ArtworkPage({
 
         </div>
       </div>
+
+      {/* ── Obras relacionadas ─────────────────────────── */}
+      {related.length > 0 && (
+        <section className="relatedSection">
+          <div className="relatedHeader">
+            <h2 className="relatedTitle">Obras relacionadas</h2>
+            <Link href={`/artworks?categoria=${encodeURIComponent(art.category ?? "")}`} className="relatedSeeAll">
+              Ver mais →
+            </Link>
+          </div>
+          <div className="relatedGrid">
+            {related.map((r) => (
+              <Link key={r.id} href={`/artwork/${r.id}`} className="relatedCard">
+                <div className="relatedCardImage">
+                  <Image
+                    src={r.image_url}
+                    alt={r.title}
+                    fill
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                    style={{ objectFit: "cover" }}
+                  />
+                  <div className="relatedCardOverlay">
+                    <span>{r.title}</span>
+                  </div>
+                </div>
+                <p className="relatedCardLabel">{r.title}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
     </main>
   )

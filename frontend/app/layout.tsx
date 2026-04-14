@@ -7,6 +7,8 @@ import PageTransitionWrapper from "@/components/PageTransitionWrapper"
 import ScrollToTop from "@/components/ScrollToTop"
 import NavigationProgress from "@/components/NavigationProgress"
 import CookieBanner from "@/components/CookieBanner"
+import CustomCursor from "@/components/CustomCursor"
+import { Analytics } from "@vercel/analytics/next"
 import { SITE_URL } from "@/lib/config"
 
 export const metadata: Metadata = {
@@ -88,6 +90,8 @@ export default function RootLayout({
           <Footer />
           <ScrollToTop />
           <CookieBanner />
+          <CustomCursor />
+          <Analytics />
         </FavoritesProvider>
       </body>
     </html>
