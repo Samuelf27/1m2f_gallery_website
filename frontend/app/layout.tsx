@@ -4,6 +4,9 @@ import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import { FavoritesProvider } from "@/context/FavoritesContext"
 import PageTransitionWrapper from "@/components/PageTransitionWrapper"
+import ScrollToTop from "@/components/ScrollToTop"
+import NavigationProgress from "@/components/NavigationProgress"
+import CookieBanner from "@/components/CookieBanner"
 import { SITE_URL } from "@/lib/config"
 
 export const metadata: Metadata = {
@@ -77,11 +80,14 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
         <FavoritesProvider>
+          <NavigationProgress />
           <Navbar />
           <PageTransitionWrapper>
             {children}
           </PageTransitionWrapper>
           <Footer />
+          <ScrollToTop />
+          <CookieBanner />
         </FavoritesProvider>
       </body>
     </html>

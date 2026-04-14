@@ -11,17 +11,30 @@ import FavoriteButton from "@/components/FavoriteButton"
 export default function FavoritosPage() {
   const [artworks, setArtworks] = useState<Artwork[]>([])
   const [loading, setLoading] = useState(true)
+  const [historyIds, setHistoryIds] = useState<number[]>([])
   const { ids } = useFavorites()
 
   useEffect(() => {
     getArtworks()
       .then((data) => { setArtworks(data); setLoading(false) })
       .catch(() => setLoading(false))
+    try {
+      const saved: number[] = JSON.parse(localStorage.getItem("1m2f_history") ?? "[]")
+      setHistoryIds(saved)
+    } catch { /* ignore */ }
   }, [])
 
   const favorites = useMemo(
     () => artworks.filter((a) => ids.includes(a.id)),
     [artworks, ids]
+  )
+
+  const recentlyViewed = useMemo(
+    () => historyIds
+      .map((id) => artworks.find((a) => a.id === id))
+      .filter((a): a is Artwork => !!a && !ids.includes(a.id))
+      .slice(0, 6),
+    [artworks, historyIds, ids]
   )
 
   return (
@@ -84,6 +97,30 @@ export default function FavoritosPage() {
             </Link>
           ))}
         </div>
+      )}
+
+      {/* ─── HISTÓRICO ──────────────────────────────────────── */}
+      {!loading && recentlyViewed.length > 0 && (
+        <section className="recentSection">
+          <h2 className="recentTitle">Vistas recentemente</h2>
+          <div className="recentGrid">
+            {recentlyViewed.map((art) => (
+              <Link key={art.id} href={`/artwork/${art.id}`} className="recentCard">
+                <div className="recentCardImage">
+                  <Image
+                    src={art.image_url}
+                    alt={art.title}
+                    fill
+                    sizes="(max-width: 640px) 50vw, 200px"
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+                <p className="recentCardTitle">{art.title}</p>
+                <p className="recentCardCat">{art.category}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
       )}
 
     </main>

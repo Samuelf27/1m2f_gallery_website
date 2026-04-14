@@ -30,6 +30,7 @@ export default function Navbar() {
     { href: "/artworks",   label: "Galeria"     },
     { href: "/exposicoes", label: "Exposições"  },
     { href: "/about",      label: "Sobre"       },
+    { href: "/faq",        label: "FAQ"         },
     { href: "/contact",    label: "Contato"     },
   ]
 

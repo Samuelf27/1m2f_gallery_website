@@ -35,7 +35,10 @@ export default function Footer() {
             <span>Navegação</span>
             <Link href="/">Home</Link>
             <Link href="/artworks">Galeria</Link>
+            <Link href="/exposicoes">Exposições</Link>
             <Link href="/about">Sobre</Link>
+            <Link href="/faq">FAQ</Link>
+            <Link href="/imprensa">Imprensa</Link>
             <Link href="/contact">Contato</Link>
           </div>
           <div className="footerNavCol">

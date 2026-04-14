@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState, Suspense } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { getArtworks } from "@/services/api"
 import type { Artwork } from "@/types/artwork.types"
@@ -26,14 +26,15 @@ function GalleryContent() {
   const searchParams = useSearchParams()
   const obraId       = searchParams.get("obra")
 
-  const [artworks, setArtworks] = useState<Artwork[]>([])
-  const [loading, setLoading]   = useState(true)
-  const [error, setError]       = useState(false)
-  const [search, setSearch]     = useState("")
-  const [category, setCategory] = useState("Todas")
-  const [sort, setSort]         = useState<SortKey>("newest")
-  const [gridCols, setGridCols] = useState<2 | 3>(2)
-  const [page, setPage]         = useState(1)
+  const [artworks, setArtworks]       = useState<Artwork[]>([])
+  const [loading, setLoading]         = useState(true)
+  const [error, setError]             = useState(false)
+  const [search, setSearch]           = useState("")
+  const [category, setCategory]       = useState("Todas")
+  const [sort, setSort]               = useState<SortKey>("newest")
+  const [gridCols, setGridCols]       = useState<2 | 3>(2)
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+  const sentinelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     getArtworks()
@@ -67,17 +68,35 @@ function GalleryContent() {
     })
   }, [filtered, sort])
 
+  const paginated  = sorted.slice(0, visibleCount)
+  const hasMore    = visibleCount < sorted.length
   const activeFilters = (search ? 1 : 0) + (category !== "Todas" ? 1 : 0)
-  const totalPages    = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE))
-  const currentPage   = Math.min(page, totalPages)
-  const paginated     = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
 
-  function handleSearch(value: string)  { setSearch(value);   setPage(1) }
-  function handleCategory(value: string){ setCategory(value); setPage(1) }
-  function handleSort(value: SortKey)   { setSort(value);     setPage(1) }
+  // Reset visible count when filters/sort change
+  useEffect(() => { setVisibleCount(PAGE_SIZE) }, [search, category, sort])
+
+  // IntersectionObserver for infinite scroll
+  const loadMore = useCallback(() => {
+    setVisibleCount((n) => Math.min(n + PAGE_SIZE, sorted.length))
+  }, [sorted.length])
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+    if (!sentinel) return
+    const observer = new IntersectionObserver(
+      (entries) => { if (entries[0].isIntersecting && hasMore) loadMore() },
+      { rootMargin: "300px" }
+    )
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [hasMore, loadMore])
+
+  function handleSearch(value: string)   { setSearch(value);   }
+  function handleCategory(value: string) { setCategory(value); }
+  function handleSort(value: SortKey)    { setSort(value);     }
 
   function clearFilters() {
-    setSearch(""); setCategory("Todas"); setSort("newest"); setPage(1)
+    setSearch(""); setCategory("Todas"); setSort("newest")
   }
 
   function openModal(id: number) {
@@ -180,11 +199,18 @@ function GalleryContent() {
         </div>
       </div>
 
-      {/* ─── ESTADOS ────────────────────────────────────────── */}
+      {/* ─── SKELETON LOADING ───────────────────────────────── */}
       {loading && (
-        <div className="galleryState">
-          <div className="gallerySpinner" />
-          <p>Carregando obras…</p>
+        <div className={`grid grid--${gridCols}`}>
+          {Array.from({ length: PAGE_SIZE }).map((_, i) => (
+            <div key={i} className="skeletonCard" style={{ "--delay": `${(i % 6) * 60}ms` } as React.CSSProperties}>
+              <div className="skeletonImage" />
+              <div className="skeletonMeta">
+                <div className="skeletonLine skeletonLine--title" />
+                <div className="skeletonLine skeletonLine--sub" />
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
@@ -239,38 +265,10 @@ function GalleryContent() {
             </div>
           )}
 
-          {/* ─── PAGINAÇÃO ──────────────────────────────────── */}
-          {totalPages > 1 && (
-            <div className="pagination">
-              <button type="button" className="paginationBtn"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1} aria-label="Página anterior"
-              >←</button>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter((p) => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 2)
-                .reduce<(number | "…")[]>((acc, p, idx, arr) => {
-                  if (idx > 0 && p - (arr[idx - 1] as number) > 1) acc.push("…")
-                  acc.push(p)
-                  return acc
-                }, [])
-                .map((item, i) =>
-                  item === "…" ? (
-                    <span key={`ell-${i}`} className="paginationEllipsis">…</span>
-                  ) : (
-                    <button key={item} type="button"
-                      className={`paginationBtn${currentPage === item ? " active" : ""}`}
-                      onClick={() => setPage(item as number)}
-                    >{item}</button>
-                  )
-                )}
-
-              <button type="button" className="paginationBtn"
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages} aria-label="Próxima página"
-              >→</button>
-            </div>
-          )}
+          {/* ─── INFINITE SCROLL SENTINEL ───────────────────── */}
+          <div ref={sentinelRef} className="infiniteScrollSentinel">
+            {hasMore && <div className="infiniteScrollSpinner" />}
+          </div>
         </>
       )}
 
@@ -285,8 +283,16 @@ export default function ArtworksPage() {
   return (
     <main className="page">
       <Suspense fallback={
-        <div className="galleryState" style={{ paddingTop: "160px" }}>
-          <div className="gallerySpinner" />
+        <div className="grid grid--2" style={{ padding: "120px 24px 40px" }}>
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div key={i} className="skeletonCard">
+              <div className="skeletonImage" />
+              <div className="skeletonMeta">
+                <div className="skeletonLine skeletonLine--title" />
+                <div className="skeletonLine skeletonLine--sub" />
+              </div>
+            </div>
+          ))}
         </div>
       }>
         <GalleryContent />

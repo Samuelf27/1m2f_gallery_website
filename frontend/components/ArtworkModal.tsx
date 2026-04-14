@@ -21,7 +21,17 @@ export default function ArtworkModal({ id }: { id: string }) {
     setLoading(true)
     setArt(null)
     getArtwork(id)
-      .then((data) => { setArt(data); setLoading(false) })
+      .then((data) => {
+        setArt(data)
+        setLoading(false)
+        // Salva no histórico
+        try {
+          const key = "1m2f_history"
+          const prev: number[] = JSON.parse(localStorage.getItem(key) ?? "[]")
+          const next = [data.id, ...prev.filter((x) => x !== data.id)].slice(0, 20)
+          localStorage.setItem(key, JSON.stringify(next))
+        } catch { /* ignore */ }
+      })
       .catch(() => setLoading(false))
   }, [id])
 
@@ -51,6 +61,23 @@ export default function ArtworkModal({ id }: { id: string }) {
     setVisible(false)
     setTimeout(() => router.push("/artworks", { scroll: false }), 260)
   }
+
+  async function shareArtwork() {
+    if (!art) return
+    const url = `${window.location.origin}/artwork/${art.id}`
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: art.title, text: `Confira esta obra de Maria França: ${art.title}`, url })
+      } catch { /* user cancelled */ }
+    } else {
+      await navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }
+
+  const [copied, setCopied] = useState(false)
+  const [zoomed, setZoomed] = useState(false)
 
   const whatsappMsg = art
     ? encodeURIComponent(`Olá! Tenho interesse em adquirir a obra "${art.title}". Poderia me dar mais informações?`)
@@ -94,7 +121,11 @@ export default function ArtworkModal({ id }: { id: string }) {
           <div className="artModalInner">
 
             {/* Imagem */}
-            <div className="artModalImage">
+            <div
+              className="artModalImage artModalImage--zoomable"
+              onClick={() => setZoomed(true)}
+              title="Clique para ampliar"
+            >
               <Image
                 src={art.image_url}
                 alt={art.title}
@@ -103,8 +134,34 @@ export default function ArtworkModal({ id }: { id: string }) {
                 style={{ objectFit: "cover" }}
                 priority
               />
+              <div className="artZoomHint">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                  <circle cx="11" cy="11" r="7" /><path d="m16.5 16.5 4 4M11 8v6M8 11h6" />
+                </svg>
+              </div>
               <FavoriteButton id={art.id} />
             </div>
+
+            {/* Lightbox */}
+            {zoomed && (
+              <div className="artLightbox" onClick={() => setZoomed(false)} role="dialog" aria-label="Imagem ampliada">
+                <button type="button" className="artLightboxClose" onClick={() => setZoomed(false)} aria-label="Fechar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                    <path d="M18 6 6 18M6 6l12 12" />
+                  </svg>
+                </button>
+                <div className="artLightboxImg" onClick={(e) => e.stopPropagation()}>
+                  <Image
+                    src={art.image_url}
+                    alt={art.title}
+                    fill
+                    sizes="100vw"
+                    style={{ objectFit: "contain" }}
+                    priority
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Info */}
             <div className="artModalInfo" ref={infoRef}>
@@ -171,13 +228,31 @@ export default function ArtworkModal({ id }: { id: string }) {
                 <span className="acquireBtnIcon">→</span>
               </a>
 
-              {/* Link para página completa */}
-              <Link
-                href={`/artwork/${art.id}`}
-                className="artModalFullLink"
-              >
-                Ver página completa →
-              </Link>
+              {/* Ações secundárias */}
+              <div className="artModalActions">
+                <Link href={`/artwork/${art.id}`} className="artModalFullLink">
+                  Ver página completa →
+                </Link>
+                <button
+                  type="button"
+                  className="artShareBtn"
+                  onClick={shareArtwork}
+                  aria-label="Compartilhar obra"
+                  title={copied ? "Link copiado!" : "Compartilhar"}
+                >
+                  {copied ? (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                  ) : (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
+                      <path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" />
+                    </svg>
+                  )}
+                  <span>{copied ? "Copiado!" : "Compartilhar"}</span>
+                </button>
+              </div>
 
             </div>
           </div>
