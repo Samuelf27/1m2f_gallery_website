@@ -33,7 +33,7 @@ const FAQ_DATA: FAQSection[] = [
     items: [
       {
         question: "Como faço para adquirir uma obra?",
-        answer: "Clique em "Adquirir esta Obra" na página da obra desejada para iniciar uma conversa pelo WhatsApp. Nossa equipe responde em até 24 horas com informações de preço, disponibilidade e envio.",
+        answer: 'Clique em "Adquirir esta Obra" na página da obra desejada para iniciar uma conversa pelo WhatsApp. Nossa equipe responde em até 24 horas com informações de preço, disponibilidade e envio.',
       },
       {
         question: "Quais formas de pagamento são aceitas?",
