@@ -2512,6 +2512,126 @@ body::before {
 
 .errorLink:hover { color: var(--white); }
 
+/* ─── DEPOIMENTOS ─────────────────────────────────────────── */
+.testimonialsSection {
+  padding: 120px 80px;
+  border-top: 0.5px solid var(--border);
+  background: var(--black);
+}
+
+.testimonialsSectionHeader {
+  margin-bottom: 64px;
+  padding-bottom: 28px;
+}
+
+.testimonialsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+.testimonialCard {
+  position: relative;
+  padding: 48px 40px;
+  border: 0.5px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  transition: border-color 0.4s var(--ease), background 0.4s var(--ease);
+  overflow: hidden;
+}
+
+.testimonialCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--gold-glow);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+
+.testimonialCard:hover {
+  border-color: var(--border-warm);
+}
+
+.testimonialCard:hover::before { opacity: 1; }
+
+/* Aspas decorativas */
+.testimonialQuoteMark {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 80px;
+  font-weight: 300;
+  line-height: 0.6;
+  color: var(--gold);
+  opacity: 0.25;
+  margin-bottom: 24px;
+  display: block;
+  user-select: none;
+}
+
+/* Texto da citação */
+.testimonialQuote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.75;
+  color: var(--white-dim);
+  flex: 1;
+  margin-bottom: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Linha divisória */
+.testimonialDivider {
+  width: 32px;
+  height: 0.5px;
+  background: var(--gold);
+  opacity: 0.5;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Rodapé do card */
+.testimonialFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  position: relative;
+  z-index: 1;
+}
+
+.testimonialAuthor {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.testimonialMeta {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: rgba(240, 237, 232, 0.3);
+  text-transform: uppercase;
+}
+
+/* Responsivo */
+@media (max-width: 1024px) {
+  .testimonialsSection { padding: 100px 40px; }
+  .testimonialsGrid { grid-template-columns: 1fr; gap: 2px; }
+  .testimonialCard { padding: 40px 36px; }
+}
+
+@media (max-width: 768px) {
+  .testimonialsSection { padding: 80px 24px; }
+  .testimonialCard { padding: 36px 28px; }
+  .testimonialQuote { font-size: 16px; }
+}
+
 /* ─── CARD COMO BOTÃO (modal) ────────────────────────────── */
 .cardBtn {
   width: 100%;

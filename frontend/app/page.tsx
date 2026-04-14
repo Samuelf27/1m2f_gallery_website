@@ -14,6 +14,27 @@ const heroStats = [
   { value: "SP",     label: "São Paulo, Brasil" },
 ]
 
+const testimonials = [
+  {
+    quote: "A obra de Maria França transformou completamente o ambiente do meu escritório. É uma peça que inspira todos que passam por aqui — clientes e colaboradores.",
+    author: "Roberto Almeida",
+    role: "Empresário",
+    city: "São Paulo, SP",
+  },
+  {
+    quote: "Adquiri uma tela e me surpreendi com a profundidade e a emoção transmitidas. O atendimento foi impecável, do primeiro contato até a entrega na minha casa.",
+    author: "Claudia Mendes",
+    role: "Arquiteta de interiores",
+    city: "Rio de Janeiro, RJ",
+  },
+  {
+    quote: "Colecionador há mais de 20 anos, raramente encontro obras que me tocam tão profundamente. Maria França é uma artista verdadeiramente singular.",
+    author: "Fernando Costa",
+    role: "Colecionador de arte",
+    city: "Curitiba, PR",
+  },
+]
+
 export default function Home() {
   const [artworks, setArtworks]       = useState<Artwork[]>([])
   const [carouselError, setCarouselError] = useState(false)
@@ -225,6 +246,32 @@ export default function Home() {
             Brasileira, nascida em 1969, São Paulo. Com vivências em quatro continentes e mais de 6.000 obras criadas, une técnica e sentimento para transformar espaços em experiências únicas.
           </p>
           <Link href="/about" className="heroButton">Conhecer a artista →</Link>
+        </div>
+      </section>
+
+      {/* ─── DEPOIMENTOS ───────────────────────────────────── */}
+      <section className="testimonialsSection">
+        <div className="sectionHeader testimonialsSectionHeader anim">
+          <h2>O que dizem nossos clientes</h2>
+          <p>Depoimentos</p>
+        </div>
+
+        <div className="testimonialsGrid">
+          {testimonials.map((t, i) => (
+            <article
+              key={t.author}
+              className="testimonialCard anim"
+              style={{ "--delay": `${i * 120}ms` } as React.CSSProperties}
+            >
+              <div className="testimonialQuoteMark">&ldquo;</div>
+              <blockquote className="testimonialQuote">{t.quote}</blockquote>
+              <div className="testimonialDivider" />
+              <footer className="testimonialFooter">
+                <span className="testimonialAuthor">{t.author}</span>
+                <span className="testimonialMeta">{t.role} · {t.city}</span>
+              </footer>
+            </article>
+          ))}
         </div>
       </section>
 
