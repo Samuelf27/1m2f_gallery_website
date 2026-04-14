@@ -1,20 +1,17 @@
-"use client"
-
-import { useEffect, useState } from "react"
 import { getExhibitions } from "@/services/api"
-import { deleteExhibitionAction } from "@/app/admin/actions"
 import type { Exhibition } from "@/types/exhibition.types"
 import Link from "next/link"
+import { DeleteExhibitionButton } from "./_components/DeleteExhibitionButton"
 
 const STATUS_LABELS: Record<string, string> = {
-  proxima: "Próxima",
+  proxima:   "Próxima",
   em_cartaz: "Em cartaz",
   encerrada: "Encerrada",
   indefinida: "Sem data",
 }
 
 const STATUS_CLASS: Record<string, string> = {
-  proxima: "adminBadge--gold",
+  proxima:   "adminBadge--gold",
   em_cartaz: "adminBadge--green",
   encerrada: "adminBadge--dim",
   indefinida: "adminBadge--dim",
@@ -26,29 +23,14 @@ function formatDate(dateStr: string | null) {
   return `${d}/${m}/${y}`
 }
 
-export default function AdminExposicoes() {
-  const [exhibitions, setExhibitions] = useState<Exhibition[]>([])
-  const [error, setError] = useState<string | null>(null)
-  const [deletingId, setDeletingId] = useState<number | null>(null)
+export default async function AdminExposicoes() {
+  let exhibitions: Exhibition[] = []
+  let fetchError = false
 
-  useEffect(() => {
-    getExhibitions()
-      .then(setExhibitions)
-      .catch(() => setError("Não foi possível carregar as exposições."))
-  }, [])
-
-  async function handleDelete(id: number, title: string) {
-    if (!window.confirm(`Deseja remover "${title}"?`)) return
-
-    setDeletingId(id)
-    const result = await deleteExhibitionAction(id)
-
-    if ("error" in result) {
-      setError(result.error)
-    } else {
-      setExhibitions((prev) => prev.filter((e) => e.id !== id))
-    }
-    setDeletingId(null)
+  try {
+    exhibitions = await getExhibitions()
+  } catch {
+    fetchError = true
   }
 
   return (
@@ -63,10 +45,12 @@ export default function AdminExposicoes() {
         </Link>
       </div>
 
-      {error && <p className="adminError">{error}</p>}
+      {fetchError && (
+        <p className="adminError">Não foi possível carregar as exposições.</p>
+      )}
 
       <div className="adminList">
-        {exhibitions.length === 0 && !error && (
+        {exhibitions.length === 0 && !fetchError && (
           <p className="adminEmpty">Nenhuma exposição cadastrada.</p>
         )}
         {exhibitions.map((ex) => (
@@ -90,14 +74,7 @@ export default function AdminExposicoes() {
               <Link href={`/admin/exposicoes/${ex.id}`} className="editButton">
                 Editar
               </Link>
-              <button
-                type="button"
-                onClick={() => handleDelete(ex.id, ex.title)}
-                className="deleteButton"
-                disabled={deletingId === ex.id}
-              >
-                {deletingId === ex.id ? "..." : "Deletar"}
-              </button>
+              <DeleteExhibitionButton id={ex.id} title={ex.title} />
             </div>
           </div>
         ))}

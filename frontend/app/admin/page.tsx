@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { getArtworks } from "@/services/api"
-import { getExhibitions } from "@/services/api"
-import { getTestimonials } from "@/services/api"
+import { getArtworks, getExhibitions, getTestimonials } from "@/services/api"
 import type { Artwork } from "@/types/artwork.types"
 import type { Exhibition } from "@/types/exhibition.types"
 import type { Testimonial } from "@/types/testimonial.types"

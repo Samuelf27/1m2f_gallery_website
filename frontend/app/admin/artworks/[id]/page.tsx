@@ -5,6 +5,7 @@ import { getArtwork } from "@/services/api"
 import { updateArtworkAction } from "@/app/admin/actions"
 import type { Artwork } from "@/types/artwork.types"
 import Link from "next/link"
+import Image from "next/image"
 
 const CATEGORIES = ["Pintura", "Escultura", "Fotografia", "Gravura", "Desenho", "Mista", "Digital", "Outra"]
 
@@ -135,6 +136,18 @@ export default function EditArtwork({ params }: { params: Promise<{ id: string }
           <div className="adminFormGroup adminFormGroup--full">
             <label className="adminLabel">URL da Imagem</label>
             <input name="image_url" value={form.image_url} onChange={handleChange} />
+            {form.image_url && (
+              <div className="adminImagePreview">
+                <Image
+                  src={form.image_url}
+                  alt="Preview"
+                  fill
+                  style={{ objectFit: "cover" }}
+                  sizes="260px"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none" }}
+                />
+              </div>
+            )}
           </div>
 
           <div className="adminFormGroup adminFormGroup--full">

@@ -5,12 +5,10 @@ export function middleware(request: NextRequest) {
   const isAdmin = request.cookies.get("admin")?.value
   const isLoginPage = request.nextUrl.pathname === "/admin/login"
 
-  // Se não está logado e não está na página de login → redireciona
   if (!isAdmin && !isLoginPage) {
     return NextResponse.redirect(new URL("/admin/login", request.url))
   }
 
-  // Se já está logado e tenta acessar o login → redireciona pro painel
   if (isAdmin && isLoginPage) {
     return NextResponse.redirect(new URL("/admin", request.url))
   }
@@ -18,7 +16,6 @@ export function middleware(request: NextRequest) {
   return NextResponse.next()
 }
 
-// Aplica o middleware apenas nas rotas /admin/*
 export const config = {
   matcher: ["/admin/:path*"],
 }

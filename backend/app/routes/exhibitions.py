@@ -5,6 +5,8 @@ from extensions import db
 
 exhibitions_bp = Blueprint("exhibitions", __name__)
 
+_MUTABLE_FIELDS = ["title", "subtitle", "start_date", "end_date", "location", "description"]
+
 
 def require_api_key():
     auth = request.headers.get("Authorization", "")
@@ -15,8 +17,12 @@ def require_api_key():
 
 @exhibitions_bp.route("/", methods=["GET"])
 def list_exhibitions():
-    exhibitions = Exhibition.query.order_by(Exhibition.start_date.desc()).all()
-    return jsonify([e.to_dict() for e in exhibitions])
+    status = request.args.get("status")
+    query = Exhibition.query.order_by(Exhibition.start_date.desc())
+    exhibitions = query.all()
+
+    items = [e for e in exhibitions if (e.get_status() == status if status else True)]
+    return jsonify([e.to_dict() for e in items])
 
 
 @exhibitions_bp.route("/<int:id>", methods=["GET"])
@@ -28,16 +34,16 @@ def get_exhibition(id):
 @exhibitions_bp.route("/", methods=["POST"])
 def create_exhibition():
     require_api_key()
-    data = request.get_json()
+    data = request.get_json(silent=True)
 
-    if not data or not data.get("title"):
-        abort(400)
+    if not data or not data.get("title", "").strip():
+        return jsonify({"error": "O campo 'title' é obrigatório"}), 400
 
     exhibition = Exhibition(
-        title=data["title"],
+        title=data["title"].strip(),
         subtitle=data.get("subtitle"),
-        start_date=data.get("start_date"),
-        end_date=data.get("end_date"),
+        start_date=data.get("start_date") or None,
+        end_date=data.get("end_date") or None,
         location=data.get("location"),
         description=data.get("description"),
     )
@@ -50,11 +56,18 @@ def create_exhibition():
 def update_exhibition(id):
     require_api_key()
     exhibition = db.get_or_404(Exhibition, id)
-    data = request.get_json()
+    data = request.get_json(silent=True)
 
-    for field in ["title", "subtitle", "start_date", "end_date", "location", "description"]:
+    if not data:
+        return jsonify({"error": "Nenhum dado enviado"}), 400
+
+    for field in _MUTABLE_FIELDS:
         if field in data:
-            setattr(exhibition, field, data[field])
+            value = data[field]
+            # Treat empty strings as NULL for date fields
+            if field in ("start_date", "end_date") and value == "":
+                value = None
+            setattr(exhibition, field, value)
 
     db.session.commit()
     return jsonify(exhibition.to_dict())

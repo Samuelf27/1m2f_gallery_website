@@ -1,34 +1,16 @@
-"use client"
-
-import { useEffect, useState } from "react"
 import { getTestimonials } from "@/services/api"
-import { deleteTestimonialAction } from "@/app/admin/actions"
 import type { Testimonial } from "@/types/testimonial.types"
 import Link from "next/link"
+import { DeleteTestimonialButton } from "./_components/DeleteTestimonialButton"
 
-export default function AdminDepoimentos() {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
-  const [error, setError] = useState<string | null>(null)
-  const [deletingId, setDeletingId] = useState<number | null>(null)
+export default async function AdminDepoimentos() {
+  let testimonials: Testimonial[] = []
+  let fetchError = false
 
-  useEffect(() => {
-    getTestimonials()
-      .then(setTestimonials)
-      .catch(() => setError("Não foi possível carregar os depoimentos."))
-  }, [])
-
-  async function handleDelete(id: number, name: string) {
-    if (!window.confirm(`Deseja remover o depoimento de "${name}"?`)) return
-
-    setDeletingId(id)
-    const result = await deleteTestimonialAction(id)
-
-    if ("error" in result) {
-      setError(result.error)
-    } else {
-      setTestimonials((prev) => prev.filter((t) => t.id !== id))
-    }
-    setDeletingId(null)
+  try {
+    testimonials = await getTestimonials()
+  } catch {
+    fetchError = true
   }
 
   return (
@@ -43,10 +25,12 @@ export default function AdminDepoimentos() {
         </Link>
       </div>
 
-      {error && <p className="adminError">{error}</p>}
+      {fetchError && (
+        <p className="adminError">Não foi possível carregar os depoimentos.</p>
+      )}
 
       <div className="adminList">
-        {testimonials.length === 0 && !error && (
+        {testimonials.length === 0 && !fetchError && (
           <p className="adminEmpty">Nenhum depoimento cadastrado.</p>
         )}
         {testimonials.map((t) => (
@@ -69,14 +53,7 @@ export default function AdminDepoimentos() {
               <Link href={`/admin/depoimentos/${t.id}`} className="editButton">
                 Editar
               </Link>
-              <button
-                type="button"
-                onClick={() => handleDelete(t.id, t.name)}
-                className="deleteButton"
-                disabled={deletingId === t.id}
-              >
-                {deletingId === t.id ? "..." : "Deletar"}
-              </button>
+              <DeleteTestimonialButton id={t.id} name={t.name} />
             </div>
           </div>
         ))}

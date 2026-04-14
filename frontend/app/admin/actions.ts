@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
 import { API_URL, EXHIBITIONS_API_URL, TESTIMONIALS_API_URL } from "@/lib/config"
 
 function authHeaders() {
@@ -21,7 +22,7 @@ export async function loginAction(password: string): Promise<{ error: string } |
   const cookieStore = await cookies()
   cookieStore.set("admin", "true", {
     path: "/",
-    maxAge: 28800, // 8 horas
+    maxAge: 28800,
     sameSite: "strict",
     httpOnly: true,
   })
@@ -58,10 +59,10 @@ export async function createArtworkAction(
     body: JSON.stringify(data),
   })
 
-  if (!res.ok) {
-    return { error: "Erro ao criar obra. Tente novamente." }
-  }
+  if (!res.ok) return { error: "Erro ao criar obra. Tente novamente." }
 
+  revalidatePath("/admin/artworks")
+  revalidatePath("/admin")
   redirect("/admin/artworks")
 }
 
@@ -75,10 +76,11 @@ export async function updateArtworkAction(
     body: JSON.stringify(data),
   })
 
-  if (!res.ok) {
-    return { error: "Erro ao atualizar obra. Tente novamente." }
-  }
+  if (!res.ok) return { error: "Erro ao atualizar obra. Tente novamente." }
 
+  revalidatePath("/admin/artworks")
+  revalidatePath(`/admin/artworks/${id}`)
+  revalidatePath("/admin")
   redirect("/admin/artworks")
 }
 
@@ -90,10 +92,10 @@ export async function deleteArtworkAction(
     headers: { Authorization: `Bearer ${process.env.API_SECRET_KEY ?? ""}` },
   })
 
-  if (!res.ok) {
-    return { error: "Erro ao deletar obra. Tente novamente." }
-  }
+  if (!res.ok) return { error: "Erro ao deletar obra. Tente novamente." }
 
+  revalidatePath("/admin/artworks")
+  revalidatePath("/admin")
   return { success: true }
 }
 
@@ -117,10 +119,10 @@ export async function createExhibitionAction(
     body: JSON.stringify(data),
   })
 
-  if (!res.ok) {
-    return { error: "Erro ao criar exposição. Tente novamente." }
-  }
+  if (!res.ok) return { error: "Erro ao criar exposição. Tente novamente." }
 
+  revalidatePath("/admin/exposicoes")
+  revalidatePath("/admin")
   redirect("/admin/exposicoes")
 }
 
@@ -134,10 +136,11 @@ export async function updateExhibitionAction(
     body: JSON.stringify(data),
   })
 
-  if (!res.ok) {
-    return { error: "Erro ao atualizar exposição. Tente novamente." }
-  }
+  if (!res.ok) return { error: "Erro ao atualizar exposição. Tente novamente." }
 
+  revalidatePath("/admin/exposicoes")
+  revalidatePath(`/admin/exposicoes/${id}`)
+  revalidatePath("/admin")
   redirect("/admin/exposicoes")
 }
 
@@ -149,10 +152,10 @@ export async function deleteExhibitionAction(
     headers: { Authorization: `Bearer ${process.env.API_SECRET_KEY ?? ""}` },
   })
 
-  if (!res.ok) {
-    return { error: "Erro ao deletar exposição. Tente novamente." }
-  }
+  if (!res.ok) return { error: "Erro ao deletar exposição. Tente novamente." }
 
+  revalidatePath("/admin/exposicoes")
+  revalidatePath("/admin")
   return { success: true }
 }
 
@@ -175,10 +178,10 @@ export async function createTestimonialAction(
     body: JSON.stringify(data),
   })
 
-  if (!res.ok) {
-    return { error: "Erro ao criar depoimento. Tente novamente." }
-  }
+  if (!res.ok) return { error: "Erro ao criar depoimento. Tente novamente." }
 
+  revalidatePath("/admin/depoimentos")
+  revalidatePath("/admin")
   redirect("/admin/depoimentos")
 }
 
@@ -192,10 +195,11 @@ export async function updateTestimonialAction(
     body: JSON.stringify(data),
   })
 
-  if (!res.ok) {
-    return { error: "Erro ao atualizar depoimento. Tente novamente." }
-  }
+  if (!res.ok) return { error: "Erro ao atualizar depoimento. Tente novamente." }
 
+  revalidatePath("/admin/depoimentos")
+  revalidatePath(`/admin/depoimentos/${id}`)
+  revalidatePath("/admin")
   redirect("/admin/depoimentos")
 }
 
@@ -207,9 +211,9 @@ export async function deleteTestimonialAction(
     headers: { Authorization: `Bearer ${process.env.API_SECRET_KEY ?? ""}` },
   })
 
-  if (!res.ok) {
-    return { error: "Erro ao deletar depoimento. Tente novamente." }
-  }
+  if (!res.ok) return { error: "Erro ao deletar depoimento. Tente novamente." }
 
+  revalidatePath("/admin/depoimentos")
+  revalidatePath("/admin")
   return { success: true }
 }

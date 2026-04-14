@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { createArtworkAction } from "@/app/admin/actions"
 import Link from "next/link"
+import Image from "next/image"
 
 const CATEGORIES = ["Pintura", "Escultura", "Fotografia", "Gravura", "Desenho", "Mista", "Digital", "Outra"]
 
@@ -106,6 +107,18 @@ export default function NewArtwork() {
           <div className="adminFormGroup adminFormGroup--full">
             <label className="adminLabel">URL da Imagem</label>
             <input name="image_url" value={form.image_url} onChange={handleChange} />
+            {form.image_url && (
+              <div className="adminImagePreview">
+                <Image
+                  src={form.image_url}
+                  alt="Preview"
+                  fill
+                  style={{ objectFit: "cover" }}
+                  sizes="260px"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none" }}
+                />
+              </div>
+            )}
           </div>
 
           <div className="adminFormGroup adminFormGroup--full">

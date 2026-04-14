@@ -1,35 +1,17 @@
-"use client"
-
-import { useEffect, useState } from "react"
 import { getArtworks } from "@/services/api"
-import { deleteArtworkAction } from "@/app/admin/actions"
 import type { Artwork } from "@/types/artwork.types"
 import Link from "next/link"
 import Image from "next/image"
+import { DeleteArtworkButton } from "./_components/DeleteArtworkButton"
 
-export default function AdminArtworks() {
-  const [artworks, setArtworks] = useState<Artwork[]>([])
-  const [error, setError] = useState<string | null>(null)
-  const [deletingId, setDeletingId] = useState<number | null>(null)
+export default async function AdminArtworks() {
+  let artworks: Artwork[] = []
+  let fetchError = false
 
-  useEffect(() => {
-    getArtworks()
-      .then(setArtworks)
-      .catch(() => setError("Não foi possível carregar as obras."))
-  }, [])
-
-  async function handleDelete(id: number, title: string) {
-    if (!window.confirm(`Deseja remover "${title}"?`)) return
-
-    setDeletingId(id)
-    const result = await deleteArtworkAction(id)
-
-    if ("error" in result) {
-      setError(result.error)
-    } else {
-      setArtworks((prev) => prev.filter((art) => art.id !== id))
-    }
-    setDeletingId(null)
+  try {
+    artworks = await getArtworks()
+  } catch {
+    fetchError = true
   }
 
   return (
@@ -44,10 +26,12 @@ export default function AdminArtworks() {
         </Link>
       </div>
 
-      {error && <p className="adminError">{error}</p>}
+      {fetchError && (
+        <p className="adminError">Não foi possível carregar as obras.</p>
+      )}
 
       <div className="adminList">
-        {artworks.length === 0 && !error && (
+        {artworks.length === 0 && !fetchError && (
           <p className="adminEmpty">Nenhuma obra cadastrada.</p>
         )}
         {artworks.map((art) => (
@@ -81,14 +65,7 @@ export default function AdminArtworks() {
               <Link href={`/admin/artworks/${art.id}`} className="editButton">
                 Editar
               </Link>
-              <button
-                type="button"
-                onClick={() => handleDelete(art.id, art.title)}
-                className="deleteButton"
-                disabled={deletingId === art.id}
-              >
-                {deletingId === art.id ? "..." : "Deletar"}
-              </button>
+              <DeleteArtworkButton id={art.id} title={art.title} />
             </div>
           </div>
         ))}
