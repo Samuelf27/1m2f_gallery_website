@@ -131,7 +131,7 @@ export default function ArtworkModal({ id }: { id: string }) {
                 alt={art.title}
                 fill
                 sizes="(max-width: 768px) 100vw, 55vw"
-                style={{ objectFit: "cover" }}
+                style={{ objectFit: "contain" }}
                 priority
               />
               <div className="artZoomHint">

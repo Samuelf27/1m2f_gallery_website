@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { WHATSAPP_NUMBER, SITE_URL } from "@/lib/config"
+import ShareButton from "@/components/ShareButton"
 
 /* ─── METADATA DINÂMICO ────────────────────────────────────── */
 export async function generateMetadata({
@@ -152,7 +153,7 @@ export default async function ArtworkPage({
               alt={`${art.title} — ${artist}`}
               fill
               sizes="(max-width: 1024px) 100vw, 55vw"
-              style={{ objectFit: "cover" }}
+              style={{ objectFit: "contain" }}
               priority
               quality={90}
             />
@@ -236,6 +237,10 @@ export default async function ArtworkPage({
           <p className="artContactNote">
             Via WhatsApp · Pagamento e envio combinados diretamente com a artista
           </p>
+
+          <div className="artPageActions">
+            <ShareButton title={art.title} artworkId={String(art.id)} />
+          </div>
 
         </div>
       </div>

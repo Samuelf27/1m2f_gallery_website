@@ -644,7 +644,7 @@ body::before {
 .homeAbout {
   padding: 80px 80px;
   display: grid;
-  grid-template-columns: 5fr 7fr;
+  grid-template-columns: 2fr 5fr;
   gap: 64px;
   align-items: center;
   border-top: 0.5px solid var(--border);
@@ -652,7 +652,8 @@ body::before {
 
 .homeAboutImage {
   position: relative;
-  height: 400px;
+  aspect-ratio: 3 / 4;
+  max-height: 460px;
   overflow: hidden;
 }
 
@@ -1154,11 +1155,7 @@ body::before {
 }
 
 .artImageWrapper img {
-  transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
-}
-
-.artImageBlock:hover .artImageWrapper img {
-  transform: scale(1.04) !important;
+  transition: none !important;
 }
 
 /* Label flutuante sobre a imagem */
@@ -1392,6 +1389,11 @@ body::before {
   text-transform: uppercase;
   text-align: center;
   margin-top: 4px;
+}
+
+.artPageActions {
+  display: flex;
+  margin-top: 20px;
 }
 
 /* ARTWORKS PAGE */
@@ -2250,7 +2252,7 @@ body::before {
   .carouselFooter { padding: 0 24px; }
   .videoSection { padding: 80px 24px; }
   .homeAbout { padding: 60px 24px; grid-template-columns: 1fr; gap: 32px; }
-  .homeAboutImage { height: 56vw; max-height: 340px; }
+  .homeAboutImage { aspect-ratio: 4 / 3; max-height: 300px; }
   .homeAboutText h2 { font-size: 44px; }
   .manifestoSection { padding: 80px 24px; }
   .manifestoText { font-size: 22px; }
@@ -3726,11 +3728,7 @@ body::before {
 }
 
 .artModalImage img {
-  transition: transform 0.9s var(--ease-out) !important;
-}
-
-.artModalImage:hover img {
-  transform: scale(1.04) !important;
+  transition: none !important;
 }
 
 /* FavoriteButton dentro da imagem do modal */
