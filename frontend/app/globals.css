@@ -2518,6 +2518,196 @@ body::before {
   padding: 0 4px;
 }
 
+/* ─── EXPOSIÇÕES ──────────────────────────────────────────── */
+.exhPage { padding-top: 120px; }
+
+.exhHeader { align-items: flex-start; }
+
+/* Filtros */
+.exhFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 48px;
+}
+
+/* Lista de exposições */
+.exhList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Card de exposição */
+.exhCard {
+  display: grid;
+  grid-template-columns: 200px 1px 1fr;
+  gap: 0 40px;
+  padding: 48px 0;
+  border-top: 0.5px solid var(--border);
+  align-items: start;
+  transition: opacity 0.3s var(--ease);
+  animation: fadeUp 0.6s var(--ease-out) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.exhCard:last-child { border-bottom: 0.5px solid var(--border); }
+
+.exhCard--past { opacity: 0.6; }
+.exhCard--past:hover { opacity: 1; }
+
+/* Coluna de datas */
+.exhDates {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 2px;
+}
+
+/* Badge de status */
+.exhBadge {
+  display: inline-block;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.exhBadge--upcoming {
+  background: var(--gold-dim);
+  border: 0.5px solid var(--border-warm);
+  color: var(--gold);
+}
+
+.exhBadge--ongoing {
+  background: rgba(100, 200, 130, 0.1);
+  border: 0.5px solid rgba(100, 200, 130, 0.25);
+  color: #7ec99a;
+}
+
+.exhBadge--past {
+  background: var(--white-faint);
+  border: 0.5px solid var(--border);
+  color: var(--white-dim);
+}
+
+/* Range de datas */
+.exhDateRange {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--white-dim);
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.exhDateSep {
+  color: rgba(240, 237, 232, 0.2);
+  font-size: 12px;
+}
+
+/* Divisor vertical */
+.exhDivider {
+  width: 0.5px;
+  background: var(--border);
+  align-self: stretch;
+}
+
+/* Conteúdo do card */
+.exhContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.exhSubtitle {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.exhTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 34px;
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.3px;
+  color: var(--white);
+}
+
+.exhLocation {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(240, 237, 232, 0.35);
+}
+
+.exhLocation svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+.exhDescription {
+  font-size: 14px;
+  color: var(--white-dim);
+  line-height: 1.85;
+  max-width: 600px;
+  margin-top: 4px;
+}
+
+.exhLink { margin-top: 8px; align-self: flex-start; }
+
+/* CTA final */
+.exhCta {
+  margin-top: 80px;
+  padding: 72px 0 0;
+  border-top: 0.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.exhCta h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px;
+  font-weight: 300;
+  line-height: 1.2;
+  max-width: 480px;
+}
+
+.exhCta h2 em { font-style: italic; color: var(--gold); }
+
+.exhCta p {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--white-dim);
+  line-height: 1.8;
+  max-width: 400px;
+}
+
+/* Responsivo */
+@media (max-width: 1024px) {
+  .exhCard { grid-template-columns: 160px 1px 1fr; gap: 0 28px; }
+}
+
+@media (max-width: 768px) {
+  .exhPage { padding-top: 100px; }
+  .exhCard { grid-template-columns: 1fr; gap: 20px; padding: 36px 0; }
+  .exhDivider { display: none; }
+  .exhDates { flex-direction: row; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .exhDateRange { flex-direction: row; gap: 6px; align-items: center; }
+  .exhTitle { font-size: 26px; }
+  .exhCta { flex-direction: column; align-items: flex-start; margin-top: 56px; }
+  .exhCta h2 { font-size: 30px; }
+}
+
 /* ─── ERROR / 404 PAGES ───────────────────────────────── */
 .errorPage {
   min-height: 100vh;

@@ -26,10 +26,11 @@ export default function Navbar() {
   }, [menuOpen])
 
   const links = [
-    { href: "/", label: "Home" },
-    { href: "/artworks", label: "Galeria" },
-    { href: "/about", label: "Sobre" },
-    { href: "/contact", label: "Contato" },
+    { href: "/",           label: "Home"        },
+    { href: "/artworks",   label: "Galeria"     },
+    { href: "/exposicoes", label: "Exposições"  },
+    { href: "/about",      label: "Sobre"       },
+    { href: "/contact",    label: "Contato"     },
   ]
 
   return (
