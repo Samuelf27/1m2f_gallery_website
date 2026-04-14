@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react"
 import Link from "next/link"
 
 type PressItem = {
@@ -39,7 +40,7 @@ const PRESS_ITEMS: PressItem[] = [
     id: 4,
     outlet:   "Cultura.SP",
     title:    "Top 10 exposições do segundo semestre em SP",
-    excerpt:  ""Matéria e Sentimento" figura entre as mostras imperdíveis do segundo semestre, com destaque para a instalação central em aço inoxidável.",
+    excerpt:  '"Matéria e Sentimento" figura entre as mostras imperdíveis do segundo semestre, com destaque para a instalação central em aço inoxidável.',
     date:     "2024-07-15",
     category: "digital",
   },
@@ -100,7 +101,7 @@ export default function ImprensaPage() {
           <article
             key={item.id}
             className="pressCard"
-            style={{ "--delay": `${i * 60}ms` } as React.CSSProperties}
+            style={{ "--delay": `${i * 60}ms` } as CSSProperties}
           >
             <div className="pressCardMeta">
               <span className="pressCategoryBadge">{CATEGORY_LABELS[item.category]}</span>
