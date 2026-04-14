@@ -4,8 +4,12 @@ from flask_cors import CORS
 
 from extensions import db
 from app.routes.artworks import artworks_bp
+from app.routes.exhibitions import exhibitions_bp
+from app.routes.testimonials import testimonials_bp
 from app.models.artist import Artist
 from app.models.artwork import Artwork
+from app.models.exhibition import Exhibition
+from app.models.testimonial import Testimonial
 import os
 
 app = Flask(__name__)
@@ -24,6 +28,8 @@ db.init_app(app)
 
 # ROTAS (blueprint)
 app.register_blueprint(artworks_bp, url_prefix="/api/artworks")
+app.register_blueprint(exhibitions_bp, url_prefix="/api/exhibitions")
+app.register_blueprint(testimonials_bp, url_prefix="/api/testimonials")
 
 
 # ROTA HOME

@@ -54,6 +54,9 @@ def create_artwork():
         description=data.get("description"),
         image_url=data.get("image_url"),
         category=data.get("category"),
+        dimensions=data.get("dimensions"),
+        available=data.get("available", "disponível"),
+        featured=data.get("featured", False),
     )
     db.session.add(art)
     db.session.commit()
@@ -72,7 +75,7 @@ def update_artwork(id):
         else:
             art.artist_id = None
 
-    for field in ["title", "year", "description", "image_url", "category"]:
+    for field in ["title", "year", "description", "image_url", "category", "dimensions", "available", "featured"]:
         if field in data:
             setattr(art, field, data[field])
 

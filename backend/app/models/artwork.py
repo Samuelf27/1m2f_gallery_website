@@ -11,6 +11,9 @@ class Artwork(db.Model):
     description = db.Column(db.Text)
     image_url = db.Column(db.String(500))
     category = db.Column(db.String(100))
+    dimensions = db.Column(db.String(100))
+    available = db.Column(db.String(50), default="disponível")
+    featured = db.Column(db.Boolean, default=False)
 
     artist = db.relationship("Artist", backref="artworks")
 
@@ -23,4 +26,7 @@ class Artwork(db.Model):
             "description": self.description,
             "image_url": self.image_url,
             "category": self.category,
+            "dimensions": self.dimensions,
+            "available": self.available or "disponível",
+            "featured": self.featured or False,
         }

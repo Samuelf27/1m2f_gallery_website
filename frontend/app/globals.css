@@ -2147,6 +2147,7 @@ body::before {
   .grid { grid-template-columns: 1fr; }
   .page { padding: 100px 24px 60px; }
   .adminPage { padding: 100px 24px 60px; }
+  .adminMain .adminPage { padding: 32px 20px 60px; }
   .pageHeader { flex-direction: column; align-items: flex-start; gap: 16px; }
   .aboutHeroText { padding: 100px 24px; }
   .aboutTitle { font-size: 42px; }
@@ -4005,4 +4006,563 @@ body::before {
 }
 .art-card-image img {
   object-fit: cover;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ADMIN DASHBOARD — painel completo
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Shell layout ─────────────────────────────────────────── */
+.adminShell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--black);
+}
+
+.adminSidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: var(--black-2);
+  border-right: 0.5px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+}
+
+.adminMain {
+  flex: 1;
+  margin-left: 240px;
+  min-height: 100vh;
+}
+
+/* ── Sidebar header ───────────────────────────────────────── */
+.adminSidebarHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 24px 24px;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.adminSidebarLogo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 5px;
+  color: var(--white);
+}
+
+.adminSidebarTag {
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: var(--gold-dim);
+  border: 0.5px solid var(--border-warm);
+  padding: 3px 7px;
+}
+
+/* ── Sidebar navigation ───────────────────────────────────── */
+.adminNav {
+  flex: 1;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.adminNavGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+
+.adminNavSection {
+  font-size: 8px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(240,237,232,0.18);
+  padding: 10px 24px 6px;
+}
+
+.adminNavLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 24px;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: rgba(240,237,232,0.45);
+  transition: color 0.25s, background 0.25s;
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  background: none;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  width: 100%;
+  text-align: left;
+}
+
+.adminNavLink:hover {
+  color: var(--white);
+  background: var(--white-faint);
+}
+
+.adminNavLink--active {
+  color: var(--gold);
+  border-left-color: var(--gold);
+  background: var(--gold-glow);
+}
+
+.adminNavLink--active:hover {
+  color: var(--gold);
+  background: var(--gold-glow);
+}
+
+.adminNavLink--muted {
+  color: rgba(240,237,232,0.25);
+}
+
+.adminNavLink--logout {
+  color: rgba(224,112,112,0.5);
+}
+
+.adminNavLink--logout:hover {
+  color: #e07070;
+  background: rgba(224,112,112,0.05);
+}
+
+.adminNavIcon {
+  font-size: 13px;
+  width: 16px;
+  text-align: center;
+  opacity: 0.7;
+}
+
+/* ── Sidebar footer ───────────────────────────────────────── */
+.adminSidebarFooter {
+  border-top: 0.5px solid var(--border);
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ── Admin page (inside sidebar shell) ───────────────────── */
+.adminMain .adminPage {
+  padding: 48px 56px 80px;
+  max-width: 1100px;
+  margin: 0;
+}
+
+.adminPageLabel {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+
+.adminPageLabel a {
+  color: rgba(201,169,110,0.6);
+  transition: color 0.25s;
+}
+
+.adminPageLabel a:hover {
+  color: var(--gold);
+}
+
+/* ── Metrics grid ─────────────────────────────────────────── */
+.adminMetrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 48px;
+}
+
+.adminMetricCard {
+  background: var(--black-2);
+  border: 0.5px solid var(--border);
+  padding: 24px 20px;
+  display: block;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.adminMetricCard:hover {
+  border-color: var(--border-warm);
+  background: var(--black-3);
+}
+
+.adminMetricValue {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 44px;
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.adminMetricLabel {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(240,237,232,0.35);
+}
+
+/* ── Section titles ───────────────────────────────────────── */
+.adminSection {
+  margin-bottom: 48px;
+}
+
+.adminSectionTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--white-dim);
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 0.5px solid var(--border);
+}
+
+/* ── Quick shortcuts ──────────────────────────────────────── */
+.adminShortcuts {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.adminShortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: 0.5px solid var(--border-warm);
+  color: var(--gold);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.adminShortcut:hover {
+  background: var(--gold-dim);
+  border-color: var(--gold);
+}
+
+.adminShortcutIcon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* ── Navigation cards ─────────────────────────────────────── */
+.adminNavCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.adminNavCard {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 20px;
+  background: var(--black-2);
+  border: 0.5px solid var(--border);
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.adminNavCard:hover {
+  border-color: rgba(255,255,255,0.15);
+  background: var(--black-3);
+}
+
+.adminNavCardIcon {
+  font-size: 20px;
+  color: var(--gold);
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.adminNavCardTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.adminNavCardDesc {
+  font-size: 11px;
+  color: var(--white-dim);
+  line-height: 1.5;
+}
+
+.adminNavCardArrow {
+  margin-left: auto;
+  color: rgba(240,237,232,0.2);
+  font-size: 14px;
+  transition: color 0.3s, transform 0.3s;
+  flex-shrink: 0;
+}
+
+.adminNavCard:hover .adminNavCardArrow {
+  color: var(--gold);
+  transform: translateX(4px);
+}
+
+/* ── Admin list & cards ───────────────────────────────────── */
+.adminEmpty {
+  font-size: 12px;
+  color: rgba(240,237,232,0.25);
+  letter-spacing: 1px;
+  padding: 32px 0;
+  text-align: center;
+}
+
+.adminError {
+  font-size: 12px;
+  color: #e07070;
+  background: rgba(224,112,112,0.06);
+  border: 0.5px solid rgba(224,112,112,0.2);
+  padding: 12px 16px;
+  margin-bottom: 24px;
+}
+
+.adminLoading {
+  padding: 48px 56px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(240,237,232,0.25);
+}
+
+.adminCardBadges {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.adminBadge {
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border: 0.5px solid;
+  white-space: nowrap;
+}
+
+.adminBadge--gold {
+  color: var(--gold);
+  border-color: var(--border-warm);
+  background: var(--gold-glow);
+}
+
+.adminBadge--green {
+  color: #7bc67b;
+  border-color: rgba(123,198,123,0.25);
+  background: rgba(123,198,123,0.06);
+}
+
+.adminBadge--red {
+  color: #e07070;
+  border-color: rgba(224,112,112,0.25);
+  background: rgba(224,112,112,0.06);
+}
+
+.adminBadge--dim {
+  color: rgba(240,237,232,0.3);
+  border-color: var(--border);
+  background: transparent;
+}
+
+.adminCardExcerpt {
+  display: block;
+  font-size: 11px;
+  color: rgba(240,237,232,0.3);
+  font-style: italic;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+/* ── Admin form improvements ──────────────────────────────── */
+.adminFormGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 32px;
+  max-width: 680px;
+}
+
+.adminFormGroup {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 0.5px solid var(--border);
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+}
+
+.adminFormGroup--full {
+  grid-column: 1 / -1;
+}
+
+.adminLabel {
+  font-size: 8px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.7;
+  padding-top: 18px;
+  margin-bottom: 2px;
+}
+
+.adminFormGroup input,
+.adminFormGroup textarea {
+  background: transparent;
+  border: none;
+  padding: 10px 0 14px;
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  outline: none;
+  width: 100%;
+  transition: none;
+}
+
+.adminFormGroup input::placeholder,
+.adminFormGroup textarea::placeholder {
+  color: rgba(255,255,255,0.15);
+}
+
+.adminFormGroup textarea {
+  resize: none;
+  line-height: 1.6;
+}
+
+.adminFormGroup:focus-within {
+  border-bottom-color: var(--gold);
+}
+
+.adminSelect {
+  background: transparent;
+  border: none;
+  padding: 10px 0 14px;
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  outline: none;
+  width: 100%;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.adminSelect option {
+  background: var(--black-3);
+  color: var(--white);
+}
+
+.adminDateInput {
+  color-scheme: dark;
+}
+
+/* ── Toggle switch ────────────────────────────────────────── */
+.adminToggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.adminToggle input[type="checkbox"] {
+  display: none;
+}
+
+.adminToggleTrack {
+  width: 36px;
+  height: 20px;
+  background: rgba(255,255,255,0.1);
+  border: 0.5px solid var(--border);
+  border-radius: 10px;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.adminToggleTrack::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 12px;
+  height: 12px;
+  background: rgba(240,237,232,0.3);
+  border-radius: 50%;
+  transition: transform 0.3s, background 0.3s;
+}
+
+.adminToggle input[type="checkbox"]:checked + .adminToggleTrack {
+  background: var(--gold-dim);
+  border-color: var(--border-warm);
+}
+
+.adminToggle input[type="checkbox"]:checked + .adminToggleTrack::after {
+  transform: translateX(16px);
+  background: var(--gold);
+}
+
+.adminToggleLabel {
+  font-size: 12px;
+  color: rgba(240,237,232,0.55);
+  letter-spacing: 0.3px;
+}
+
+/* ── Responsive admin ─────────────────────────────────────── */
+@media (max-width: 900px) {
+  .adminSidebar {
+    width: 200px;
+  }
+  .adminMain {
+    margin-left: 200px;
+  }
+}
+
+@media (max-width: 640px) {
+  .adminShell {
+    flex-direction: column;
+  }
+  .adminSidebar {
+    width: 100%;
+    min-height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .adminNav {
+    flex-direction: row;
+    padding: 8px 0;
+    overflow-x: auto;
+  }
+  .adminNavGroup {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 0;
+  }
+  .adminNavSection { display: none; }
+  .adminMain { margin-left: 0; }
+  .adminPage { padding: 24px 20px 60px; }
+  .adminMetrics { grid-template-columns: repeat(2, 1fr); }
+  .adminFormGrid { grid-template-columns: 1fr; }
+  .adminFormGroup--full { grid-column: 1; }
+  .adminNavCards { grid-template-columns: 1fr; }
+  .adminShortcuts { flex-direction: column; }
 }

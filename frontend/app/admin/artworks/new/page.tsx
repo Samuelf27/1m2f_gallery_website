@@ -4,6 +4,8 @@ import { useState } from "react"
 import { createArtworkAction } from "@/app/admin/actions"
 import Link from "next/link"
 
+const CATEGORIES = ["Pintura", "Escultura", "Fotografia", "Gravura", "Desenho", "Mista", "Digital", "Outra"]
+
 export default function NewArtwork() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -15,12 +17,19 @@ export default function NewArtwork() {
     description: "",
     image_url: "",
     category: "",
+    dimensions: "",
+    available: "disponível",
+    featured: false,
   })
 
   function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) {
-    setForm({ ...form, [e.target.name]: e.target.value })
+    const { name, value, type } = e.target
+    setForm({
+      ...form,
+      [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+    })
   }
 
   async function handleSubmit(e: { preventDefault(): void }) {
@@ -39,52 +48,84 @@ export default function NewArtwork() {
       setError(result.error)
       setLoading(false)
     }
-    // Se não retornou erro, o server action fez redirect
   }
 
   return (
     <div className="adminPage">
-      <h1>Nova Obra</h1>
+      <div className="adminPageHeader">
+        <div>
+          <p className="adminPageLabel">
+            <Link href="/admin/artworks">← Obras</Link>
+          </p>
+          <h1>Nova Obra</h1>
+        </div>
+      </div>
 
-      {error && <p className="errorMessage">{error}</p>}
+      {error && <p className="adminError">{error}</p>}
 
       <form onSubmit={handleSubmit} className="adminForm">
-        <input
-          name="title"
-          placeholder="Título *"
-          value={form.title}
-          onChange={handleChange}
-        />
-        <input
-          name="artist"
-          placeholder="Artista *"
-          value={form.artist}
-          onChange={handleChange}
-        />
-        <input
-          name="year"
-          placeholder="Ano"
-          value={form.year}
-          onChange={handleChange}
-        />
-        <input
-          name="category"
-          placeholder="Categoria"
-          value={form.category}
-          onChange={handleChange}
-        />
-        <input
-          name="image_url"
-          placeholder="URL da imagem"
-          value={form.image_url}
-          onChange={handleChange}
-        />
-        <textarea
-          name="description"
-          placeholder="Descrição"
-          value={form.description}
-          onChange={handleChange}
-        />
+        <div className="adminFormGrid">
+          <div className="adminFormGroup adminFormGroup--full">
+            <label className="adminLabel">Título *</label>
+            <input name="title" value={form.title} onChange={handleChange} autoFocus />
+          </div>
+
+          <div className="adminFormGroup adminFormGroup--full">
+            <label className="adminLabel">Artista *</label>
+            <input name="artist" value={form.artist} onChange={handleChange} />
+          </div>
+
+          <div className="adminFormGroup">
+            <label className="adminLabel">Ano</label>
+            <input name="year" value={form.year} onChange={handleChange} />
+          </div>
+
+          <div className="adminFormGroup">
+            <label className="adminLabel">Dimensões</label>
+            <input name="dimensions" placeholder="ex: 80 × 60 cm" value={form.dimensions} onChange={handleChange} />
+          </div>
+
+          <div className="adminFormGroup">
+            <label className="adminLabel">Categoria</label>
+            <select name="category" value={form.category} onChange={handleChange} className="adminSelect">
+              <option value="">Selecionar...</option>
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="adminFormGroup">
+            <label className="adminLabel">Disponibilidade</label>
+            <select name="available" value={form.available} onChange={handleChange} className="adminSelect">
+              <option value="disponível">Disponível</option>
+              <option value="vendido">Vendido</option>
+            </select>
+          </div>
+
+          <div className="adminFormGroup adminFormGroup--full">
+            <label className="adminLabel">URL da Imagem</label>
+            <input name="image_url" value={form.image_url} onChange={handleChange} />
+          </div>
+
+          <div className="adminFormGroup adminFormGroup--full">
+            <label className="adminLabel">Descrição</label>
+            <textarea name="description" value={form.description} onChange={handleChange} rows={4} />
+          </div>
+
+          <div className="adminFormGroup adminFormGroup--full">
+            <label className="adminToggle">
+              <input
+                type="checkbox"
+                name="featured"
+                checked={form.featured}
+                onChange={handleChange}
+              />
+              <span className="adminToggleTrack" />
+              <span className="adminToggleLabel">Marcar como destaque</span>
+            </label>
+          </div>
+        </div>
 
         <div className="adminFormActions">
           <button type="submit" disabled={loading}>
