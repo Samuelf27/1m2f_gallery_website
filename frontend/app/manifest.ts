@@ -19,7 +19,6 @@ export default function manifest(): MetadataRoute.Manifest {
         src:          "/screenshot-home.jpg",
         sizes:        "1280x720",
         type:         "image/jpeg",
-        // @ts-expect-error — form_factor is valid in newer spec
         form_factor:  "wide",
         label:        "Página inicial da 1M2F Gallery",
       },
