@@ -156,7 +156,15 @@ export default function Home() {
         <div ref={textRef} className="heroText heroAnimated">
           <div className="heroTag">Arte contemporânea · São Paulo</div>
           <h1 className="heroTitle">
-            1M2F<br /><span>Gallery</span>
+            <Image
+              src="/logo.png"
+              alt="1M2F Gallery"
+              width={340}
+              height={132}
+              priority
+              className="heroLogo"
+              style={{ objectFit: "contain", objectPosition: "left center" }}
+            />
           </h1>
           <p className="heroSubtitle">
             A galeria de Maria França — mais de 6.000 obras em acrílico, tela, porcelana e aço.

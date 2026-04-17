@@ -713,6 +713,13 @@ body::before {
   color: var(--gold);
 }
 
+.heroLogo {
+  display: block;
+  width: clamp(200px, 30vw, 340px) !important;
+  height: auto !important;
+  max-width: 100%;
+}
+
 .heroSubtitle {
   font-size: 13px;
   color: var(--white-dim);
