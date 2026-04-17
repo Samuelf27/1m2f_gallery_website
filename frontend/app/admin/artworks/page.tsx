@@ -3,6 +3,7 @@ import type { Artwork } from "@/types/artwork.types"
 import Link from "next/link"
 import Image from "next/image"
 import { DeleteArtworkButton } from "./_components/DeleteArtworkButton"
+import AdminBreadcrumb from "@/app/admin/_components/AdminBreadcrumb"
 
 export default async function AdminArtworks() {
   let artworks: Artwork[] = []
@@ -18,7 +19,7 @@ export default async function AdminArtworks() {
     <div className="adminPage">
       <div className="adminPageHeader">
         <div>
-          <p className="adminPageLabel">Conteúdo</p>
+          <AdminBreadcrumb crumbs={[{ label: "Dashboard", href: "/admin" }, { label: "Obras" }]} />
           <h1>Obras</h1>
         </div>
         <Link href="/admin/artworks/new" className="adminButton">

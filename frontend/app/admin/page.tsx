@@ -21,6 +21,7 @@ const shortcuts = [
   { href: "/admin/artworks/new", label: "Nova Obra", icon: "+" },
   { href: "/admin/exposicoes/new", label: "Nova Exposição", icon: "+" },
   { href: "/admin/depoimentos/new", label: "Novo Depoimento", icon: "+" },
+  { href: "/admin/configuracoes", label: "Configurações", icon: "◉" },
 ]
 
 export default function AdminDashboard() {
@@ -131,6 +132,12 @@ export default function AdminDashboard() {
             title="Depoimentos"
             description="Controle depoimentos e visibilidade"
             icon="◎"
+          />
+          <AdminNavCard
+            href="/admin/configuracoes"
+            title="Configurações"
+            description="Logo, identidade visual e preferências do site"
+            icon="◉"
           />
         </div>
       </div>

@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { createTestimonialAction } from "@/app/admin/actions"
 import Link from "next/link"
+import AdminBreadcrumb from "@/app/admin/_components/AdminBreadcrumb"
 
 const ROLES = ["Cliente", "Colecionador", "Crítico", "Curador", "Imprensa", "Outro"]
 
@@ -50,9 +51,7 @@ export default function NewDepoimento() {
     <div className="adminPage">
       <div className="adminPageHeader">
         <div>
-          <p className="adminPageLabel">
-            <Link href="/admin/depoimentos">← Depoimentos</Link>
-          </p>
+          <AdminBreadcrumb crumbs={[{ label: "Dashboard", href: "/admin" }, { label: "Depoimentos", href: "/admin/depoimentos" }, { label: "Novo Depoimento" }]} />
           <h1>Novo Depoimento</h1>
         </div>
       </div>

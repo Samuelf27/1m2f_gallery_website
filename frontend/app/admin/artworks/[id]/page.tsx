@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { getArtwork } from "@/services/api"
 import { updateArtworkAction } from "@/app/admin/actions"
+import AdminBreadcrumb from "@/app/admin/_components/AdminBreadcrumb"
 import type { Artwork } from "@/types/artwork.types"
 import Link from "next/link"
 import Image from "next/image"
@@ -84,9 +85,7 @@ export default function EditArtwork({ params }: { params: Promise<{ id: string }
     <div className="adminPage">
       <div className="adminPageHeader">
         <div>
-          <p className="adminPageLabel">
-            <Link href="/admin/artworks">← Obras</Link>
-          </p>
+          <AdminBreadcrumb crumbs={[{ label: "Dashboard", href: "/admin" }, { label: "Obras", href: "/admin/artworks" }, { label: "Editar" }]} />
           <h1>Editar Obra</h1>
         </div>
       </div>

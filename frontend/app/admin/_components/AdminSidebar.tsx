@@ -31,7 +31,9 @@ const navItems: NavGroup[] = [
   },
 ]
 
-export default function AdminSidebar() {
+type Props = { open?: boolean; onClose?: () => void }
+
+export default function AdminSidebar({ open, onClose }: Props) {
   const pathname = usePathname()
 
   function isActive(href: string, exact = false) {
@@ -40,7 +42,7 @@ export default function AdminSidebar() {
   }
 
   return (
-    <aside className="adminSidebar">
+    <aside className={`adminSidebar${open ? " adminSidebar--open" : ""}`}>
       <div className="adminSidebarHeader">
         <Link href="/admin" className="adminSidebarLogoLink">
           <Image
@@ -53,6 +55,16 @@ export default function AdminSidebar() {
           />
         </Link>
         <span className="adminSidebarTag">Admin</span>
+        {onClose && (
+          <button
+            type="button"
+            className="adminSidebarClose"
+            onClick={onClose}
+            aria-label="Fechar menu"
+          >
+            ✕
+          </button>
+        )}
       </div>
 
       <nav className="adminNav">

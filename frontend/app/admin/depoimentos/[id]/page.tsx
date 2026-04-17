@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { getTestimonial } from "@/services/api"
 import { updateTestimonialAction } from "@/app/admin/actions"
+import AdminBreadcrumb from "@/app/admin/_components/AdminBreadcrumb"
 import type { Testimonial } from "@/types/testimonial.types"
 import Link from "next/link"
 
@@ -75,9 +76,7 @@ export default function EditDepoimento({ params }: { params: Promise<{ id: strin
     <div className="adminPage">
       <div className="adminPageHeader">
         <div>
-          <p className="adminPageLabel">
-            <Link href="/admin/depoimentos">← Depoimentos</Link>
-          </p>
+          <AdminBreadcrumb crumbs={[{ label: "Dashboard", href: "/admin" }, { label: "Depoimentos", href: "/admin/depoimentos" }, { label: "Editar" }]} />
           <h1>Editar Depoimento</h1>
         </div>
       </div>

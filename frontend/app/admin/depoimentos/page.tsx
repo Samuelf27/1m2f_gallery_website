@@ -2,6 +2,7 @@ import { getTestimonials } from "@/services/api"
 import type { Testimonial } from "@/types/testimonial.types"
 import Link from "next/link"
 import { DeleteTestimonialButton } from "./_components/DeleteTestimonialButton"
+import AdminBreadcrumb from "@/app/admin/_components/AdminBreadcrumb"
 
 export default async function AdminDepoimentos() {
   let testimonials: Testimonial[] = []
@@ -17,7 +18,7 @@ export default async function AdminDepoimentos() {
     <div className="adminPage">
       <div className="adminPageHeader">
         <div>
-          <p className="adminPageLabel">Conteúdo</p>
+          <AdminBreadcrumb crumbs={[{ label: "Dashboard", href: "/admin" }, { label: "Depoimentos" }]} />
           <h1>Depoimentos</h1>
         </div>
         <Link href="/admin/depoimentos/new" className="adminButton">

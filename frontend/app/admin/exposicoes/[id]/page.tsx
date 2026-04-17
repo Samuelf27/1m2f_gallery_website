@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { getExhibition } from "@/services/api"
 import { updateExhibitionAction } from "@/app/admin/actions"
+import AdminBreadcrumb from "@/app/admin/_components/AdminBreadcrumb"
 import type { Exhibition } from "@/types/exhibition.types"
 import Link from "next/link"
 
@@ -71,9 +72,7 @@ export default function EditExposicao({ params }: { params: Promise<{ id: string
     <div className="adminPage">
       <div className="adminPageHeader">
         <div>
-          <p className="adminPageLabel">
-            <Link href="/admin/exposicoes">← Exposições</Link>
-          </p>
+          <AdminBreadcrumb crumbs={[{ label: "Dashboard", href: "/admin" }, { label: "Exposições", href: "/admin/exposicoes" }, { label: "Editar" }]} />
           <h1>Editar Exposição</h1>
         </div>
       </div>

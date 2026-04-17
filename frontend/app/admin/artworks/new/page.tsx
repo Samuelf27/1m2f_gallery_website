@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { createArtworkAction } from "@/app/admin/actions"
 import Link from "next/link"
+import AdminBreadcrumb from "@/app/admin/_components/AdminBreadcrumb"
 import Image from "next/image"
 
 const CATEGORIES = ["Pintura", "Escultura", "Fotografia", "Gravura", "Desenho", "Mista", "Digital", "Outra"]
@@ -55,9 +56,7 @@ export default function NewArtwork() {
     <div className="adminPage">
       <div className="adminPageHeader">
         <div>
-          <p className="adminPageLabel">
-            <Link href="/admin/artworks">← Obras</Link>
-          </p>
+          <AdminBreadcrumb crumbs={[{ label: "Dashboard", href: "/admin" }, { label: "Obras", href: "/admin/artworks" }, { label: "Nova Obra" }]} />
           <h1>Nova Obra</h1>
         </div>
       </div>

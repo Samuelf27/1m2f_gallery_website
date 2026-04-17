@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { createExhibitionAction } from "@/app/admin/actions"
 import Link from "next/link"
+import AdminBreadcrumb from "@/app/admin/_components/AdminBreadcrumb"
 
 export default function NewExposicao() {
   const [error, setError] = useState<string | null>(null)
@@ -45,9 +46,7 @@ export default function NewExposicao() {
     <div className="adminPage">
       <div className="adminPageHeader">
         <div>
-          <p className="adminPageLabel">
-            <Link href="/admin/exposicoes">← Exposições</Link>
-          </p>
+          <AdminBreadcrumb crumbs={[{ label: "Dashboard", href: "/admin" }, { label: "Exposições", href: "/admin/exposicoes" }, { label: "Nova Exposição" }]} />
           <h1>Nova Exposição</h1>
         </div>
       </div>

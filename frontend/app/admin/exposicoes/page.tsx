@@ -2,6 +2,7 @@ import { getExhibitions } from "@/services/api"
 import type { Exhibition } from "@/types/exhibition.types"
 import Link from "next/link"
 import { DeleteExhibitionButton } from "./_components/DeleteExhibitionButton"
+import AdminBreadcrumb from "@/app/admin/_components/AdminBreadcrumb"
 
 const STATUS_LABELS: Record<string, string> = {
   proxima:   "Próxima",
@@ -37,7 +38,7 @@ export default async function AdminExposicoes() {
     <div className="adminPage">
       <div className="adminPageHeader">
         <div>
-          <p className="adminPageLabel">Conteúdo</p>
+          <AdminBreadcrumb crumbs={[{ label: "Dashboard", href: "/admin" }, { label: "Exposições" }]} />
           <h1>Exposições</h1>
         </div>
         <Link href="/admin/exposicoes/new" className="adminButton">
