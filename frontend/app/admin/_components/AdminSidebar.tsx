@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { logoutAction } from "@/app/admin/actions"
 
@@ -22,6 +23,12 @@ const navItems: NavGroup[] = [
       { href: "/admin/depoimentos", label: "Depoimentos", icon: "◎" },
     ],
   },
+  {
+    section: "Sistema",
+    links: [
+      { href: "/admin/configuracoes", label: "Configurações", icon: "◉" },
+    ],
+  },
 ]
 
 export default function AdminSidebar() {
@@ -35,8 +42,15 @@ export default function AdminSidebar() {
   return (
     <aside className="adminSidebar">
       <div className="adminSidebarHeader">
-        <Link href="/admin" className="adminSidebarLogo">
-          1M2F
+        <Link href="/admin" className="adminSidebarLogoLink">
+          <Image
+            src="/logo.png"
+            alt="1M2F Gallery"
+            width={72}
+            height={28}
+            priority
+            style={{ objectFit: "contain", objectPosition: "left center" }}
+          />
         </Link>
         <span className="adminSidebarTag">Admin</span>
       </div>
