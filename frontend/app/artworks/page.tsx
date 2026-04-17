@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
-import { getArtworks } from "@/services/api"
+import { getAllArtworks } from "@/services/api"
 import type { Artwork } from "@/types/artwork.types"
 import Link from "next/link"
 import Image from "next/image"
@@ -37,7 +37,7 @@ function GalleryContent() {
   const sentinelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    getArtworks()
+    getAllArtworks()
       .then((data) => { setArtworks(data); setLoading(false) })
       .catch(() => { setError(true); setLoading(false) })
   }, [])

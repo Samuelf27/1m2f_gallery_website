@@ -5,19 +5,46 @@ import { API_URL, EXHIBITIONS_API_URL, TESTIMONIALS_API_URL } from "@/lib/config
 
 // ─── Artworks ────────────────────────────────────────────────────────────────
 
-export async function getArtworks(params?: { page?: number; per_page?: number; category?: string; featured?: boolean }): Promise<Artwork[]> {
-  const query = new URLSearchParams()
-  if (params?.page)     query.set("page",     String(params.page))
-  if (params?.per_page) query.set("per_page", String(params.per_page))
-  if (params?.category) query.set("category", params.category)
-  if (params?.featured !== undefined) query.set("featured", String(params.featured))
+type ArtworksParams = { page?: number; per_page?: number; category?: string; featured?: boolean }
 
-  const url = `${API_URL}/?${query.toString()}`
-  const res = await fetch(url)
+function buildArtworksUrl(params?: ArtworksParams) {
+  const query = new URLSearchParams()
+  if (params?.page)                   query.set("page",     String(params.page))
+  if (params?.per_page)               query.set("per_page", String(params.per_page))
+  if (params?.category)               query.set("category", params.category)
+  if (params?.featured !== undefined) query.set("featured", String(params.featured))
+  return `${API_URL}/?${query.toString()}`
+}
+
+export async function getArtworks(params?: ArtworksParams): Promise<Artwork[]> {
+  const res = await fetch(buildArtworksUrl(params))
   if (!res.ok) throw new Error("Erro ao buscar artworks")
   const data = await res.json()
-  // Backend retorna objeto paginado { items, total, page, pages }
   return Array.isArray(data) ? data : (data.items ?? [])
+}
+
+/** Busca todas as obras percorrendo todas as páginas do backend (máx 100/página). */
+export async function getAllArtworks(): Promise<Artwork[]> {
+  const res = await fetch(buildArtworksUrl({ per_page: 100, page: 1 }))
+  if (!res.ok) throw new Error("Erro ao buscar artworks")
+  const data = await res.json()
+
+  if (Array.isArray(data)) return data
+
+  const items: Artwork[] = data.items ?? []
+  const totalPages: number = data.pages ?? 1
+
+  if (totalPages <= 1) return items
+
+  const remaining = await Promise.all(
+    Array.from({ length: totalPages - 1 }, (_, i) =>
+      fetch(buildArtworksUrl({ per_page: 100, page: i + 2 }))
+        .then((r) => r.json())
+        .then((d): Artwork[] => (Array.isArray(d) ? d : (d.items ?? [])))
+    )
+  )
+
+  return [...items, ...remaining.flat()]
 }
 
 export async function getArtwork(id: string): Promise<Artwork> {

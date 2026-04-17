@@ -2692,7 +2692,47 @@ body::before {
   margin-top: 4px;
 }
 
-.exhLink { margin-top: 8px; align-self: flex-start; }
+.exhLink { align-self: flex-start; }
+
+/* ── Calendar export & share buttons ─────────────────────── */
+.exhActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.exhCalBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 0.5px solid var(--border);
+  background: transparent;
+  color: rgba(240,237,232,0.45);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  cursor: pointer;
+  transition: color 0.25s, border-color 0.25s, background 0.25s;
+  text-decoration: none;
+}
+
+.exhCalBtn svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.exhCalBtn:hover {
+  color: var(--white);
+  border-color: rgba(240,237,232,0.3);
+  background: var(--white-faint);
+}
 
 /* CTA final */
 .exhCta {
@@ -4871,4 +4911,69 @@ body.admin-mode .cookieBanner {
   height: 20px;
   border: 0.5px solid var(--border);
   cursor: default;
+}
+
+/* ─── PRINT STYLES ────────────────────────────────────────── */
+@media print {
+  /* Ocultar elementos de navegação e UI interativa */
+  .navbar,
+  .footer,
+  .hamburger,
+  .navMobile,
+  .scrollToTop,
+  .cookieBanner,
+  .navProgress,
+  .heroButton,
+  .carouselBtn,
+  .galleryFilters,
+  .favNavBtn,
+  .exhFilters,
+  .exhCalBtn,
+  .exhActions,
+  .exhCta,
+  .newsletterSection,
+  .ctaSection,
+  .heroStrip,
+  .heroScroll,
+  .adminSidebar,
+  .adminSidebarFooter,
+  .adminMobileMenuBtn,
+  button[type="submit"],
+  .deleteButton,
+  .editButton { display: none !important; }
+
+  /* Tipografia e cores para papel */
+  body {
+    background: #fff !important;
+    color: #111 !important;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  body::before { display: none; }
+
+  a { color: #111 !important; text-decoration: underline; }
+  h1, h2, h3 { color: #000 !important; page-break-after: avoid; }
+  img { max-width: 100% !important; page-break-inside: avoid; }
+
+  /* Artwork detail — layout empilhado */
+  .artLayout { display: block !important; }
+  .artImageBlock { height: 320pt !important; position: relative !important; top: 0 !important; }
+  .artInfoBlock { padding: 24pt 0 !important; }
+
+  /* Galeria — 2 colunas */
+  .grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12pt !important; }
+  .card { break-inside: avoid; }
+
+  /* Exposições */
+  .exhCard { break-inside: avoid; border-bottom: 0.5pt solid #ccc !important; }
+  .exhCard--past { opacity: 1 !important; }
+
+  /* Hero — esconder fundo mas manter texto */
+  .heroBg, .heroBgOverlay { display: none !important; }
+  .hero { min-height: 0 !important; padding: 24pt 0 !important; }
+  .heroTitle, .heroSubtitle { color: #000 !important; }
+
+  /* Rodapé simplificado */
+  @page { margin: 20mm; }
 }

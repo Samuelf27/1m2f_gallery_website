@@ -1,13 +1,52 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
-import { getArtworks } from "@/services/api"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import { getAllArtworks } from "@/services/api"
 import type { Artwork } from "@/types/artwork.types"
 import Link from "next/link"
 import Image from "next/image"
 import { useFavorites } from "@/context/FavoritesContext"
 import FavoriteButton from "@/components/FavoriteButton"
 import { useArtworkHistory } from "@/hooks/useArtworkHistory"
+
+function ShareFavoritesButton({ count }: { count: number }) {
+  const [copied, setCopied] = useState(false)
+
+  const share = useCallback(async () => {
+    const url  = window.location.href
+    const text = `Veja as ${count} obras que salvei na Galeria 1M2F`
+
+    if (navigator.share) {
+      try { await navigator.share({ title: "Meus favoritos — 1M2F Gallery", text, url }) } catch { /* cancelado */ }
+      return
+    }
+
+    await navigator.clipboard.writeText(url)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }, [count])
+
+  return (
+    <button type="button" onClick={share} className="exhCalBtn">
+      {copied ? (
+        <>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M20 6L9 17l-5-5" />
+          </svg>
+          Link copiado
+        </>
+      ) : (
+        <>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
+            <path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" />
+          </svg>
+          Partilhar
+        </>
+      )}
+    </button>
+  )
+}
 
 export default function FavoritosPage() {
   const [artworks, setArtworks] = useState<Artwork[]>([])
@@ -16,7 +55,7 @@ export default function FavoritosPage() {
   const { historyIds }          = useArtworkHistory()
 
   useEffect(() => {
-    getArtworks()
+    getAllArtworks()
       .then((data) => { setArtworks(data); setLoading(false) })
       .catch(() => setLoading(false))
   }, [])
@@ -46,7 +85,12 @@ export default function FavoritosPage() {
               : `${favorites.length} obra${favorites.length !== 1 ? "s" : ""} salva${favorites.length !== 1 ? "s" : ""}`}
           </p>
         </div>
-        <Link href="/artworks" className="heroButton">Ver toda a coleção →</Link>
+        <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
+          {!loading && favorites.length > 0 && (
+            <ShareFavoritesButton count={favorites.length} />
+          )}
+          <Link href="/artworks" className="heroButton">Ver toda a coleção →</Link>
+        </div>
       </div>
 
       {loading && (

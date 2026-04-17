@@ -3,6 +3,46 @@
 import { useState } from "react"
 import Link from "next/link"
 
+/* ── Helpers de calendário ────────────────────────────────── */
+function toCalDate(dateStr: string) {
+  return dateStr.replace(/-/g, "")
+}
+
+function buildGoogleCalUrl(exh: Exhibition) {
+  const p = new URLSearchParams({
+    action:   "TEMPLATE",
+    text:     exh.title,
+    dates:    `${toCalDate(exh.startDate)}/${toCalDate(exh.endDate)}`,
+    details:  exh.description,
+    location: `${exh.location}, ${exh.city}`,
+  })
+  return `https://calendar.google.com/calendar/render?${p.toString()}`
+}
+
+function downloadIcs(exh: Exhibition) {
+  const uid = `exhibition-${exh.id}@1m2f-gallery`
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//1M2F Gallery//PT",
+    "BEGIN:VEVENT",
+    `UID:${uid}`,
+    `DTSTART;VALUE=DATE:${toCalDate(exh.startDate)}`,
+    `DTEND;VALUE=DATE:${toCalDate(exh.endDate)}`,
+    `SUMMARY:${exh.title}`,
+    `DESCRIPTION:${exh.description.replace(/\n/g, "\\n")}`,
+    `LOCATION:${exh.location}\\, ${exh.city}`,
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n")
+
+  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" })
+  const url  = URL.createObjectURL(blob)
+  const a    = Object.assign(document.createElement("a"), { href: url, download: `${exh.title}.ics` })
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
 /* ── Tipos ────────────────────────────────────────────────── */
 type ExhibitionStatus = "upcoming" | "ongoing" | "past"
 
@@ -189,16 +229,46 @@ export default function ExposicoesPage() {
                   </p>
                   <p className="exhDescription">{exh.description}</p>
 
-                  {exh.link && (
-                    <a
-                      href={exh.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="heroButton exhLink"
-                    >
-                      Saiba mais →
-                    </a>
-                  )}
+                  <div className="exhActions">
+                    {exh.link && (
+                      <a
+                        href={exh.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="heroButton exhLink"
+                      >
+                        Saiba mais →
+                      </a>
+                    )}
+                    {exh.status !== "past" && (
+                      <>
+                        <a
+                          href={buildGoogleCalUrl(exh)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="exhCalBtn"
+                          title="Adicionar ao Google Calendar"
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                            <path d="M16 2v4M8 2v4M3 10h18" />
+                          </svg>
+                          Google Calendar
+                        </a>
+                        <button
+                          type="button"
+                          className="exhCalBtn"
+                          onClick={() => downloadIcs(exh)}
+                          title="Baixar arquivo .ics"
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                          </svg>
+                          .ics
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
               </article>
             )

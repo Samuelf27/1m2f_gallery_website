@@ -12,13 +12,20 @@ export default function Newsletter() {
   const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   const showErr = touched && email.length > 0 && !isValid
 
-  async function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     if (!isValid) { setTouched(true); return }
     setState("loading")
-    // Simula envio — trocar pela integração real (Mailchimp, Resend, etc.)
-    await new Promise((r) => setTimeout(r, 1200))
-    setState("success")
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      })
+      setState(res.ok ? "success" : "error")
+    } catch {
+      setState("error")
+    }
   }
 
   return (
