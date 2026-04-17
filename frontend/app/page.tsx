@@ -148,6 +148,7 @@ export default function Home() {
             priority
             quality={95}
             sizes="100vw"
+            className="heroBgImg"
             style={{ objectFit: "cover", objectPosition: "center center" }}
           />
         </div>

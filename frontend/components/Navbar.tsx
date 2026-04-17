@@ -22,8 +22,13 @@ export default function Navbar() {
   useEffect(() => { setMenuOpen(false) }, [pathname])
 
   useEffect(() => {
+    // Aplicar tanto no html quanto no body — garante que fixed funcione no iOS Safari
+    document.documentElement.style.overflow = menuOpen ? "hidden" : ""
     document.body.style.overflow = menuOpen ? "hidden" : ""
-    return () => { document.body.style.overflow = "" }
+    return () => {
+      document.documentElement.style.overflow = ""
+      document.body.style.overflow = ""
+    }
   }, [menuOpen])
 
   const links = [

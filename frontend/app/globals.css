@@ -4,6 +4,27 @@
 a { text-decoration: none; color: inherit; }
 html { scroll-behavior: smooth; }
 
+/* ─── Acessibilidade: foco visível para teclado ──────────── */
+/* Esconde anel feio no mouse, mantém visível no teclado     */
+:focus { outline: none; }
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* Botões e links dentro de áreas escuras */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
 :root {
   --gold: #c9a96e;
   --gold-light: #dfc28a;
@@ -75,6 +96,13 @@ body::before {
   }
 }
 
+/* Navbar isolada da transição — permanece fixa durante a navegação */
+::view-transition-old(navbar),
+::view-transition-new(navbar) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 /* Preferência de movimento reduzido */
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
@@ -112,13 +140,20 @@ body::before {
 .navbar {
   position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
   padding: 28px 80px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 1000;
-  transition: all 0.5s ease;
+  transition: background 0.5s ease, padding 0.5s ease, border-color 0.5s ease;
+  /* Força hardware acceleration — corrige iOS Safari fixed */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  /* Isola da View Transitions API para não animar junto com a página */
+  view-transition-name: navbar;
 }
 
 .navbar.scrolled {
@@ -2141,9 +2176,22 @@ body::before {
 }
 
 @media (max-width: 768px) {
-  .navbar, .navbar.scrolled { padding: 20px 24px; }
+  .navbar, .navbar.scrolled {
+    padding: 16px 20px;
+    /* Garante que o navbar nunca some no mobile */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(8,8,8,0.85);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border-bottom: 0.5px solid var(--border);
+  }
   .navDesktop { display: none; }
   .hamburger { display: flex; }
+  /* Imagem do hero: âncora na esquerda no mobile */
+  .heroBgImg { object-position: 20% center !important; }
   .hero { padding: 100px 24px 60px; }
   .heroCenter .heroTitle { font-size: 52px; }
   .heroTitle { font-size: 48px; }
