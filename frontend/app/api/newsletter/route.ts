@@ -29,10 +29,18 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    // Resend Contacts API — adiciona à audiência
     const endpoint = audienceId
       ? `https://api.resend.com/audiences/${audienceId}/contacts`
-      : "https://api.resend.com/contacts"
+      : "https://api.resend.com/emails"
+
+    const body = audienceId
+      ? JSON.stringify({ email, unsubscribed: false })
+      : JSON.stringify({
+          from: "newsletter@1m2f-gallery.com",
+          to: [email],
+          subject: "Bem-vindo à newsletter 1M2F Gallery",
+          html: "<p>Obrigado por subscrever a newsletter da <strong>Galeria 1M2F</strong>. Em breve receberás novidades sobre obras, exposições e eventos.</p>",
+        })
 
     const res = await fetch(endpoint, {
       method: "POST",
@@ -40,10 +48,7 @@ export async function POST(req: NextRequest) {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        email,
-        unsubscribed: false,
-      }),
+      body,
     })
 
     if (!res.ok) {
