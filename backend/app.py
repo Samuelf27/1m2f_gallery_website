@@ -61,6 +61,10 @@ app = create_app()
 
 if __name__ == "__main__":
     with app.app_context():
+        # Para SQLite (sem DATABASE_URL), recria tabelas com o schema atual.
+        # Para PostgreSQL, apenas cria tabelas que não existem.
+        if "sqlite" in app.config["SQLALCHEMY_DATABASE_URI"]:
+            db.drop_all()
         db.create_all()
 
     port = int(os.environ.get("PORT", 5000))
