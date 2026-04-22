@@ -18,9 +18,11 @@ def create_app() -> Flask:
     if not secret:
         raise RuntimeError("SECRET_KEY env var is not set")
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-        "DATABASE_URL", "sqlite:///gallery.db"
-    )
+    db_url = os.environ.get("DATABASE_URL", "sqlite:///gallery.db")
+    # Render fornece postgres:// mas SQLAlchemy 2.0 exige postgresql://
+    if db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
+    app.config["SQLALCHEMY_DATABASE_URI"] = db_url
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SECRET_KEY"] = secret
 
@@ -29,7 +31,7 @@ def create_app() -> Flask:
         "ALLOWED_ORIGINS",
         "http://localhost:3000"
     ).split(",")
-    CORS(app, origins=allowed_origins)
+    CORS(app, origins=allowed_origins, supports_credentials=False)
     db.init_app(app)
     migrate.init_app(app, db)
 
