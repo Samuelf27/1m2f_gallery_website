@@ -3,7 +3,7 @@
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
-import { API_URL, EXHIBITIONS_API_URL, TESTIMONIALS_API_URL } from "@/lib/config"
+import { API_URL, EXHIBITIONS_API_URL, TESTIMONIALS_API_URL, SETTINGS_API_URL } from "@/lib/config"
 
 function authHeaders() {
   return {
@@ -291,5 +291,23 @@ export async function deleteTestimonialAction(
 
   revalidatePath("/admin/depoimentos")
   revalidatePath("/admin")
+  return { success: true }
+}
+
+// ─── Settings ─────────────────────────────────────────────────────────────────
+
+export async function updateSettingsAction(
+  data: Record<string, string>
+): Promise<{ error: string } | { success: true }> {
+  const res = await fetch(SETTINGS_API_URL + "/", {
+    method: "PUT",
+    headers: authHeaders(),
+    body: JSON.stringify(data),
+  })
+
+  if (!res.ok) return { error: "Erro ao salvar configurações. Tente novamente." }
+
+  revalidatePath("/admin/configuracoes")
+  revalidatePath("/")
   return { success: true }
 }

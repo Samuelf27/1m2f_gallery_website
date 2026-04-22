@@ -1,7 +1,7 @@
 import type { Artwork } from "@/types/artwork.types"
 import type { Exhibition } from "@/types/exhibition.types"
 import type { Testimonial } from "@/types/testimonial.types"
-import { API_URL, EXHIBITIONS_API_URL, TESTIMONIALS_API_URL } from "@/lib/config"
+import { API_URL, EXHIBITIONS_API_URL, TESTIMONIALS_API_URL, SETTINGS_API_URL } from "@/lib/config"
 
 // ─── Artworks ────────────────────────────────────────────────────────────────
 
@@ -79,4 +79,16 @@ export async function getTestimonial(id: string): Promise<Testimonial> {
   const res = await fetch(`${TESTIMONIALS_API_URL}/${id}`)
   if (!res.ok) throw new Error("Erro ao buscar depoimento")
   return res.json()
+}
+
+// ─── Settings ─────────────────────────────────────────────────────────────────
+
+export async function getSettings(): Promise<Record<string, string>> {
+  try {
+    const res = await fetch(SETTINGS_API_URL + "/", { cache: "no-store" })
+    if (!res.ok) return {}
+    return res.json()
+  } catch {
+    return {}
+  }
 }

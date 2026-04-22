@@ -7,6 +7,7 @@ const API_BASE =
     ? "http://localhost:5000/api"
     : "https://onem2f-gallery-website.onrender.com/api"
 
-export const API_URL            = `${API_BASE}/artworks`
-export const EXHIBITIONS_API_URL = `${API_BASE}/exhibitions`
+export const API_URL              = `${API_BASE}/artworks`
+export const EXHIBITIONS_API_URL  = `${API_BASE}/exhibitions`
 export const TESTIMONIALS_API_URL = `${API_BASE}/testimonials`
+export const SETTINGS_API_URL     = `${API_BASE}/settings`

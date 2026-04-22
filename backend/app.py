@@ -44,10 +44,12 @@ def create_app() -> Flask:
     from app.routes.artworks import artworks_bp
     from app.routes.exhibitions import exhibitions_bp
     from app.routes.testimonials import testimonials_bp
+    from app.routes.settings import settings_bp
 
-    app.register_blueprint(artworks_bp,   url_prefix="/api/artworks")
-    app.register_blueprint(exhibitions_bp, url_prefix="/api/exhibitions")
+    app.register_blueprint(artworks_bp,    url_prefix="/api/artworks")
+    app.register_blueprint(exhibitions_bp,  url_prefix="/api/exhibitions")
     app.register_blueprint(testimonials_bp, url_prefix="/api/testimonials")
+    app.register_blueprint(settings_bp,     url_prefix="/api/settings")
 
     # ── Health check ──────────────────────────────────────────
     @app.route("/")
