@@ -1,8 +1,9 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { getArtworks } from "../services/api"
+import { getArtworks, getTestimonials } from "../services/api"
 import type { Artwork } from "@/types/artwork.types"
+import type { Testimonial } from "@/types/testimonial.types"
 import Link from "next/link"
 import Image from "next/image"
 import FavoriteButton from "@/components/FavoriteButton"
@@ -59,29 +60,9 @@ const heroStats = [
   { num: 4,    suffix: "",  label: "Continentes"   },
 ]
 
-const testimonials = [
-  {
-    quote: "A obra de Maria França transformou completamente o ambiente do meu escritório. É uma peça que inspira todos que passam por aqui — clientes e colaboradores.",
-    author: "Roberto Almeida",
-    role: "Empresário",
-    city: "São Paulo, SP",
-  },
-  {
-    quote: "Adquiri uma tela e me surpreendi com a profundidade e a emoção transmitidas. O atendimento foi impecável, do primeiro contato até a entrega na minha casa.",
-    author: "Claudia Mendes",
-    role: "Arquiteta de interiores",
-    city: "Rio de Janeiro, RJ",
-  },
-  {
-    quote: "Colecionador há mais de 20 anos, raramente encontro obras que me tocam tão profundamente. Maria França é uma artista verdadeiramente singular.",
-    author: "Fernando Costa",
-    role: "Colecionador de arte",
-    city: "Curitiba, PR",
-  },
-]
-
 export default function Home() {
-  const [artworks, setArtworks]       = useState<Artwork[]>([])
+  const [artworks, setArtworks]           = useState<Artwork[]>([])
+  const [testimonials, setTestimonials]   = useState<Testimonial[]>([])
   const [carouselError, setCarouselError] = useState(false)
   const [videoPlaying, setVideoPlaying]   = useState(false)
   const carouselRef = useRef<HTMLDivElement>(null)
@@ -91,6 +72,7 @@ export default function Home() {
 
   useEffect(() => {
     getArtworks().then(setArtworks).catch(() => setCarouselError(true))
+    getTestimonials().then((data) => setTestimonials(data.filter((t) => t.visible))).catch(() => {})
   }, [])
 
   // Scroll animations
@@ -314,16 +296,20 @@ export default function Home() {
         <div className="testimonialsGrid">
           {testimonials.map((t, i) => (
             <article
-              key={t.author}
+              key={t.id}
               className="testimonialCard anim"
               style={{ "--delay": `${i * 120}ms` } as React.CSSProperties}
             >
               <div className="testimonialQuoteMark">&ldquo;</div>
-              <blockquote className="testimonialQuote">{t.quote}</blockquote>
+              <blockquote className="testimonialQuote">{t.text}</blockquote>
               <div className="testimonialDivider" />
               <footer className="testimonialFooter">
-                <span className="testimonialAuthor">{t.author}</span>
-                <span className="testimonialMeta">{t.role} · {t.city}</span>
+                <span className="testimonialAuthor">{t.name}</span>
+                {(t.role || t.city) && (
+                  <span className="testimonialMeta">
+                    {[t.role, t.city].filter(Boolean).join(" · ")}
+                  </span>
+                )}
               </footer>
             </article>
           ))}

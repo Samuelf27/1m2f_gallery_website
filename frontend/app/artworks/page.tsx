@@ -31,6 +31,7 @@ function GalleryContent() {
   const [error, setError]             = useState(false)
   const [search, setSearch]           = useState("")
   const [category, setCategory]       = useState("Todas")
+  const [year, setYear]               = useState("Todos")
   const [sort, setSort]               = useState<SortKey>("newest")
   const [gridCols, setGridCols]       = useState<2 | 3>(2)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
@@ -47,14 +48,20 @@ function GalleryContent() {
     return ["Todas", ...cats.sort()]
   }, [artworks])
 
+  const years = useMemo(() => {
+    const ys = Array.from(new Set(artworks.map((a) => a.year).filter(Boolean)))
+    return ["Todos", ...ys.sort((a, b) => parseInt(b) - parseInt(a))]
+  }, [artworks])
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
     return artworks.filter((a) => {
       const matchSearch = !q || a.title.toLowerCase().includes(q) || a.category?.toLowerCase().includes(q)
       const matchCat    = category === "Todas" || a.category === category
-      return matchSearch && matchCat
+      const matchYear   = year === "Todos" || a.year === year
+      return matchSearch && matchCat && matchYear
     })
-  }, [artworks, search, category])
+  }, [artworks, search, category, year])
 
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
@@ -70,7 +77,7 @@ function GalleryContent() {
 
   const paginated  = sorted.slice(0, visibleCount)
   const hasMore    = visibleCount < sorted.length
-  const activeFilters = (search ? 1 : 0) + (category !== "Todas" ? 1 : 0)
+  const activeFilters = (search ? 1 : 0) + (category !== "Todas" ? 1 : 0) + (year !== "Todos" ? 1 : 0)
 
   // Reset visible count when filters/sort change
   useEffect(() => { setVisibleCount(PAGE_SIZE) }, [search, category, sort])
@@ -96,7 +103,7 @@ function GalleryContent() {
   function handleSort(value: SortKey)    { setSort(value);     }
 
   function clearFilters() {
-    setSearch(""); setCategory("Todas"); setSort("newest")
+    setSearch(""); setCategory("Todas"); setYear("Todos"); setSort("newest")
   }
 
   function openModal(id: number) {
@@ -165,6 +172,20 @@ function GalleryContent() {
               value={search}
               onChange={(e) => handleSearch(e.target.value)}
             />
+          </div>
+
+          <div className="gallerySortWrapper">
+            <label className="gallerySortLabel" htmlFor="gallery-year">Ano</label>
+            <select
+              id="gallery-year"
+              className="gallerySort"
+              value={year}
+              onChange={(e) => { setYear(e.target.value); setVisibleCount(PAGE_SIZE) }}
+            >
+              {years.map((y) => (
+                <option key={y} value={y}>{y}</option>
+              ))}
+            </select>
           </div>
 
           <div className="gallerySortWrapper">

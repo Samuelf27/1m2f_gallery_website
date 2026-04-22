@@ -4977,3 +4977,143 @@ body.admin-mode .cookieBanner {
   /* Rodapé simplificado */
   @page { margin: 20mm; }
 }
+
+/* ─── WHATSAPP FLUTUANTE ─────────────────────────────────── */
+.whatsappFloat {
+  position: fixed;
+  bottom: 88px;
+  right: 24px;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #25D366;
+  color: #fff;
+  border-radius: 50px;
+  padding: 12px 16px 12px 14px;
+  box-shadow: 0 4px 24px rgba(37, 211, 102, 0.35);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  opacity: 0;
+  transform: translateY(12px) scale(0.95);
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease), box-shadow 0.2s;
+}
+.whatsappFloat svg { width: 20px; height: 20px; flex-shrink: 0; }
+.whatsappFloat--visible { opacity: 1; transform: none; pointer-events: auto; }
+.whatsappFloat:hover { box-shadow: 0 6px 32px rgba(37, 211, 102, 0.5); transform: translateY(-2px); }
+@media (max-width: 480px) {
+  .whatsappFloat { bottom: 80px; right: 16px; padding: 12px; border-radius: 50%; }
+  .whatsappFloatLabel { display: none; }
+}
+body.admin-mode .whatsappFloat { display: none; }
+
+/* ─── LIGHTBOX ───────────────────────────────────────────── */
+.lightboxTrigger {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  background: rgba(8,8,8,0.7);
+  border: 1px solid var(--border-warm);
+  border-radius: 6px;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s;
+  z-index: 10;
+}
+.lightboxTrigger svg { width: 16px; height: 16px; }
+.artImageWrapper:hover .lightboxTrigger { opacity: 1; }
+.artImageWrapper:focus-within .lightboxTrigger { opacity: 1; }
+
+.lightboxOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+  animation: lightboxIn 0.2s var(--ease-out);
+}
+@keyframes lightboxIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.lightboxContent {
+  position: relative;
+  width: min(92vw, 1200px);
+  height: min(88vh, 900px);
+  cursor: default;
+}
+.lightboxClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10001;
+  transition: background 0.2s;
+}
+.lightboxClose:hover { background: rgba(255,255,255,0.15); }
+.lightboxClose svg { width: 18px; height: 18px; }
+
+/* ─── EXPOSIÇÃO INDIVIDUAL ───────────────────────────────── */
+.exhDetailBreadcrumb {
+  margin-bottom: 32px;
+  font-size: 13px;
+  color: var(--white-dim);
+  letter-spacing: 0.3px;
+}
+.exhDetailBreadcrumb a { color: var(--gold); transition: opacity 0.2s; }
+.exhDetailBreadcrumb a:hover { opacity: 0.75; }
+
+.exhDetailHeader {
+  margin-bottom: 40px;
+}
+.exhDetailTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 300;
+  color: var(--white);
+  margin-top: 12px;
+  line-height: 1.1;
+}
+
+.exhDetailMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  padding: 28px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 40px;
+}
+.exhDetailMetaItem { display: flex; flex-direction: column; gap: 4px; }
+.exhDetailMetaLabel { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); opacity: 0.7; }
+.exhDetailMetaValue { font-size: 15px; color: var(--white); }
+
+.exhDetailBody {
+  max-width: 680px;
+  margin-bottom: 48px;
+  line-height: 1.8;
+  color: rgba(240,237,232,0.8);
+  font-size: 15px;
+}
+.exhDetailActions { margin-top: 0; }
+}

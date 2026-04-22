@@ -6,6 +6,7 @@ import { notFound } from "next/navigation"
 import { SITE_URL } from "@/lib/config"
 import { buildArtworkWhatsAppUrl } from "@/lib/whatsapp"
 import ShareButton from "@/components/ShareButton"
+import ImageLightbox from "@/components/ImageLightbox"
 
 /* ─── METADATA DINÂMICO ────────────────────────────────────── */
 export async function generateMetadata({
@@ -155,6 +156,7 @@ export default async function ArtworkPage({
               priority
               quality={90}
             />
+            <ImageLightbox src={art.image_url} alt={`${art.title} — ${artist}`} />
           </div>
           <div className="artImageLabel">Obra única</div>
         </div>

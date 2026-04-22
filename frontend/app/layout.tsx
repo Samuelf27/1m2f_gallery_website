@@ -7,6 +7,8 @@ import PageTransitionWrapper from "@/components/PageTransitionWrapper"
 import ScrollToTop from "@/components/ScrollToTop"
 import NavigationProgress from "@/components/NavigationProgress"
 import CookieBanner from "@/components/CookieBanner"
+import WhatsAppFloat from "@/components/WhatsAppFloat"
+import ScrollAnimations from "@/components/ScrollAnimations"
 import { Analytics } from "@vercel/analytics/next"
 import { SITE_URL } from "@/lib/config"
 
@@ -92,6 +94,8 @@ export default function RootLayout({
           <Footer />
           <ScrollToTop />
           <CookieBanner />
+          <WhatsAppFloat />
+          <ScrollAnimations />
           <Analytics />
         </FavoritesProvider>
       </body>
