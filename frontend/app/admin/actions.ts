@@ -63,7 +63,7 @@ export async function createArtworkAction(
 
   revalidatePath("/admin/artworks")
   revalidatePath("/admin")
-  redirect("/admin/artworks")
+  redirect("/admin/artworks?msg=Obra+criada+com+sucesso")
 }
 
 export async function updateArtworkAction(
@@ -81,7 +81,7 @@ export async function updateArtworkAction(
   revalidatePath("/admin/artworks")
   revalidatePath(`/admin/artworks/${id}`)
   revalidatePath("/admin")
-  redirect("/admin/artworks")
+  redirect("/admin/artworks?msg=Obra+atualizada+com+sucesso")
 }
 
 export async function deleteArtworkAction(
@@ -123,7 +123,7 @@ export async function createExhibitionAction(
 
   revalidatePath("/admin/exposicoes")
   revalidatePath("/admin")
-  redirect("/admin/exposicoes")
+  redirect("/admin/exposicoes?msg=Exposi%C3%A7%C3%A3o+criada+com+sucesso")
 }
 
 export async function updateExhibitionAction(
@@ -141,7 +141,7 @@ export async function updateExhibitionAction(
   revalidatePath("/admin/exposicoes")
   revalidatePath(`/admin/exposicoes/${id}`)
   revalidatePath("/admin")
-  redirect("/admin/exposicoes")
+  redirect("/admin/exposicoes?msg=Exposi%C3%A7%C3%A3o+atualizada+com+sucesso")
 }
 
 export async function deleteExhibitionAction(
@@ -182,7 +182,7 @@ export async function createTestimonialAction(
 
   revalidatePath("/admin/depoimentos")
   revalidatePath("/admin")
-  redirect("/admin/depoimentos")
+  redirect("/admin/depoimentos?msg=Depoimento+criado+com+sucesso")
 }
 
 export async function updateTestimonialAction(
@@ -200,7 +200,7 @@ export async function updateTestimonialAction(
   revalidatePath("/admin/depoimentos")
   revalidatePath(`/admin/depoimentos/${id}`)
   revalidatePath("/admin")
-  redirect("/admin/depoimentos")
+  redirect("/admin/depoimentos?msg=Depoimento+atualizado+com+sucesso")
 }
 
 export async function deleteTestimonialAction(

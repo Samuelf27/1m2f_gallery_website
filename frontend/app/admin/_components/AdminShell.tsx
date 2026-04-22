@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
 import AdminSidebar from "./AdminSidebar"
+import AdminToast from "@/components/admin/AdminToast"
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -38,6 +39,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         >
           <span /><span /><span />
         </button>
+        <AdminToast />
         {children}
       </main>
     </div>
