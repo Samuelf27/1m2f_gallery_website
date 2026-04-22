@@ -2,7 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { getAllArtworks } from "@/services/api"
-import { deleteArtworkAction, updateArtworkAction } from "@/app/admin/actions"
+import {
+  deleteArtworkAction,
+  updateArtworkAction,
+  toggleArtworkFeaturedAction,
+  toggleArtworkAvailableAction,
+  duplicateArtworkAction,
+} from "@/app/admin/actions"
 import type { Artwork } from "@/types/artwork.types"
 import Link from "next/link"
 import Image from "next/image"
@@ -97,6 +103,53 @@ export default function AdminArtworks() {
     load()
   }
 
+  async function handleToggleFeatured(art: Artwork) {
+    await toggleArtworkFeaturedAction(art.id, art.featured, {
+      title: art.title, artist: art.artist ?? "", year: art.year,
+      description: art.description, image_url: art.image_url,
+      category: art.category, dimensions: art.dimensions ?? "",
+      available: art.available, featured: art.featured,
+    })
+    load()
+  }
+
+  async function handleToggleAvailable(art: Artwork) {
+    await toggleArtworkAvailableAction(art.id, {
+      title: art.title, artist: art.artist ?? "", year: art.year,
+      description: art.description, image_url: art.image_url,
+      category: art.category, dimensions: art.dimensions ?? "",
+      available: art.available, featured: art.featured,
+    })
+    load()
+  }
+
+  async function handleDuplicate(id: number) {
+    await duplicateArtworkAction(id)
+    load()
+  }
+
+  function handleExportCSV() {
+    const headers = ["ID", "Título", "Artista", "Ano", "Categoria", "Disponibilidade", "Destaque", "Dimensões"]
+    const rows = filtered.map((a) => [
+      a.id,
+      `"${a.title.replace(/"/g, '""')}"`,
+      `"${(a.artist ?? "").replace(/"/g, '""')}"`,
+      a.year ?? "",
+      `"${a.category.replace(/"/g, '""')}"`,
+      a.available || "disponível",
+      a.featured ? "sim" : "não",
+      `"${(a.dimensions ?? "").replace(/"/g, '""')}"`,
+    ])
+    const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n")
+    const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `obras_${new Date().toISOString().slice(0, 10)}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <div className="adminPage">
       <div className="adminPageHeader">
@@ -104,7 +157,12 @@ export default function AdminArtworks() {
           <AdminBreadcrumb crumbs={[{ label: "Dashboard", href: "/admin" }, { label: "Obras" }]} />
           <h1>Obras <span className="adminPageCount">{loading ? "" : `(${filtered.length})`}</span></h1>
         </div>
-        <Link href="/admin/artworks/new" className="adminButton">+ Nova Obra</Link>
+        <div className="adminHeaderActions">
+          <button type="button" className="adminButtonSecondary" onClick={handleExportCSV} disabled={loading || filtered.length === 0}>
+            ↓ CSV
+          </button>
+          <Link href="/admin/artworks/new" className="adminButton">+ Nova Obra</Link>
+        </div>
       </div>
 
       {/* ── Filtros ──────────────────────────────────────────── */}
@@ -205,6 +263,30 @@ export default function AdminArtworks() {
                     <polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
                   </svg>
                 </Link>
+                <button
+                  type="button"
+                  className={`adminToggleBtn ${art.featured ? "adminToggleBtn--active" : ""}`}
+                  title={art.featured ? "Remover destaque" : "Marcar destaque"}
+                  onClick={() => handleToggleFeatured(art)}
+                >
+                  ★
+                </button>
+                <button
+                  type="button"
+                  className={`adminToggleBtn ${art.available === "vendido" ? "adminToggleBtn--sold" : "adminToggleBtn--avail"}`}
+                  title={art.available === "vendido" ? "Marcar disponível" : "Marcar vendido"}
+                  onClick={() => handleToggleAvailable(art)}
+                >
+                  {art.available === "vendido" ? "↩" : "✓"}
+                </button>
+                <button
+                  type="button"
+                  className="adminToggleBtn"
+                  title="Duplicar obra"
+                  onClick={() => handleDuplicate(art.id)}
+                >
+                  ⧉
+                </button>
                 <Link href={`/admin/artworks/${art.id}`} className="editButton">Editar</Link>
                 <button type="button" className="deleteButton" onClick={() => handleDelete(art.id, art.title)}>
                   Deletar

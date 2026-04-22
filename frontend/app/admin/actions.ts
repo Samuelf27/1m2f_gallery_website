@@ -99,6 +99,82 @@ export async function deleteArtworkAction(
   return { success: true }
 }
 
+export async function toggleArtworkFeaturedAction(
+  id: number,
+  currentFeatured: boolean,
+  currentData: ArtworkFormData
+): Promise<{ error: string } | { success: true }> {
+  const res = await fetch(`${API_URL}/${id}`, {
+    method: "PUT",
+    headers: authHeaders(),
+    body: JSON.stringify({ ...currentData, featured: !currentFeatured }),
+  })
+  if (!res.ok) return { error: "Erro ao atualizar destaque." }
+  revalidatePath("/admin/artworks")
+  revalidatePath("/admin")
+  return { success: true }
+}
+
+export async function toggleArtworkAvailableAction(
+  id: number,
+  currentData: ArtworkFormData
+): Promise<{ error: string } | { success: true }> {
+  const newValue = currentData.available === "vendido" ? "disponível" : "vendido"
+  const res = await fetch(`${API_URL}/${id}`, {
+    method: "PUT",
+    headers: authHeaders(),
+    body: JSON.stringify({ ...currentData, available: newValue }),
+  })
+  if (!res.ok) return { error: "Erro ao atualizar disponibilidade." }
+  revalidatePath("/admin/artworks")
+  revalidatePath("/admin")
+  return { success: true }
+}
+
+export async function duplicateArtworkAction(
+  id: number
+): Promise<{ error: string } | { success: true }> {
+  const getRes = await fetch(`${API_URL}/${id}`)
+  if (!getRes.ok) return { error: "Obra não encontrada." }
+  const art = await getRes.json()
+
+  const res = await fetch(API_URL + "/", {
+    method: "POST",
+    headers: authHeaders(),
+    body: JSON.stringify({
+      title:       `${art.title} (cópia)`,
+      artist:       art.artist,
+      year:         art.year,
+      description:  art.description,
+      image_url:    art.image_url,
+      category:     art.category,
+      dimensions:   art.dimensions,
+      available:    "disponível",
+      featured:     false,
+    }),
+  })
+  if (!res.ok) return { error: "Erro ao duplicar obra." }
+  revalidatePath("/admin/artworks")
+  revalidatePath("/admin")
+  return { success: true }
+}
+
+export async function toggleTestimonialVisibleAction(
+  id: number,
+  currentVisible: boolean,
+  currentData: TestimonialFormData
+): Promise<{ error: string } | { success: true }> {
+  const res = await fetch(`${TESTIMONIALS_API_URL}/${id}`, {
+    method: "PUT",
+    headers: authHeaders(),
+    body: JSON.stringify({ ...currentData, visible: !currentVisible }),
+  })
+  if (!res.ok) return { error: "Erro ao atualizar visibilidade." }
+  revalidatePath("/admin/depoimentos")
+  revalidatePath("/admin")
+  return { success: true }
+}
+
 // ─── Exhibitions ──────────────────────────────────────────────────────────────
 
 type ExhibitionFormData = {

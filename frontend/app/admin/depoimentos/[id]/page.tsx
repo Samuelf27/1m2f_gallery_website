@@ -106,7 +106,10 @@ export default function EditDepoimento({ params }: { params: Promise<{ id: strin
           </div>
 
           <div className="adminFormGroup adminFormGroup--full">
-            <label className="adminLabel">Depoimento *</label>
+            <label className="adminLabel">
+              Depoimento *
+              <span className="adminCharCount">{form.text.length} caracteres</span>
+            </label>
             <textarea name="text" value={form.text} onChange={handleChange} rows={5} />
           </div>
 

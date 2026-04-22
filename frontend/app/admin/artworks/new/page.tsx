@@ -121,7 +121,10 @@ export default function NewArtwork() {
           </div>
 
           <div className="adminFormGroup adminFormGroup--full">
-            <label className="adminLabel">Descrição</label>
+            <label className="adminLabel">
+              Descrição
+              <span className="adminCharCount">{form.description.length} caracteres</span>
+            </label>
             <textarea name="description" value={form.description} onChange={handleChange} rows={4} />
           </div>
 

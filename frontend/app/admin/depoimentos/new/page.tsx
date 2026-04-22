@@ -81,7 +81,10 @@ export default function NewDepoimento() {
           </div>
 
           <div className="adminFormGroup adminFormGroup--full">
-            <label className="adminLabel">Depoimento *</label>
+            <label className="adminLabel">
+              Depoimento *
+              <span className="adminCharCount">{form.text.length} caracteres</span>
+            </label>
             <textarea name="text" value={form.text} onChange={handleChange} rows={5} />
           </div>
 
