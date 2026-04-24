@@ -1,6 +1,7 @@
 import os
 from flask import Blueprint, jsonify, request, abort
 from app.models.testimonial import Testimonial
+from app.audit import log_action
 from extensions import db
 
 testimonials_bp = Blueprint("testimonials", __name__)
@@ -48,6 +49,7 @@ def create_testimonial():
         visible=bool(data.get("visible", True)),
     )
     db.session.add(testimonial)
+    log_action("depoimento", "criou", testimonial.id, testimonial.name)
     db.session.commit()
     return jsonify(testimonial.to_dict()), 201
 
@@ -65,6 +67,7 @@ def update_testimonial(id):
         if field in data:
             setattr(testimonial, field, data[field])
 
+    log_action("depoimento", "atualizou", testimonial.id, testimonial.name)
     db.session.commit()
     return jsonify(testimonial.to_dict())
 
@@ -73,6 +76,7 @@ def update_testimonial(id):
 def delete_testimonial(id):
     require_api_key()
     testimonial = db.get_or_404(Testimonial, id)
+    log_action("depoimento", "deletou", testimonial.id, testimonial.name)
     db.session.delete(testimonial)
     db.session.commit()
     return "", 204

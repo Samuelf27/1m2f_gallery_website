@@ -54,11 +54,13 @@ def create_app() -> Flask:
     from app.routes.exhibitions import exhibitions_bp
     from app.routes.testimonials import testimonials_bp
     from app.routes.settings    import settings_bp
+    from app.routes.audit_logs  import audit_logs_bp
 
     flask_app.register_blueprint(artworks_bp,    url_prefix="/api/artworks")
     flask_app.register_blueprint(exhibitions_bp,  url_prefix="/api/exhibitions")
     flask_app.register_blueprint(testimonials_bp, url_prefix="/api/testimonials")
     flask_app.register_blueprint(settings_bp,     url_prefix="/api/settings")
+    flask_app.register_blueprint(audit_logs_bp,   url_prefix="/api/audit-logs")
 
     # ── Health check ──────────────────────────────────────────
     @flask_app.route("/")

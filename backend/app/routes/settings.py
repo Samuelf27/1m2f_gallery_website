@@ -1,6 +1,7 @@
 import os
 from flask import Blueprint, jsonify, request, abort
 from app.models.setting import Setting
+from app.audit import log_action
 from extensions import db
 
 settings_bp = Blueprint("settings", __name__)
@@ -39,6 +40,7 @@ def update_settings():
         else:
             db.session.add(Setting(key=key, value=str(value)))
 
+    log_action("configurações", "atualizou", None, "Configurações do sistema")
     db.session.commit()
     settings = Setting.query.all()
     return jsonify({s.key: s.value for s in settings})

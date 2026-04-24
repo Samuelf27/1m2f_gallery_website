@@ -2,6 +2,7 @@ import os
 from flask import Blueprint, jsonify, request, abort
 from app.models.artwork import Artwork
 from app.models.artist import Artist
+from app.audit import log_action
 from extensions import db
 
 artworks_bp = Blueprint("artworks", __name__)
@@ -90,6 +91,7 @@ def create_artwork():
         featured=bool(data.get("featured", False)),
     )
     db.session.add(art)
+    log_action("obra", "criou", art.id, art.title)
     db.session.commit()
     return jsonify(art.to_dict()), 201
 
@@ -110,6 +112,7 @@ def update_artwork(id):
         if field in data:
             setattr(art, field, data[field])
 
+    log_action("obra", "atualizou", art.id, art.title)
     db.session.commit()
     return jsonify(art.to_dict())
 
@@ -132,6 +135,7 @@ def reorder_artworks():
 def delete_artwork(id):
     require_api_key()
     art = db.get_or_404(Artwork, id)
+    log_action("obra", "deletou", art.id, art.title)
     db.session.delete(art)
     db.session.commit()
     return "", 204

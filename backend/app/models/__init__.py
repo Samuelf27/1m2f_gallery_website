@@ -6,5 +6,6 @@ from app.models.artwork import Artwork
 from app.models.exhibition import Exhibition
 from app.models.testimonial import Testimonial
 from app.models.setting import Setting
+from app.models.audit_log import AuditLog
 
-__all__ = ["Artist", "Artwork", "Exhibition", "Testimonial", "Setting"]
+__all__ = ["Artist", "Artwork", "Exhibition", "Testimonial", "Setting", "AuditLog"]

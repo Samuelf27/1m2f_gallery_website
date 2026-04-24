@@ -1,6 +1,7 @@
 import os
 from flask import Blueprint, jsonify, request, abort
 from app.models.exhibition import Exhibition
+from app.audit import log_action
 from extensions import db
 
 exhibitions_bp = Blueprint("exhibitions", __name__)
@@ -48,6 +49,7 @@ def create_exhibition():
         description=data.get("description"),
     )
     db.session.add(exhibition)
+    log_action("exposição", "criou", exhibition.id, exhibition.title)
     db.session.commit()
     return jsonify(exhibition.to_dict()), 201
 
@@ -69,6 +71,7 @@ def update_exhibition(id):
                 value = None
             setattr(exhibition, field, value)
 
+    log_action("exposição", "atualizou", exhibition.id, exhibition.title)
     db.session.commit()
     return jsonify(exhibition.to_dict())
 
@@ -77,6 +80,7 @@ def update_exhibition(id):
 def delete_exhibition(id):
     require_api_key()
     exhibition = db.get_or_404(Exhibition, id)
+    log_action("exposição", "deletou", exhibition.id, exhibition.title)
     db.session.delete(exhibition)
     db.session.commit()
     return "", 204

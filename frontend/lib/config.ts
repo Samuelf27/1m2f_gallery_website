@@ -11,3 +11,4 @@ export const API_URL              = `${API_BASE}/artworks`
 export const EXHIBITIONS_API_URL  = `${API_BASE}/exhibitions`
 export const TESTIMONIALS_API_URL = `${API_BASE}/testimonials`
 export const SETTINGS_API_URL     = `${API_BASE}/settings`
+export const AUDIT_LOGS_API_URL   = `${API_BASE}/audit-logs`

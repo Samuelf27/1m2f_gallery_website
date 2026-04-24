@@ -27,6 +27,7 @@ const navItems: NavGroup[] = [
     section: "Sistema",
     links: [
       { href: "/admin/configuracoes", label: "Configurações", icon: "◉" },
+      { href: "/admin/historico",     label: "Histórico",     icon: "◷" },
     ],
   },
 ]
