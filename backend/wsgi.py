@@ -16,11 +16,18 @@ def create_app() -> Flask:
     if not secret:
         raise RuntimeError("SECRET_KEY env var is not set")
 
-    db_url = os.environ.get("DATABASE_URL", "").strip()
-    if not db_url:
+    raw_url = os.environ.get("DATABASE_URL", "").strip()
+    # Log prefix for diagnosis (never log full URL — contains password)
+    print(f"[wsgi] DATABASE_URL prefix: {repr(raw_url[:30]) if raw_url else '(not set)'}")
+
+    VALID_PREFIXES = ("postgresql://", "postgres://", "sqlite:///", "sqlite://")
+    if raw_url and any(raw_url.startswith(p) for p in VALID_PREFIXES):
+        db_url = raw_url
+        if db_url.startswith("postgres://"):
+            db_url = db_url.replace("postgres://", "postgresql://", 1)
+    else:
+        print("[wsgi] DATABASE_URL missing or invalid — falling back to SQLite")
         db_url = "sqlite:///gallery.db"
-    if db_url.startswith("postgres://"):
-        db_url = db_url.replace("postgres://", "postgresql://", 1)
 
     flask_app.config["SQLALCHEMY_DATABASE_URI"]     = db_url
     flask_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
