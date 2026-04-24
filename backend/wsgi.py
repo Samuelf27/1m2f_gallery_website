@@ -16,7 +16,9 @@ def create_app() -> Flask:
     if not secret:
         raise RuntimeError("SECRET_KEY env var is not set")
 
-    db_url = os.environ.get("DATABASE_URL", "sqlite:///gallery.db")
+    db_url = os.environ.get("DATABASE_URL", "").strip()
+    if not db_url:
+        db_url = "sqlite:///gallery.db"
     if db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql://", 1)
 
