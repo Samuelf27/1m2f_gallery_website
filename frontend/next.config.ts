@@ -30,6 +30,18 @@ const nextConfig: NextConfig = {
         { key: "Referrer-Policy",           value: "strict-origin-when-cross-origin" },
         { key: "Permissions-Policy",        value: "camera=(), microphone=(), geolocation=()" },
         { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+        {
+          key: "Content-Security-Policy",
+          value: [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            "style-src 'self' 'unsafe-inline'",
+            "img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com https://upload.wikimedia.org https://i.imgur.com https://onem2f-gallery-website.onrender.com",
+            "font-src 'self'",
+            "connect-src 'self' https://api.cloudinary.com https://api.resend.com https://onem2f-gallery-website.onrender.com",
+            "frame-ancestors 'none'",
+          ].join("; "),
+        },
       ],
     },
     {

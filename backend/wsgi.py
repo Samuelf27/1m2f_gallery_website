@@ -45,7 +45,9 @@ def create_app() -> Flask:
 
     # ── DB bootstrap ─────────────────────────────────────────
     with flask_app.app_context():
-        if "sqlite" in flask_app.config["SQLALCHEMY_DATABASE_URI"]:
+        # drop_all only in local dev (never wipe PostgreSQL in production)
+        if "sqlite" in flask_app.config["SQLALCHEMY_DATABASE_URI"] and \
+                os.environ.get("FLASK_DEBUG") == "1":
             db.drop_all()
         db.create_all()
 
