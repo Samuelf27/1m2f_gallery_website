@@ -85,7 +85,7 @@ export async function getTestimonial(id: string): Promise<Testimonial> {
 
 export async function getSettings(): Promise<Record<string, string>> {
   try {
-    const res = await fetch(SETTINGS_API_URL + "/", { cache: "no-store" })
+    const res = await fetch(SETTINGS_API_URL + "/", { next: { revalidate: 300 } })
     if (!res.ok) return {}
     return res.json()
   } catch {

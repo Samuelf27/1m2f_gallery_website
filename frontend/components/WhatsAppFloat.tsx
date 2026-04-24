@@ -1,10 +1,12 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { WHATSAPP_URL } from "@/lib/config"
+import { WHATSAPP_NUMBER } from "@/lib/config"
 
-export default function WhatsAppFloat() {
+export default function WhatsAppFloat({ phone }: { phone?: string }) {
   const [visible, setVisible] = useState(false)
+  const number = phone || WHATSAPP_NUMBER
+  const url = `https://wa.me/${number}`
 
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > 300)
@@ -14,7 +16,7 @@ export default function WhatsAppFloat() {
 
   return (
     <a
-      href={`${WHATSAPP_URL}?text=Olá!%20Tenho%20interesse%20numa%20obra%20da%20Galeria%201M2F.`}
+      href={`${url}?text=Olá!%20Tenho%20interesse%20numa%20obra%20da%20Galeria%201M2F.`}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Contactar via WhatsApp"

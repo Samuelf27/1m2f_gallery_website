@@ -11,6 +11,7 @@ import WhatsAppFloat from "@/components/WhatsAppFloat"
 import ScrollAnimations from "@/components/ScrollAnimations"
 import { Analytics } from "@vercel/analytics/next"
 import { SITE_URL } from "@/lib/config"
+import { getSettings } from "@/services/api"
 
 const defaultOg = `${SITE_URL}/api/og?title=1M2F+Gallery&description=A+galeria+de+Maria+Fran%C3%A7a+%E2%80%94+mais+de+6.000+obras+em+acr%C3%ADlico%2C+tela%2C+porcelana+e+a%C3%A7o.+S%C3%A3o+Paulo%2C+Brasil&label=Arte+Contempor%C3%A2nea`
 
@@ -73,11 +74,13 @@ const organizationJsonLd = {
   ],
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const settings = await getSettings()
+
   return (
     <html lang="pt-BR">
       <body>
@@ -91,10 +94,14 @@ export default function RootLayout({
           <PageTransitionWrapper>
             {children}
           </PageTransitionWrapper>
-          <Footer />
+          <Footer
+            whatsapp={settings.whatsapp}
+            instagram={settings.instagram}
+            facebook={settings.facebook}
+          />
           <ScrollToTop />
           <CookieBanner />
-          <WhatsAppFloat />
+          <WhatsAppFloat phone={settings.whatsapp} />
           <ScrollAnimations />
           <Analytics />
         </FavoritesProvider>

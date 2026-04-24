@@ -1,8 +1,20 @@
 import Link from "next/link"
 import Image from "next/image"
-import { WHATSAPP_URL } from "@/lib/config"
+import { WHATSAPP_NUMBER } from "@/lib/config"
 
-export default function Footer() {
+const DEFAULT_INSTAGRAM = "https://www.instagram.com/1m2f_art_gallery/"
+const YOUTUBE_URL       = "https://www.youtube.com/@1M2FArtGallery-MariaFran%C3%A7a"
+
+type FooterProps = {
+  whatsapp?: string
+  instagram?: string
+  facebook?: string
+}
+
+export default function Footer({ whatsapp, instagram, facebook }: FooterProps) {
+  const waUrl = `https://wa.me/${whatsapp || WHATSAPP_NUMBER}`
+  const igUrl = instagram || DEFAULT_INSTAGRAM
+
   return (
     <footer className="footer">
 
@@ -12,7 +24,7 @@ export default function Footer() {
           <p className="footerCtaLabel">Interessado em uma obra?</p>
           <p className="footerCtaHeading">Fale diretamente com a artista</p>
         </div>
-        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="heroButton">
+        <a href={waUrl} target="_blank" rel="noopener noreferrer" className="heroButton">
           Conversar no WhatsApp →
         </a>
       </div>
@@ -43,9 +55,12 @@ export default function Footer() {
           </div>
           <div className="footerNavCol">
             <span>Redes sociais</span>
-            <a href="https://www.instagram.com/1m2f_art_gallery/" target="_blank" rel="noopener noreferrer">Instagram</a>
-            <a href="https://www.youtube.com/@1M2FArtGallery-MariaFran%C3%A7a" target="_blank" rel="noopener noreferrer">YouTube</a>
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            <a href={igUrl} target="_blank" rel="noopener noreferrer">Instagram</a>
+            {facebook && (
+              <a href={facebook} target="_blank" rel="noopener noreferrer">Facebook</a>
+            )}
+            <a href={YOUTUBE_URL} target="_blank" rel="noopener noreferrer">YouTube</a>
+            <a href={waUrl} target="_blank" rel="noopener noreferrer">WhatsApp</a>
           </div>
         </div>
       </div>

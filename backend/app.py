@@ -27,13 +27,22 @@ def create_app() -> Flask:
     app.config["SECRET_KEY"] = secret
 
     # ── Extensions ────────────────────────────────────────────
-    allowed_origins = os.environ.get(
-        "ALLOWED_ORIGINS",
-        "http://localhost:3000"
-    ).split(",")
+    allowed_origins = [
+        o.strip()
+        for o in os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+        if o.strip()
+    ]
     CORS(app, origins=allowed_origins, supports_credentials=False)
     db.init_app(app)
     migrate.init_app(app, db)
+
+    # ── DB bootstrap ─────────────────────────────────────────
+    # Runs on every startup (Gunicorn included).
+    # create_all is idempotent — only creates tables that don't exist yet.
+    with app.app_context():
+        if "sqlite" in app.config["SQLALCHEMY_DATABASE_URI"]:
+            db.drop_all()   # dev only: reset schema on restart
+        db.create_all()
 
     # ── Swagger (dev only) ────────────────────────────────────
     if os.environ.get("FLASK_ENV") == "development":
