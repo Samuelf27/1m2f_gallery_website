@@ -5254,6 +5254,22 @@ body.admin-mode .whatsappFloat { display: none; }
   display: block;
 }
 .adminCard--selected { background: rgba(201,169,110,0.06) !important; border-color: var(--border-warm) !important; }
+.adminCard--dragOver { border-color: var(--gold) !important; background: rgba(201,169,110,0.1) !important; }
+.adminCard[draggable="true"] { cursor: grab; }
+.adminCard[draggable="true"]:active { cursor: grabbing; }
+.adminDragHandle {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  padding: 0 4px;
+  cursor: grab;
+  user-select: none;
+  flex-shrink: 0;
+}
+.adminDragHint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0 0 8px 0;
+}
 .adminListHeader {
   display: flex;
   align-items: center;
@@ -5390,3 +5406,56 @@ body.admin-mode .whatsappFloat { display: none; }
 .adminCategoryCount { font-size: 12px; color: var(--white-dim); }
 .adminCategoryBar { height: 4px; background: var(--black-3); border-radius: 2px; overflow: hidden; }
 .adminCategoryBarFill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.6s var(--ease-out); }
+
+/* ─── SKELETON LOADERS ───────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--black-2) 25%, var(--black-3) 50%, var(--black-2) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 6px;
+}
+/* ─── CLOUDINARY UPLOAD ──────────────────────────────────── */
+.cloudinaryUpload { display: flex; flex-direction: column; gap: 8px; }
+.cloudinaryPreview {
+  position: relative;
+  width: 100%;
+  max-width: 260px;
+  aspect-ratio: 4/5;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--black-2);
+  border: 1px solid var(--border);
+}
+.cloudinaryPreview img { width: 100%; height: 100%; object-fit: cover; }
+.cloudinaryOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--white);
+}
+.cloudinaryActions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* ─── CONTACT FORM EXTRAS ────────────────────────────────── */
+.contactFormError { font-size: 13px; color: #e57373; margin: 4px 0; }
+.contactWhatsAppBtn {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--white-dim);
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  margin-top: 4px;
+}
+.contactWhatsAppBtn:hover { border-color: #25d366; color: #25d366; }

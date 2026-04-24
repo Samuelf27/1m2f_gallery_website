@@ -7,6 +7,7 @@ import AdminBreadcrumb from "@/app/admin/_components/AdminBreadcrumb"
 import type { Artwork } from "@/types/artwork.types"
 import Link from "next/link"
 import Image from "next/image"
+import CloudinaryUpload from "@/components/CloudinaryUpload"
 
 const CATEGORIES = ["Pintura", "Escultura", "Fotografia", "Gravura", "Desenho", "Mista", "Digital", "Outra"]
 
@@ -133,18 +134,22 @@ export default function EditArtwork({ params }: { params: Promise<{ id: string }
           </div>
 
           <div className="adminFormGroup adminFormGroup--full">
-            <label className="adminLabel">URL da Imagem</label>
-            <input name="image_url" value={form.image_url} onChange={handleChange} />
-            {form.image_url && (
+            <label className="adminLabel">Imagem</label>
+            <CloudinaryUpload
+              currentUrl={form.image_url}
+              onUpload={(url) => setForm((f) => ({ ...f, image_url: url }))}
+            />
+            <input
+              name="image_url"
+              value={form.image_url}
+              onChange={handleChange}
+              placeholder="Ou cole uma URL externa"
+              style={{ marginTop: 8 }}
+            />
+            {form.image_url && !form.image_url.startsWith("blob:") && (
               <div className="adminImagePreview">
-                <Image
-                  src={form.image_url}
-                  alt="Preview"
-                  fill
-                  style={{ objectFit: "cover" }}
-                  sizes="260px"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none" }}
-                />
+                <Image src={form.image_url} alt="Preview" fill style={{ objectFit: "cover" }} sizes="260px"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none" }} />
               </div>
             )}
           </div>

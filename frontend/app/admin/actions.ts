@@ -131,6 +131,20 @@ export async function toggleArtworkAvailableAction(
   return { success: true }
 }
 
+export async function reorderArtworksAction(
+  order: { id: number; sort_order: number }[]
+): Promise<{ error: string } | { success: true }> {
+  const res = await fetch(`${API_URL}/reorder`, {
+    method: "PUT",
+    headers: authHeaders(),
+    body: JSON.stringify(order),
+  })
+  if (!res.ok) return { error: "Erro ao reordenar obras." }
+  revalidatePath("/admin/artworks")
+  revalidatePath("/")
+  return { success: true }
+}
+
 export async function duplicateArtworkAction(
   id: number
 ): Promise<{ error: string } | { success: true }> {

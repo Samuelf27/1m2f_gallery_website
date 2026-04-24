@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { getAllArtworks } from "@/services/api"
 import {
   deleteArtworkAction,
@@ -8,6 +8,7 @@ import {
   toggleArtworkFeaturedAction,
   toggleArtworkAvailableAction,
   duplicateArtworkAction,
+  reorderArtworksAction,
 } from "@/app/admin/actions"
 import type { Artwork } from "@/types/artwork.types"
 import Link from "next/link"
@@ -39,6 +40,8 @@ export default function AdminArtworks() {
   const [filterAvail, setFilterAvail] = useState("Todas")
   const [selected, setSelected]     = useState<Set<number>>(new Set())
   const [bulkLoading, setBulkLoading] = useState(false)
+  const [dragOverIdx, setDragOverIdx] = useState<number | null>(null)
+  const dragIdx = useRef<number | null>(null)
 
   const load = useCallback(() => {
     setLoading(true)
@@ -126,6 +129,34 @@ export default function AdminArtworks() {
   async function handleDuplicate(id: number) {
     await duplicateArtworkAction(id)
     load()
+  }
+
+  const isDragMode = !search.trim() && filterCat === "Todas" && filterAvail === "Todas"
+
+  function handleDragStart(idx: number) {
+    dragIdx.current = idx
+  }
+
+  function handleDragOver(e: React.DragEvent, idx: number) {
+    e.preventDefault()
+    if (dragIdx.current !== idx) setDragOverIdx(idx)
+  }
+
+  function handleDrop(idx: number) {
+    const from = dragIdx.current
+    if (from === null || from === idx) { setDragOverIdx(null); return }
+    const newList = [...artworks]
+    const [moved] = newList.splice(from, 1)
+    newList.splice(idx, 0, moved)
+    setArtworks(newList)
+    setDragOverIdx(null)
+    dragIdx.current = null
+    reorderArtworksAction(newList.map((a, i) => ({ id: a.id, sort_order: i })))
+  }
+
+  function handleDragEnd() {
+    setDragOverIdx(null)
+    dragIdx.current = null
   }
 
   function handleExportCSV() {
@@ -232,8 +263,23 @@ export default function AdminArtworks() {
             </div>
           )}
 
-          {filtered.map((art) => (
-            <div key={art.id} className={`adminCard${selected.has(art.id) ? " adminCard--selected" : ""}`}>
+          {isDragMode && filtered.length > 1 && (
+            <p className="adminDragHint">⠿ Arraste as obras para reordenar</p>
+          )}
+
+          {filtered.map((art, idx) => (
+            <div
+              key={art.id}
+              className={`adminCard${selected.has(art.id) ? " adminCard--selected" : ""}${dragOverIdx === idx ? " adminCard--dragOver" : ""}`}
+              draggable={isDragMode}
+              onDragStart={() => handleDragStart(idx)}
+              onDragOver={(e) => handleDragOver(e, idx)}
+              onDrop={() => handleDrop(idx)}
+              onDragEnd={handleDragEnd}
+            >
+              {isDragMode && (
+                <span className="adminDragHandle" title="Arrastar para reordenar">⠿</span>
+              )}
               <label className="adminCheckbox">
                 <input type="checkbox" checked={selected.has(art.id)} onChange={() => toggleOne(art.id)} />
                 <span />

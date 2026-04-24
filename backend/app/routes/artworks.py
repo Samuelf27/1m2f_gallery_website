@@ -47,7 +47,8 @@ def list_artworks():
     if available:
         query = query.filter(Artwork.available == available)
 
-    query = query.order_by(Artwork.created_at.desc())
+    from sqlalchemy import nulls_last
+    query = query.order_by(nulls_last(Artwork.sort_order.asc()), Artwork.created_at.desc())
     pagination = query.paginate(page=page, per_page=per_page, error_out=False)
 
     return jsonify({
@@ -111,6 +112,20 @@ def update_artwork(id):
 
     db.session.commit()
     return jsonify(art.to_dict())
+
+
+@artworks_bp.route("/reorder", methods=["PUT"])
+def reorder_artworks():
+    require_api_key()
+    data = request.get_json(silent=True)
+    if not data or not isinstance(data, list):
+        return jsonify({"error": "Lista inválida"}), 400
+    for item in data:
+        art = db.session.get(Artwork, item.get("id"))
+        if art is not None:
+            art.sort_order = item.get("sort_order")
+    db.session.commit()
+    return jsonify({"ok": True})
 
 
 @artworks_bp.route("/<int:id>", methods=["DELETE"])
