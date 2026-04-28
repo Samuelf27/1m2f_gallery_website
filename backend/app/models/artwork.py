@@ -4,6 +4,12 @@ from extensions import db
 
 class Artwork(db.Model):
     __tablename__ = "artworks"
+    __table_args__ = (
+        db.Index("ix_artworks_category",   "category"),
+        db.Index("ix_artworks_featured",   "featured"),
+        db.Index("ix_artworks_available",  "available"),
+        db.Index("ix_artworks_sort_order", "sort_order"),
+    )
 
     id          = db.Column(db.Integer, primary_key=True)
     title       = db.Column(db.String(200), nullable=False)

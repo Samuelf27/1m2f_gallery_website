@@ -9,4 +9,7 @@ export type Artwork = {
   dimensions: string
   available: "disponível" | "vendido"
   featured: boolean
+  sort_order: number | null
+  created_at?: string
+  updated_at?: string
 }

@@ -1,9 +1,22 @@
 "use server"
 
+import { timingSafeEqual } from "crypto"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
 import { API_URL, EXHIBITIONS_API_URL, TESTIMONIALS_API_URL, SETTINGS_API_URL } from "@/lib/config"
+
+function safePasswordCompare(a: string, b: string): boolean {
+  if (!a || !b) return false
+  try {
+    const bufA = Buffer.from(a)
+    const bufB = Buffer.from(b)
+    if (bufA.length !== bufB.length) return false
+    return timingSafeEqual(bufA, bufB)
+  } catch {
+    return false
+  }
+}
 
 function authHeaders() {
   return {
@@ -15,7 +28,7 @@ function authHeaders() {
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
 export async function loginAction(password: string): Promise<{ error: string } | never> {
-  if (password !== process.env.ADMIN_PASSWORD) {
+  if (!safePasswordCompare(password, process.env.ADMIN_PASSWORD ?? "")) {
     return { error: "Senha incorreta. Tente novamente." }
   }
 

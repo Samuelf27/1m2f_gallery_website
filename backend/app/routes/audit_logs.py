@@ -1,15 +1,8 @@
-import os
-from flask import Blueprint, jsonify, request, abort
+from flask import Blueprint, jsonify, request
 from app.models.audit_log import AuditLog
+from app.auth import require_api_key
 
 audit_logs_bp = Blueprint("audit_logs", __name__)
-
-
-def require_api_key():
-    auth = request.headers.get("Authorization", "")
-    expected = f"Bearer {os.environ.get('API_SECRET_KEY', '')}"
-    if not auth or auth != expected:
-        abort(401)
 
 
 @audit_logs_bp.route("/", methods=["GET"])

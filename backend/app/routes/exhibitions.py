@@ -1,19 +1,12 @@
-import os
-from flask import Blueprint, jsonify, request, abort
+from flask import Blueprint, jsonify, request
 from app.models.exhibition import Exhibition
 from app.audit import log_action
+from app.auth import require_api_key
 from extensions import db
 
 exhibitions_bp = Blueprint("exhibitions", __name__)
 
 _MUTABLE_FIELDS = ["title", "subtitle", "start_date", "end_date", "location", "description"]
-
-
-def require_api_key():
-    auth = request.headers.get("Authorization", "")
-    expected = f"Bearer {os.environ.get('API_SECRET_KEY', '')}"
-    if not auth or auth != expected:
-        abort(401)
 
 
 @exhibitions_bp.route("/", methods=["GET"])

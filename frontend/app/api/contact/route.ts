@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
+import { rateLimit } from "@/lib/rate-limit"
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0] ?? "unknown"
+  if (rateLimit(ip, 5, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: "Muitas tentativas. Tente novamente em 1 hora." }, { status: 429 })
+  }
   let body: unknown
   try { body = await req.json() } catch {
     return NextResponse.json({ error: "Requisição inválida." }, { status: 400 })

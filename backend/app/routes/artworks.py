@@ -1,8 +1,8 @@
-import os
-from flask import Blueprint, jsonify, request, abort
+from flask import Blueprint, jsonify, request
 from app.models.artwork import Artwork
 from app.models.artist import Artist
 from app.audit import log_action
+from app.auth import require_api_key
 from extensions import db
 
 artworks_bp = Blueprint("artworks", __name__)
@@ -11,13 +11,6 @@ _MUTABLE_FIELDS = [
     "title", "year", "description", "image_url",
     "category", "dimensions", "available", "featured",
 ]
-
-
-def require_api_key():
-    auth = request.headers.get("Authorization", "")
-    expected = f"Bearer {os.environ.get('API_SECRET_KEY', '')}"
-    if not auth or auth != expected:
-        abort(401)
 
 
 def get_or_create_artist(name: str) -> Artist:

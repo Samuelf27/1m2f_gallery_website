@@ -1,7 +1,7 @@
-import os
-from flask import Blueprint, jsonify, request, abort
+from flask import Blueprint, jsonify, request
 from app.models.setting import Setting
 from app.audit import log_action
+from app.auth import require_api_key
 from extensions import db
 
 settings_bp = Blueprint("settings", __name__)
@@ -11,13 +11,6 @@ ALLOWED_KEYS = {
     "instagram", "facebook",
     "gallery_description",
 }
-
-
-def require_api_key():
-    auth = request.headers.get("Authorization", "")
-    expected = f"Bearer {os.environ.get('API_SECRET_KEY', '')}"
-    if not auth or auth != expected:
-        abort(401)
 
 
 @settings_bp.route("/", methods=["GET"])
