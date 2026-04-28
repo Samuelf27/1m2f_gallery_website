@@ -5678,6 +5678,102 @@ body.admin-mode .whatsappFloat { display: none; }
   margin-top: 12px;
 }
 
+/* ─── ACQUISITION STEPS ────────────────────────────────── */
+.acquisitionSteps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 32px 0 28px;
+  border-left: 0.5px solid var(--border-warm);
+  padding-left: 24px;
+}
+
+.acquisitionSteps--compact {
+  margin: 28px 0 24px;
+  border-left: 0.5px solid var(--border);
+}
+
+.acquisitionStep {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 16px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.acquisitionStep:last-child {
+  border-bottom: none;
+}
+
+.acquisitionStepNum {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+  min-width: 28px;
+  padding-top: 2px;
+}
+
+.acquisitionStepTitle {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.acquisitionStep p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--white-dim);
+  margin: 0;
+}
+
+/* Modal compact process strip */
+.modalAcquisitionSteps {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: rgba(240, 237, 232, 0.4);
+}
+
+.modalAcquisitionArrow {
+  color: var(--gold);
+  opacity: 0.6;
+}
+
+/* Sold state CTA */
+.acquireBtnSold {
+  width: 100%;
+  padding: 16px 24px;
+  text-align: center;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  color: rgba(240, 237, 232, 0.3);
+  border: 0.5px solid var(--border);
+  border-radius: 2px;
+  margin-top: 20px;
+}
+
+/* Destaques chip */
+.galleryCatBtn--featured {
+  color: var(--gold);
+  border-color: rgba(201, 169, 110, 0.2);
+}
+
+.galleryCatBtn--featured.active {
+  background: rgba(201, 169, 110, 0.12);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
 /* ─── EXHIBITIONS EMPTY STATE ──────────────────────────── */
 .exhEmpty {
   display: flex;

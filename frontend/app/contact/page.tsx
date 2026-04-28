@@ -48,6 +48,31 @@ export default async function ContactPage() {
         <p className="contactDesc">
           Adquira uma obra, encomende uma peça exclusiva ou tire suas dúvidas.
         </p>
+
+        <div className="acquisitionSteps">
+          <div className="acquisitionStep">
+            <span className="acquisitionStepNum">01</span>
+            <div>
+              <span className="acquisitionStepTitle">Escolha a obra</span>
+              <p>Navegue pela galeria e encontre a peça que fala com você.</p>
+            </div>
+          </div>
+          <div className="acquisitionStep">
+            <span className="acquisitionStepNum">02</span>
+            <div>
+              <span className="acquisitionStepTitle">Entre em contato</span>
+              <p>Respondemos em até 24h com valor, disponibilidade e condições.</p>
+            </div>
+          </div>
+          <div className="acquisitionStep">
+            <span className="acquisitionStepNum">03</span>
+            <div>
+              <span className="acquisitionStepTitle">Receba em casa</span>
+              <p>Embalagem especializada, seguro de transporte e certificado incluso.</p>
+            </div>
+          </div>
+        </div>
+
         <div className="contactResponseBadge">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
             <circle cx="12" cy="12" r="9" />

@@ -34,6 +34,7 @@ function GalleryContent() {
   const [category, setCategory]       = useState("Todas")
   const [year, setYear]               = useState("Todos")
   const [sort, setSort]               = useState<SortKey>("newest")
+  const [featuredOnly, setFeaturedOnly] = useState(false)
   const [gridCols, setGridCols]       = useState<2 | 3>(2)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const sentinelRef = useRef<HTMLDivElement>(null)
@@ -65,9 +66,10 @@ function GalleryContent() {
       const matchSearch = !q || a.title.toLowerCase().includes(q) || a.category?.toLowerCase().includes(q)
       const matchCat    = category === "Todas" || a.category === category
       const matchYear   = year === "Todos" || a.year === year
-      return matchSearch && matchCat && matchYear
+      const matchFeat   = !featuredOnly || a.featured
+      return matchSearch && matchCat && matchYear && matchFeat
     })
-  }, [artworks, search, category, year])
+  }, [artworks, search, category, year, featuredOnly])
 
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
@@ -83,7 +85,7 @@ function GalleryContent() {
 
   const paginated  = sorted.slice(0, visibleCount)
   const hasMore    = visibleCount < sorted.length
-  const activeFilters = (search ? 1 : 0) + (category !== "Todas" ? 1 : 0) + (year !== "Todos" ? 1 : 0)
+  const activeFilters = (search ? 1 : 0) + (category !== "Todas" ? 1 : 0) + (year !== "Todos" ? 1 : 0) + (featuredOnly ? 1 : 0)
 
   // Reset visible count when filters/sort change
   useEffect(() => { setVisibleCount(PAGE_SIZE) }, [search, category, sort])
@@ -109,7 +111,7 @@ function GalleryContent() {
   function handleSort(value: SortKey)    { setSort(value);     }
 
   function clearFilters() {
-    setSearch(""); setCategory("Todas"); setYear("Todos"); setSort("newest")
+    setSearch(""); setCategory("Todas"); setYear("Todos"); setSort("newest"); setFeaturedOnly(false)
   }
 
   function openModal(id: number) {
@@ -211,6 +213,13 @@ function GalleryContent() {
 
         <div className="galleryFilterBottom">
           <div className="galleryCats">
+            <button
+              type="button"
+              className={`galleryCatBtn galleryCatBtn--featured${featuredOnly ? " active" : ""}`}
+              onClick={() => setFeaturedOnly((v) => !v)}
+            >
+              ★ Destaques
+            </button>
             {categories.map((cat) => (
               <button key={cat} type="button"
                 className={`galleryCatBtn${category === cat ? " active" : ""}`}

@@ -180,7 +180,9 @@ export default function ArtworkModal({ id }: { id: string }) {
                   </div>
                   <div className="artMetaItem">
                     <span className="artMetaLabel">Disponibilidade</span>
-                    <span className="artMetaValue artMetaAvailable">Disponível</span>
+                    <span className="artMetaValue artMetaAvailable">
+                      {art.available === "vendido" ? "Vendido" : "Disponível · Peça única"}
+                    </span>
                   </div>
                 </div>
               )}
@@ -207,18 +209,33 @@ export default function ArtworkModal({ id }: { id: string }) {
                 </div>
               </div>
 
+              {/* Processo compacto */}
+              {art.available !== "vendido" && (
+                <div className="modalAcquisitionSteps">
+                  <span>Escolha</span>
+                  <span className="modalAcquisitionArrow">→</span>
+                  <span>Contato</span>
+                  <span className="modalAcquisitionArrow">→</span>
+                  <span>Obra em casa</span>
+                </div>
+              )}
+
               {/* CTA WhatsApp */}
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="acquireBtn"
-                aria-label={`Adquirir "${art.title}" via WhatsApp`}
-              >
-                <span className="acquireBtnBg" />
-                <span className="acquireBtnText">Adquirir esta Obra</span>
-                <span className="acquireBtnIcon">→</span>
-              </a>
+              {art.available !== "vendido" ? (
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="acquireBtn"
+                  aria-label={`Tenho interesse em "${art.title}" via WhatsApp`}
+                >
+                  <span className="acquireBtnBg" />
+                  <span className="acquireBtnText">Tenho interesse nesta obra</span>
+                  <span className="acquireBtnIcon">→</span>
+                </a>
+              ) : (
+                <div className="acquireBtnSold">Esta obra já foi adquirida</div>
+              )}
 
               {/* Ações secundárias */}
               <div className="artModalActions">

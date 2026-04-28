@@ -188,7 +188,9 @@ export default async function ArtworkPage({
               </div>
               <div className="artMetaItem">
                 <span className="artMetaLabel">Disponibilidade</span>
-                <span className="artMetaValue artMetaAvailable">Disponível</span>
+                <span className={art.available === "vendido" ? "artMetaValue" : "artMetaValue artMetaAvailable"}>
+                  {art.available === "vendido" ? "Vendido" : "Disponível · Peça única"}
+                </span>
               </div>
             </div>
           )}
@@ -221,22 +223,54 @@ export default async function ArtworkPage({
             </div>
           </div>
 
-          {/* CTA */}
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="acquireBtn"
-            aria-label={`Adquirir a obra "${art.title}" via WhatsApp`}
-          >
-            <span className="acquireBtnBg" />
-            <span className="acquireBtnText">Adquirir esta Obra</span>
-            <span className="acquireBtnIcon">→</span>
-          </a>
+          {/* Processo de aquisição */}
+          {art.available !== "vendido" && (
+            <div className="acquisitionSteps acquisitionSteps--compact">
+              <div className="acquisitionStep">
+                <span className="acquisitionStepNum">01</span>
+                <div>
+                  <span className="acquisitionStepTitle">Manifeste interesse</span>
+                  <p>Clique abaixo para iniciar conversa pelo WhatsApp.</p>
+                </div>
+              </div>
+              <div className="acquisitionStep">
+                <span className="acquisitionStepNum">02</span>
+                <div>
+                  <span className="acquisitionStepTitle">Combine os detalhes</span>
+                  <p>Valor, forma de pagamento e logística — tudo direto com a artista.</p>
+                </div>
+              </div>
+              <div className="acquisitionStep">
+                <span className="acquisitionStepNum">03</span>
+                <div>
+                  <span className="acquisitionStepTitle">Receba com certificado</span>
+                  <p>Embalagem especializada e certificado de autenticidade incluso.</p>
+                </div>
+              </div>
+            </div>
+          )}
 
-          <p className="artContactNote">
-            Via WhatsApp · Pagamento e envio combinados diretamente com a artista
-          </p>
+          {/* CTA */}
+          {art.available !== "vendido" ? (
+            <>
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="acquireBtn"
+                aria-label={`Tenho interesse em "${art.title}" via WhatsApp`}
+              >
+                <span className="acquireBtnBg" />
+                <span className="acquireBtnText">Tenho interesse nesta obra</span>
+                <span className="acquireBtnIcon">→</span>
+              </a>
+              <p className="artContactNote">
+                Via WhatsApp · Resposta em até 24h · Sem compromisso
+              </p>
+            </>
+          ) : (
+            <div className="acquireBtnSold">Esta obra já foi adquirida</div>
+          )}
 
           <div className="artPageActions">
             <ShareButton title={art.title} artworkId={String(art.id)} />
