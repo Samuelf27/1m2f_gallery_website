@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from sqlalchemy.orm import joinedload
 from app.models.artwork import Artwork
 from app.models.artist import Artist
 from app.audit import log_action
@@ -11,6 +12,19 @@ _MUTABLE_FIELDS = [
     "title", "year", "description", "image_url",
     "category", "dimensions", "available", "featured",
 ]
+
+_MAX_LENGTHS = {
+    "title": 200, "year": 10, "category": 100,
+    "dimensions": 100, "image_url": 500, "description": 5000,
+}
+
+
+def _validate(data: dict) -> str | None:
+    for field, limit in _MAX_LENGTHS.items():
+        val = data.get(field)
+        if isinstance(val, str) and len(val) > limit:
+            return f"'{field}' excede {limit} caracteres"
+    return None
 
 
 def get_or_create_artist(name: str) -> Artist:
@@ -32,7 +46,7 @@ def list_artworks():
     featured = request.args.get("featured")
     available = request.args.get("available")
 
-    query = Artwork.query
+    query = Artwork.query.options(joinedload(Artwork.artist))
 
     if category:
         query = query.filter(Artwork.category == category)
@@ -68,6 +82,10 @@ def create_artwork():
     if not data or not data.get("title", "").strip():
         return jsonify({"error": "O campo 'title' é obrigatório"}), 400
 
+    err = _validate(data)
+    if err:
+        return jsonify({"error": err}), 400
+
     artist_id = None
     if data.get("artist"):
         artist_id = get_or_create_artist(data["artist"]).id
@@ -97,6 +115,10 @@ def update_artwork(id):
 
     if not data:
         return jsonify({"error": "Nenhum dado enviado"}), 400
+
+    err = _validate(data)
+    if err:
+        return jsonify({"error": err}), 400
 
     if "artist" in data:
         art.artist_id = get_or_create_artist(data["artist"]).id if data["artist"] else None

@@ -1,12 +1,18 @@
 """Dev entry point — production uses wsgi.py via gunicorn wsgi:app."""
+import logging
 import os
 from dotenv import load_dotenv
 load_dotenv()
 
-from flask import Flask
+from app.logger import configure_logging
+configure_logging()
+
+from flask import Flask, jsonify
 from flask_cors import CORS
 from extensions import db, migrate
 import app.models  # noqa: F401
+
+logger = logging.getLogger(__name__)
 
 
 def create_app() -> Flask:
@@ -52,8 +58,39 @@ def create_app() -> Flask:
     flask_app.register_blueprint(audit_logs_bp,   url_prefix="/api/audit-logs")
 
     @flask_app.route("/")
+    def root():
+        return jsonify({"status": "ok", "service": "1M2F Gallery API"})
+
+    @flask_app.route("/health")
     def health():
-        return {"status": "ok", "service": "1M2F Gallery API"}
+        try:
+            db.session.execute(db.text("SELECT 1"))
+            db_ok = True
+        except Exception:
+            db_ok = False
+        code = 200 if db_ok else 503
+        return jsonify({"status": "ok" if db_ok else "degraded", "db": db_ok}), code
+
+    @flask_app.errorhandler(400)
+    def bad_request(e):
+        return jsonify({"error": "Bad request", "detail": str(e.description)}), 400
+
+    @flask_app.errorhandler(401)
+    def unauthorized(_e):
+        return jsonify({"error": "Unauthorized"}), 401
+
+    @flask_app.errorhandler(404)
+    def not_found(_e):
+        return jsonify({"error": "Not found"}), 404
+
+    @flask_app.errorhandler(405)
+    def method_not_allowed(_e):
+        return jsonify({"error": "Method not allowed"}), 405
+
+    @flask_app.errorhandler(500)
+    def server_error(e):
+        logger.exception("Unhandled 500: %s", e)
+        return jsonify({"error": "Internal server error"}), 500
 
     return flask_app
 

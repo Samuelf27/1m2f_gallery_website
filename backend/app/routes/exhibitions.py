@@ -1,4 +1,6 @@
+from datetime import date
 from flask import Blueprint, jsonify, request
+from sqlalchemy import or_
 from app.models.exhibition import Exhibition
 from app.audit import log_action
 from app.auth import require_api_key
@@ -13,10 +15,32 @@ _MUTABLE_FIELDS = ["title", "subtitle", "start_date", "end_date", "location", "d
 def list_exhibitions():
     status = request.args.get("status")
     query = Exhibition.query.order_by(Exhibition.start_date.desc())
-    exhibitions = query.all()
 
-    items = [e for e in exhibitions if (e.get_status() == status if status else True)]
-    return jsonify([e.to_dict() for e in items])
+    if status:
+        today = date.today().isoformat()
+        if status == "proxima":
+            query = query.filter(
+                Exhibition.start_date.isnot(None),
+                Exhibition.start_date > today,
+            )
+        elif status == "em_cartaz":
+            query = query.filter(
+                Exhibition.start_date.isnot(None),
+                Exhibition.end_date.isnot(None),
+                Exhibition.start_date <= today,
+                Exhibition.end_date >= today,
+            )
+        elif status == "encerrada":
+            query = query.filter(
+                Exhibition.end_date.isnot(None),
+                Exhibition.end_date < today,
+            )
+        elif status == "indefinida":
+            query = query.filter(
+                or_(Exhibition.start_date.is_(None), Exhibition.end_date.is_(None))
+            )
+
+    return jsonify([e.to_dict() for e in query.all()])
 
 
 @exhibitions_bp.route("/<int:id>", methods=["GET"])

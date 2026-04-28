@@ -1,11 +1,17 @@
+import logging
 import os
 from dotenv import load_dotenv
 load_dotenv()
 
-from flask import Flask
+from app.logger import configure_logging
+configure_logging()
+
+from flask import Flask, jsonify
 from flask_cors import CORS
 from extensions import db, migrate
 import app.models  # noqa: F401 — registers all models with SQLAlchemy
+
+logger = logging.getLogger(__name__)
 
 
 def create_app() -> Flask:
@@ -17,8 +23,7 @@ def create_app() -> Flask:
         raise RuntimeError("SECRET_KEY env var is not set")
 
     raw_url = os.environ.get("DATABASE_URL", "").strip()
-    # Log prefix for diagnosis (never log full URL — contains password)
-    print(f"[wsgi] DATABASE_URL prefix: {repr(raw_url[:30]) if raw_url else '(not set)'}")
+    logger.info("DATABASE_URL prefix: %s", repr(raw_url[:30]) if raw_url else "(not set)")
 
     VALID_PREFIXES = ("postgresql://", "postgres://", "sqlite:///", "sqlite://")
     if raw_url and any(raw_url.startswith(p) for p in VALID_PREFIXES):
@@ -26,7 +31,7 @@ def create_app() -> Flask:
         if db_url.startswith("postgres://"):
             db_url = db_url.replace("postgres://", "postgresql://", 1)
     else:
-        print("[wsgi] DATABASE_URL missing or invalid — falling back to SQLite")
+        logger.warning("DATABASE_URL missing or invalid — falling back to SQLite")
         db_url = "sqlite:///gallery.db"
 
     flask_app.config["SQLALCHEMY_DATABASE_URI"]     = db_url
@@ -64,10 +69,42 @@ def create_app() -> Flask:
     flask_app.register_blueprint(settings_bp,     url_prefix="/api/settings")
     flask_app.register_blueprint(audit_logs_bp,   url_prefix="/api/audit-logs")
 
-    # ── Health check ──────────────────────────────────────────
+    # ── Health ────────────────────────────────────────────────
     @flask_app.route("/")
+    def root():
+        return jsonify({"status": "ok", "service": "1M2F Gallery API"})
+
+    @flask_app.route("/health")
     def health():
-        return {"status": "ok", "service": "1M2F Gallery API"}
+        try:
+            db.session.execute(db.text("SELECT 1"))
+            db_ok = True
+        except Exception:
+            db_ok = False
+        code = 200 if db_ok else 503
+        return jsonify({"status": "ok" if db_ok else "degraded", "db": db_ok}), code
+
+    # ── Error handlers ────────────────────────────────────────
+    @flask_app.errorhandler(400)
+    def bad_request(e):
+        return jsonify({"error": "Bad request", "detail": str(e.description)}), 400
+
+    @flask_app.errorhandler(401)
+    def unauthorized(_e):
+        return jsonify({"error": "Unauthorized"}), 401
+
+    @flask_app.errorhandler(404)
+    def not_found(_e):
+        return jsonify({"error": "Not found"}), 404
+
+    @flask_app.errorhandler(405)
+    def method_not_allowed(_e):
+        return jsonify({"error": "Method not allowed"}), 405
+
+    @flask_app.errorhandler(500)
+    def server_error(e):
+        logger.exception("Unhandled 500: %s", e)
+        return jsonify({"error": "Internal server error"}), 500
 
     return flask_app
 
