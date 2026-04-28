@@ -39,6 +39,7 @@ export default function Newsletter() {
           <p className="newsletterDesc">
             Vernissages, lançamentos de coleção e obras exclusivas — direto na sua caixa de entrada.
           </p>
+          <p className="newsletterSocialProof">Lido por colecionadores e apreciadores de arte em todo o Brasil</p>
         </div>
 
         {state === "success" ? (

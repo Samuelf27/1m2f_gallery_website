@@ -150,7 +150,7 @@ export default function Home() {
             />
           </h1>
           <p className="heroSubtitle">
-            A galeria de Maria França — mais de 6.000 obras em acrílico, tela, porcelana e aço.
+            Obras que transformam qualquer espaço em uma experiência que ninguém esquece.
           </p>
           <a href="#colecao" className="heroButton heroButtonPulse">
             Explorar coleção →
@@ -176,7 +176,7 @@ export default function Home() {
         <div className="carouselSectionHeader">
           <div className="sectionHeader anim">
             <h2>Coleção em destaque</h2>
-            <p>Obras selecionadas</p>
+            <p>Acrílico, tela, porcelana e aço — cada peça, única</p>
           </div>
         </div>
 
@@ -199,6 +199,11 @@ export default function Home() {
                       sizes="340px"
                       style={{ objectFit: "cover" }}
                     />
+                    {art.available === "vendido" ? (
+                      <div className="artCardBadge artCardBadge--sold">Vendido</div>
+                    ) : (
+                      <div className="artCardBadge artCardBadge--available">Disponível</div>
+                    )}
                     <div className="carouselCardOverlay">
                       <h3>{art.title}</h3>
                       <span>{art.category}</span>
@@ -280,39 +285,67 @@ export default function Home() {
           <div className="aboutTag">A artista</div>
           <h2>Maria<br /><em>França</em></h2>
           <p>
-            Brasileira, nascida em 1969, São Paulo. Com vivências em quatro continentes e mais de 6.000 obras criadas, une técnica e sentimento para transformar espaços em experiências únicas.
+            Nasceu em São Paulo, viveu em quatro continentes e encontrou na arte a linguagem que nenhum passaporte consegue traduzir. Mais de 6.000 obras — cada uma com uma história que começa onde as palavras param.
           </p>
           <Link href="/about" className="heroButton">Conhecer a artista →</Link>
         </div>
       </section>
 
       {/* ─── DEPOIMENTOS ───────────────────────────────────── */}
-      <section className="testimonialsSection">
-        <div className="sectionHeader testimonialsSectionHeader anim">
-          <h2>O que dizem nossos clientes</h2>
-          <p>Depoimentos</p>
-        </div>
+      {testimonials.length > 0 && (
+        <section className="testimonialsSection">
+          <div className="sectionHeader testimonialsSectionHeader anim">
+            <h2>O que dizem nossos clientes</h2>
+            <p>Depoimentos</p>
+          </div>
 
-        <div className="testimonialsGrid">
-          {testimonials.map((t, i) => (
-            <article
-              key={t.id}
-              className="testimonialCard anim"
-              style={{ "--delay": `${i * 120}ms` } as React.CSSProperties}
-            >
-              <div className="testimonialQuoteMark">&ldquo;</div>
-              <blockquote className="testimonialQuote">{t.text}</blockquote>
-              <div className="testimonialDivider" />
-              <footer className="testimonialFooter">
-                <span className="testimonialAuthor">{t.name}</span>
-                {(t.role || t.city) && (
-                  <span className="testimonialMeta">
-                    {[t.role, t.city].filter(Boolean).join(" · ")}
-                  </span>
-                )}
-              </footer>
-            </article>
-          ))}
+          <div className="testimonialsGrid">
+            {testimonials.map((t, i) => (
+              <article
+                key={t.id}
+                className="testimonialCard anim"
+                style={{ "--delay": `${i * 120}ms` } as React.CSSProperties}
+              >
+                <div className="testimonialQuoteMark">&ldquo;</div>
+                <blockquote className="testimonialQuote">{t.text}</blockquote>
+                <div className="testimonialDivider" />
+                <footer className="testimonialFooter">
+                  <span className="testimonialAuthor">{t.name}</span>
+                  {(t.role || t.city) && (
+                    <span className="testimonialMeta">
+                      {[t.role, t.city].filter(Boolean).join(" · ")}
+                    </span>
+                  )}
+                </footer>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ─── EMPRESAS & COLECIONADORES ─────────────────────── */}
+      <section className="businessSection">
+        <div className="businessInner anim">
+          <div className="businessTag">Para empresas &amp; colecionadores</div>
+          <h2>Transforme seu espaço com <em>arte original</em></h2>
+          <p className="businessDesc">
+            Escritórios, hotéis, residências de alto padrão. Curadoria exclusiva, peças únicas e atendimento personalizado para projetos que exigem o extraordinário.
+          </p>
+          <div className="businessGrid">
+            <div className="businessItem">
+              <span>Curadoria personalizada</span>
+              <p>Seleção de obras para o seu projeto, com orientação direta da artista.</p>
+            </div>
+            <div className="businessItem">
+              <span>Encomendas exclusivas</span>
+              <p>Obras criadas especificamente para o seu espaço, dimensões e paleta.</p>
+            </div>
+            <div className="businessItem">
+              <span>Certificado de autenticidade</span>
+              <p>Cada peça acompanha documentação de origem assinada pela artista.</p>
+            </div>
+          </div>
+          <Link href="/contact" className="heroButton">Solicitar curadoria →</Link>
         </div>
       </section>
 

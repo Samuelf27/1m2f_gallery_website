@@ -29,6 +29,7 @@ function GalleryContent() {
   const [artworks, setArtworks]       = useState<Artwork[]>([])
   const [loading, setLoading]         = useState(true)
   const [error, setError]             = useState(false)
+  const [timedOut, setTimedOut]       = useState(false)
   const [search, setSearch]           = useState("")
   const [category, setCategory]       = useState("Todas")
   const [year, setYear]               = useState("Todos")
@@ -38,9 +39,14 @@ function GalleryContent() {
   const sentinelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setTimedOut(true)
+    }, 8000)
     getAllArtworks()
       .then((data) => { setArtworks(data); setLoading(false) })
       .catch(() => { setError(true); setLoading(false) })
+      .finally(() => clearTimeout(timer))
+    return () => clearTimeout(timer)
   }, [])
 
   const categories = useMemo(() => {
@@ -154,7 +160,7 @@ function GalleryContent() {
               </svg>
             </button>
           </div>
-          <Link href="/contact" className="heroButton">Adquirir uma obra →</Link>
+          <Link href="/contact" className="heroButton">Encontre a obra certa para o seu espaço →</Link>
         </div>
       </div>
 
@@ -221,7 +227,7 @@ function GalleryContent() {
       </div>
 
       {/* ─── SKELETON LOADING ───────────────────────────────── */}
-      {loading && (
+      {loading && !timedOut && (
         <div className={`grid grid--${gridCols}`}>
           {Array.from({ length: PAGE_SIZE }).map((_, i) => (
             <div key={i} className="skeletonCard" style={{ "--delay": `${(i % 6) * 60}ms` } as React.CSSProperties}>
@@ -232,6 +238,14 @@ function GalleryContent() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {loading && timedOut && (
+        <div className="galleryState">
+          <p>O servidor está acordando. Aguarde um momento…</p>
+          <p style={{ fontSize: "13px", opacity: 0.5, marginTop: "8px" }}>Isso pode levar até 30 segundos na primeira visita.</p>
+          <div className="gallerySpinner" style={{ marginTop: "24px" }} />
         </div>
       )}
 
@@ -273,6 +287,11 @@ function GalleryContent() {
                       style={{ objectFit: "cover" }}
                       loading={index < 6 ? "eager" : "lazy"}
                     />
+                    {art.available === "vendido" ? (
+                      <div className="artCardBadge artCardBadge--sold">Vendido</div>
+                    ) : (
+                      <div className="artCardBadge artCardBadge--available">Disponível</div>
+                    )}
                     <div className="cardOverlay">
                       <div className="cardContent">
                         <h3>{art.title}</h3>

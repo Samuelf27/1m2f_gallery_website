@@ -46,8 +46,15 @@ export default async function ContactPage() {
           Entre em<br /><em>contato</em>
         </h1>
         <p className="contactDesc">
-          Adquira uma obra, encomende uma peça exclusiva ou tire suas dúvidas. Respondemos em até 24h.
+          Adquira uma obra, encomende uma peça exclusiva ou tire suas dúvidas.
         </p>
+        <div className="contactResponseBadge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 7v5l3 3" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          Resposta em até 24h
+        </div>
 
         <div className="contactInfo">
           {contactItems.map((item) => (

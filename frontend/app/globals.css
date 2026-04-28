@@ -5539,4 +5539,178 @@ body.admin-mode .whatsappFloat { display: none; }
   transition: border-color 0.2s, color 0.2s;
   margin-top: 4px;
 }
+
+/* ─── ARTWORK CARD BADGES ──────────────────────────────── */
+.artCardBadge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 3;
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.artCardBadge--available {
+  background: rgba(201, 169, 110, 0.15);
+  color: var(--gold);
+  border: 0.5px solid rgba(201, 169, 110, 0.35);
+}
+
+.artCardBadge--sold {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(240, 237, 232, 0.35);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  text-decoration: line-through;
+}
+
+/* ─── BUSINESS SECTION ─────────────────────────────────── */
+.businessSection {
+  padding: 120px 80px;
+  background: var(--black-2);
+  border-top: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+}
+
+.businessInner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.businessTag {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+
+.businessSection h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 300;
+  line-height: 1.15;
+  color: var(--white);
+  margin-bottom: 20px;
+}
+
+.businessSection h2 em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+
+.businessDesc {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--white-dim);
+  max-width: 580px;
+  margin-bottom: 56px;
+}
+
+.businessGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 0.5px solid var(--border);
+  margin-bottom: 48px;
+}
+
+.businessItem {
+  background: var(--black-2);
+  padding: 32px 28px;
+  transition: background 0.3s var(--ease);
+}
+
+.businessItem:hover {
+  background: var(--black-3);
+}
+
+.businessItem span {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.businessItem p {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--white-dim);
+}
+
+/* ─── CONTACT RESPONSE BADGE ───────────────────────────── */
+.contactResponseBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 8px 16px;
+  border: 0.5px solid rgba(201, 169, 110, 0.25);
+  border-radius: 2px;
+  background: rgba(201, 169, 110, 0.06);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: var(--gold);
+}
+
+.contactResponseBadge svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* ─── NEWSLETTER SOCIAL PROOF ──────────────────────────── */
+.newsletterSocialProof {
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: rgba(240, 237, 232, 0.3);
+  margin-top: 12px;
+}
+
+/* ─── EXHIBITIONS EMPTY STATE ──────────────────────────── */
+.exhEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 100px 24px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.exhEmptyTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--white);
+  margin-bottom: 16px;
+}
+
+.exhEmptyDesc {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--white-dim);
+}
+
+/* ─── BUSINESS SECTION RESPONSIVE ─────────────────────── */
+@media (max-width: 768px) {
+  .businessSection {
+    padding: 80px 24px;
+  }
+
+  .businessGrid {
+    grid-template-columns: 1fr;
+  }
+}
 .contactWhatsAppBtn:hover { border-color: #25d366; color: #25d366; }

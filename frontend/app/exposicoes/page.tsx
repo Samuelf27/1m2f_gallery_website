@@ -116,7 +116,20 @@ export default function ExposicoesPage() {
       {loading && (
         <div className="galleryState">
           <div className="gallerySpinner" />
-          <p>Carregando exposições…</p>
+          <p style={{ marginTop: "16px" }}>Carregando exposições…</p>
+        </div>
+      )}
+
+      {/* ── Empty total ─────────────────────────────────────── */}
+      {!loading && exhibitions.length === 0 && (
+        <div className="exhEmpty">
+          <p className="exhEmptyTitle">Agenda em preparação</p>
+          <p className="exhEmptyDesc">
+            Novas exposições serão anunciadas em breve. Inscreva-se na newsletter para receber em primeira mão.
+          </p>
+          <Link href="/contact" className="heroButton" style={{ marginTop: "32px" }}>
+            Entrar em contato →
+          </Link>
         </div>
       )}
 
